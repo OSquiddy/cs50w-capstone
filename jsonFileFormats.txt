@@ -1,0 +1,26 @@
+JSON Data Formats for the views.
+
+--Appointments Page
+
+appointmentList = [
+    {
+        date: "1st July",
+        meta: "Tomorrow",
+        patientsList: [
+            {
+                name: "Ronald Weasley",
+                time: "11:00 AM - 11:30 AM" 
+            },
+            {
+                name: "Harry Potter",
+                time: "11:30 AM - 12:00 PM"
+            }
+        ]
+    },
+    {
+        date: "2nd July",
+        meta: null,
+        patientsList: null
+    }
+]
+

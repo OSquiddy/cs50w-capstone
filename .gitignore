@@ -1,0 +1,32 @@
+capstone/frontend/.DS_Store
+capstone/frontend/node_modules
+frontent/dist
+
+# .myenv folder
+.myenv
+
+
+# local env files
+.env.local
+.env.*.local
+capstone/*/.env.local
+capstone/*/.env.*.local
+
+# Log files
+capstone/frontend/npm-debug.log*
+capstone/frontend/yarn-debug.log*
+capstone/frontend/yarn-error.log*
+capstone/frontend/pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+#backend files
+capstone/backend
