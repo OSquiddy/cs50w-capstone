@@ -3,6 +3,9 @@ import VueRouter from 'vue-router'
 import Layout from '../components/Layout.vue'
 import Appointments from '../views/Appointments/Appointments.vue'
 import PatientDirectory from '../views/PatientDirectory/PatientDirectory.vue'
+import Report from '../views/Reports/Report.vue'
+import PatientMain from '../views/PatientInfo/PatientMain.vue'
+import Settings from '../views/Settings/Settings.vue'
 
 Vue.use(VueRouter)
 
@@ -32,14 +35,30 @@ const routes = [
         component: PatientDirectory
       },
       {
-        path: 'settings',
-        name: 'settings'
+        path: 'p/:id',
+        name: 'patient-main',
+        component: PatientMain,
+        props: (route) => ({ id: parseInt(route.params.id) })
+      },
+      {
+        path: 'p/:id/v/:visitNumber',
+        name: 'report',
+        component: Report,
+        props: (route) => ({
+          id: parseInt(route.params.id),
+          visitNumber: parseInt(route.params.visitNumber)
+        })
       },
       {
         path: 'support',
         name: 'support'
       }
     ]
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: Settings
   },
   {
     path: '/about',

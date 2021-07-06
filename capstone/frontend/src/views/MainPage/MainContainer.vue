@@ -8,7 +8,9 @@
       <router-link to="/directory">
       <div class="grid-item">Patient Directory</div>
       </router-link>
+      <router-link to="/settings">
       <div class="grid-item">Settings</div>
+      </router-link>
       <div class="grid-item">Dev Support</div>
     </div>
   </div>
