@@ -24,3 +24,50 @@ appointmentList = [
     }
 ]
 
+--PatientDirectory Page
+
+route to = /p/{{ patient.id }}
+
+patientsList = [
+    {
+        id: 2453,
+        name: "Ronald Weasley"
+        age: 17,
+        blood-type: "O+",
+        gender: "Male",
+        mobile: "+1 2092001356"
+    },
+    {
+        id: 2453,
+        name: "Harry Potter",
+        age: 17,
+        blood-type: "O+",
+        gender: "Male",
+        mobile: "+1 2092001356"
+    }
+    
+]
+
+--PatientMain Page
+
+patient = [
+    {
+        id: 2453,
+        name: "Ronald Weasley"
+        age: 17,
+        blood-type: "O+",
+        gender: "Male",
+        mobile: "+1 2092001356",
+        occupation: "Student",
+        dob: dd/mm/yyyy,
+        father-name: "Arthur Weasley",
+        mother-name: "Molly Weasley",
+        address: "The Burrow"
+    }
+]
+
+reportsList = [
+    {
+        
+    }
+]

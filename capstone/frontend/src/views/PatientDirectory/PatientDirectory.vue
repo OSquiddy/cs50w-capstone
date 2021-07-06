@@ -5,6 +5,7 @@
         {{ item }}
       </div> -->
       <!-- This entire row will be one component or it will be repeated in v-for as is -->
+      <router-link to="/p/2453">
       <div class="row patient-small-container">
         <div class="col-3 patient-photo"></div>
         <div class="col-9 patient-info">
@@ -22,6 +23,7 @@
           </div>
         </div>
       </div>
+      </router-link>
       <!-- This entire row will be one component or it will be repeated in v-for as is -->
       <div class="row patient-small-container">
         <div class="col-3 patient-photo"></div>
