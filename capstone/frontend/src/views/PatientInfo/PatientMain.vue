@@ -8,25 +8,25 @@
     <div class="row">
       <div class="col">
         <div class="patient-card">
-          <div class="patient-card-name">Ronald Weasley</div>
+          <div class="patient-card-name">{{patient.first_name}} {{patient.last_name}}</div>
           <div class="container patient-card-details-box">
             <div class="row">
               <div class="col-4 patient-card-photo"></div>
               <div class="col-8 patient-card-details">
-                <div class="patient-card-item">ID: 2453</div>
-                <div class="patient-card-item">Age: 17yrs</div>
-                <div class="patient-card-item">Blood Type: O+</div>
-                <div class="patient-card-item">Gender: Male</div>
-                <div class="patient-card-item">Mobile: +1 2092001356</div>
+                <div class="patient-card-item">ID: {{patient.id}}</div>
+                <div class="patient-card-item">Age: {{patient.age}}yrs</div>
+                <div class="patient-card-item">Blood Type: {{patient.blood_type}}</div>
+                <div class="patient-card-item">Gender: {{patient.sex}}</div>
+                <div class="patient-card-item">Mobile: {{patient.Phone_Number}}</div>
               </div>
             </div>
             <div class="row">
               <div class="col patiend-additional-details">
-                <div class="patient-extra-item">Occupation: </div>
-                <div class="patient-extra-item">Address: </div>
-                <div class="patient-extra-item">DOB: </div>
-                <div class="patient-extra-item">Father's Name: Arthur Weasley</div>
-                <div class="patient-extra-item">Mother's Name: Molly Weasley</div>
+                <div class="patient-extra-item">Occupation: {{patient.occupation}}</div>
+                <div class="patient-extra-item">Address: {{patient.address}}</div>
+                <div class="patient-extra-item">DOB: {{patient.date_of_birth}}</div>
+                <div class="patient-extra-item">Father's Name: {{patient.fathers_name}}</div>
+                <div class="patient-extra-item">Mother's Name: {{patient.mothers_name}}</div>
               </div>
             </div>
           </div>
@@ -37,11 +37,11 @@
       <div class="col report-section">
         <h2 class="report-section-title">Reports</h2>
         <div class="report-train">
-          <router-link to="/p/2453/v/1"><div class="report"></div></router-link>
-          <router-link to="/p/2453/v/1"><div class="report"></div></router-link>
-          <router-link to="/p/2453/v/1"><div class="report"></div></router-link>
-          <router-link to="/p/2453/v/1"><div class="report"></div></router-link>
-          <router-link to="/p/2453/v/1"><div class="report"></div></router-link>
+          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
+          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
+          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
+          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
+          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
         </div>
       </div>
     </div>
@@ -49,10 +49,25 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'PatientMain',
   data() {
-    return {}
+    return {
+      patient: {}
+    }
+  },
+  mounted () {
+    this.getPatientInfo()
+  },
+  methods: {
+    async getPatientInfo() {
+      const id = this.$route.params.id
+      console.log(id)
+      const info = await axios.get(process.env.VUE_APP_API_URL + `/p/${id}`)
+      this.patient = info.data.patientInfo
+    }
   }
 }
 </script>

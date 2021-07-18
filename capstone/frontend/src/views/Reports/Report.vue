@@ -2,7 +2,7 @@
   <div class="container report-main">
     <div class="row">
       <div class="col">
-        <PatientSmall :name="'Ronald Weasley'" :id="2453" :age="17" :gender="'Male'" :mobile="'+1 2092001356'" />
+        <PatientSmall :name="patient.first_name + ' ' + patient.last_name" :id="patient.id" :age="patient.age" :gender="patient.sex" :mobile="patient.Phone_Number" :bloodType="patient.blood_type" />
       </div>
     </div>
     <div class="row">
@@ -119,19 +119,19 @@
                 <div class="examination-container">
                   <div class="examination-input">
                     <label for="respiratory">Respiratory:</label>
-                    <textarea name="respiratory" id="respiratory" rows="4"></textarea>
+                    <textarea name="respiratory" id="respiratory" rows="4" :value="report.examination.respiratory" readonly></textarea>
                   </div>
                   <div class="examination-input">
                     <label for="cardiovascular">Cardiovascular:</label>
-                    <textarea name="cardiovascular" id="cardiovascular" rows="4"></textarea>
+                    <textarea name="cardiovascular" id="cardiovascular" rows="4" :value="report.examination.cardiovascular"></textarea>
                   </div>
                   <div class="examination-input">
-                    <label for="abdomnial">Per Abdomnial:</label>
-                    <textarea name="abdomnial" id="abdomnial" rows="4"></textarea>
+                    <label for="abdominal">Per Abdominal:</label>
+                    <textarea name="abdominal" id="abdominal" rows="4"></textarea>
                   </div>
                   <div class="examination-input">
                     <label for="cereberovascular">Cereberovascular:</label>
-                    <textarea name="cereberovascular" id="cereberovascular" rows="4"></textarea>
+                    <textarea name="cereberovascular" id="cereberovascular" rows="4" :value="report.examination.cereberovascular"></textarea>
                   </div>
                   <div class="examination-input">
                     <label for="localExam">Local Examination:</label>
@@ -261,13 +261,37 @@
 
 <script>
 import PatientSmall from '../../components/PatientSmall.vue'
+import axios from 'axios'
+
 export default {
   name: 'Report',
   components: {
     PatientSmall
   },
   data() {
-    return {}
+    return {
+      patient: {},
+      report: {}
+    }
+  },
+  mounted () {
+    this.getPatientInfo()
+    this.getReport()
+  },
+  methods: {
+    async getPatientInfo () {
+      const id = this.$route.params.id
+      console.log(process.env.VUE_APP_API_URL + `/p/${id}`)
+      const response = await axios.get(process.env.VUE_APP_API_URL + `/p/${id}`)
+      this.patient = response.data.patientInfo
+    },
+    async getReport () {
+      const id = this.$route.params.id
+      const reportNum = this.$route.params.visitNumber
+      console.log(process.env.VUE_APP_API_URL + `/p/${id}/v/${reportNum}`)
+      const response = await axios.get(process.env.VUE_APP_API_URL + `/p/${id}/v/${reportNum}`)
+      this.report = response.data
+    }
   }
 }
 </script>

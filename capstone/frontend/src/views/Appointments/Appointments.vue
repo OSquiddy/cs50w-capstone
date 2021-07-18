@@ -8,8 +8,10 @@
       <div class="row">
         <div class="col appointment-day">
           <div class="appointment-title">
-            <span class="appointment-date">July 3rd</span>
-            <span class="appointment-meta">Today</span>
+            <div>
+              <span class="appointment-date">July 3rd</span>
+              <span class="appointment-meta">Today</span>
+            </div>
           </div>
           <div class="appointment-patient-list">
             <div class="patient-appt-container">
@@ -35,8 +37,10 @@
       <div class="row">
         <div class="col appointment-day">
           <div class="appointment-title">
-            <span class="appointment-date">July 4th</span>
-            <span class="appointment-meta">Tomorrow</span>
+            <div>
+              <span class="appointment-date">July 4th</span>
+              <span class="appointment-meta">Tomorrow</span>
+            </div>
           </div>
           <div class="appointment-patient-list">
             <div class="patient-appt-container">

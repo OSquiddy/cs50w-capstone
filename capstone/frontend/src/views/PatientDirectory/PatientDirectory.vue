@@ -1,9 +1,27 @@
 <template>
   <div class="patient-directory-main">
     <div class="container patients-list">
-      <!-- <div v-for="item in items" :key="item.id">
-        {{ item }}
-      </div> -->
+      <template v-for="patient in patientsList">
+        <router-link :to="'/p/' + patient.id" :key="patient.id">
+        <div class="row patient-small-container">
+          <div class="col-3 patient-photo"></div>
+          <div class="col-9 patient-info">
+            <h3 class="patient-name">{{patient.first_name}} {{patient.last_name}}</h3>
+            <div class="row patient-details-row">
+              <div class="col patient-details">ID: {{patient.id}}</div>
+              <div class="col patient-details">Age: {{patient.age}}yrs</div>
+            </div>
+            <div class="row patient-details-row">
+              <div class="col patient-details">Blood Type: {{patient.age}}</div>
+              <div class="col patient-details">Gender: {{patient.sex}}</div>
+            </div>
+            <div class="row patient-details-row">
+              <div class="col patient-details">Mobile: {{patient.Phone_Number}}</div>
+            </div>
+          </div>
+        </div>
+        </router-link>
+      </template>
       <!-- This entire row will be one component or it will be repeated in v-for as is -->
       <router-link to="/p/2453">
       <div class="row patient-small-container">
@@ -68,10 +86,24 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'PatientDirectory',
   data() {
-    return {}
+    return {
+      patientsList: []
+    }
+  },
+  mounted () {
+    this.getPatientsList()
+    console.log(process.env)
+  },
+  methods: {
+    async getPatientsList () {
+      const list = await axios.get(process.env.VUE_APP_API_URL + '/patientList')
+      this.patientsList = list.data.patientList
+    }
   }
 }
 </script>
