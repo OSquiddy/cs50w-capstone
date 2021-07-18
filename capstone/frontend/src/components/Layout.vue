@@ -9,7 +9,10 @@
       </div>
       <SearchContainer v-if="searchURL" :searchHeader="searchURL" />
     </div>
-    <router-view />
+    <div class="wrapper">
+      <router-view />
+      <div id="mask"></div>
+    </div>
   </div>
 </template>
 
@@ -59,5 +62,11 @@ export default {
 
 .container-shadow {
   box-shadow: 0 1px 3px 0px rgba(0,0,0,0.2);
+}
+
+#mask {
+  pointer-events: none;
+  width: 100%;
+  box-shadow: inset 0 1px 3px 0px rgba(0,0,0,0.25);
 }
 </style>
