@@ -12,6 +12,11 @@ class DoctorSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class PatientSerializer(serializers.ModelSerializer):
+    sex = serializers.SerializerMethodField()
+
+    def get_sex(self, obj):
+        return obj.get_sex_display()
+        
     class Meta:
         model = Patient
         exclude = ['password', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'groups', 'user_permissions']
@@ -22,6 +27,16 @@ class VisitSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class ExaminationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Examination
+        fields = '__all__'
+
+class PastHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Examination
+        fields = '__all__'
+
+class GynecHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Examination
         fields = '__all__'
