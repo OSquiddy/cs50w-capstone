@@ -1,13 +1,31 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from io import BytesIO
+from PIL import Image
+from django.core.files import File
+from django.db.models.fields.related import OneToOneField
+
+# Functions that a model can use
+def calc_visit(patient):
+    prev_visits = Visit.objects.filter(patient=patient).order_by('-visit_number').values_list('visit_number', flat=True)
+    if prev_visits:
+        return prev_visits[0] + 1
+    else:
+        return 1
 
 
 # Create your models here.
+class MyBaseUser(AbstractUser):
+    Phone_Number = models.CharField(null=True, max_length=15)
+    address = models.TextField(null=True)
+    date_of_birth = models.DateField(null=True)
+    
+    def __str__(self):
+        return f"{self.username}"
 
-class Doctor(models.Model):
-    DoctorID = models.AutoField(primary_key=True)
+class Doctor(MyBaseUser):
+    # mybaseuser_ptr = OneToOneField(MyBaseUser, on_delete=models.CASCADE, null=True, blank=True)
     DOJ = models.DateField(auto_now_add=True)
-    Phone_Number = models.CharField(max_length=15)
     
     UNIT1 = '01'
     UNIT2 = '02'
@@ -62,20 +80,19 @@ class Doctor(models.Model):
     ]
     Role = models.CharField(blank=True, null=True, max_length=2, choices=role_choices)
     
-    def __str__(self):
-        user = User.objects.get(DoctorID=self.DoctorID)
-        return f"{user.first_name} {user.last_name}"
+    class Meta:
+        verbose_name="doctor"
+        verbose_name_plural="doctors"
     
-class Patient(models.Model):
-    PatientID = models.AutoField(primary_key=True)
-    # assigned_doctor = models.ForeignKey(Doctor, on_delete=models.RESTRICT, related_name='patients', null=True)
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+    
+class Patient(MyBaseUser):
     age = models.IntegerField(null=True)
-    date_of_birth = models.DateField(null=True)
-    address = models.TextField(null=True)
     fathers_name = models.CharField("Father's Name", null=True, max_length=50)
     mothers_name = models.CharField("Mother's Name", null=True, max_length=50)
-    Phone_Number = models.CharField(null=True, max_length=15)
     occupation = models.CharField(null=True, max_length=55)
+    blood_type = models.CharField(max_length=5, null=True, blank=True)
     
     # UNIT1 = '01'
     # UNIT2 = '02'
@@ -103,24 +120,18 @@ class Patient(models.Model):
     ]
     sex = models.CharField(null=True, blank=True, max_length=1, choices=sex_choices)
     
+    class Meta:
+        verbose_name="patient"
+        verbose_name_plural="patients"
+        
     def __str__(self):
-        user = User.objects.get(PatientID=self.PatientID)
-        return f"{user.first_name} {user.last_name}"
-    
-class User(AbstractUser):
-
-    DoctorID = models.OneToOneField(Doctor, on_delete=models.CASCADE, blank=True, null=True, related_name='doctorID')
-    PatientID = models.OneToOneField(Patient, on_delete=models.CASCADE, blank=True, null=True, related_name='patientID')
-
-    def __str__(self):
-        return f"{self.username}"
+        return f"{self.first_name} {self.last_name}"
     
 class Visit(models.Model):
-    
-    PatientID = models.OneToOneField(Patient, on_delete=models.CASCADE, blank=True, null=True)
-    visit_number = models.IntegerField(primary_key=True, serialize=True)
-    date = models.DateField(auto_now_add=True)
-    time_of_visit = models.TimeField(auto_now_add=True)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True, null=True, related_name="visits")
+    visit_number = models.PositiveIntegerField()
+    date = models.DateField()
+    time_of_visit = models.TimeField()
     payment = models.DecimalField(max_digits=20, decimal_places=2)
     assigned_doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, blank=True, null=True)
       
@@ -132,15 +143,24 @@ class Visit(models.Model):
         (UNIT2, '02')
     ]
     Unit = models.CharField(blank=True, max_length=2, choices=unit_choices)
-    
+
     class Meta:
-        constraints = [ models.UniqueConstraint(fields=['PatientID', 'visit_number'], name='id') ]
-        
+        constraints = [
+            models.UniqueConstraint(fields=['patient', 'visit_number'], name='Visit Number')
+        ]
+
+    def save(self, *args, **kwargs):
+        if self.visit_number is None:
+            visit_number = calc_visit(self.patient)
+            print('New visit no. is :', visit_number)
+            self.visit_number = visit_number
+        super(Visit, self).save(*args, **kwargs)
+    
     def __str__(self):
-        return f"{self.PatientID} : {self.visit_number}"
+        return f"{self.patient}: Visit {self.visit_number}"
     
 class Examination(models.Model):
-    visit_id = models.AutoField(primary_key=True)
+    visit = models.ForeignKey(Visit, on_delete=models.CASCADE, null=True, blank=True, related_name='examinations')
     blood_pressure = models.CharField(max_length=10, blank=True, null=True)
     SpO2 = models.DecimalField(max_digits=5, decimal_places=2)
     temperature = models.DecimalField(max_digits=5, decimal_places=2)
@@ -151,4 +171,36 @@ class Examination(models.Model):
     cereberovascular = models.TextField()
     
     def __str__(self):
-        return f"Examination for visit no. {self.visit_id} "
+
+        return f"Examination for {self.visit}"
+
+class PastHistory(models.Model):
+    visit = models.ForeignKey(Visit, on_delete=models.CASCADE, null=True, blank=True, related_name='past_histories')
+    surgeries = models.TextField()
+    allergies = models.TextField()
+    general = models.TextField()
+    t2dm = models.BooleanField()
+    heart_disease = models.BooleanField()
+    hypothyroidism = models.BooleanField()
+    chronic_kidney_disease = models.BooleanField()
+    cardiovascular_disease = models.BooleanField()
+
+    class Meta:
+        verbose_name="Past History"
+        verbose_name_plural="Past History"
+    
+    def __str__(self):
+        return f"Past History for {self.visit}"
+    
+class GynecHistory(models.Model):
+    visit = models.ForeignKey(Visit, on_delete=models.CASCADE, null=True, blank=True, related_name='gynec_histories')
+    gplad = models.CharField(max_length=10, blank=True, null=True)
+    edd = models.DateField(null=True, blank=True)
+    lmp = models.DateField(null=True, blank=True)
+
+    class Meta:
+        verbose_name="Gynec History"
+        verbose_name_plural="Gynec History"
+
+    def __str__(self):
+        return f"Past History for {self.visit}"

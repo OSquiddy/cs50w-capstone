@@ -3,14 +3,14 @@ from django.urls import path, include
 from . import views
 
 vue_urls = [
-    path('', views.frontend),
+    # path('', views.frontend),
 ]
 
 urlpatterns = [
     # path("", views.index, name="index"),
-    # path("login", views.login, name="login"),
-    path('', include(vue_urls)),
+    path("hello", views.hello_world, name="hello"),
+    path("userList", views.users, name="users"),
+    # path('', include(vue_urls)),
     
-    #api urls
-    path('api/login', views.login_view),
-]
+    # api urls
+ ]
