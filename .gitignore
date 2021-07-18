@@ -7,6 +7,7 @@ frontent/dist
 
 
 # local env files
+.env
 .env.local
 .env.*.local
 capstone/*/.env.local
