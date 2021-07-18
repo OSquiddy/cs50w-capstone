@@ -4,7 +4,7 @@ from .models import *
 
 class VisitAdmin(admin.ModelAdmin):
     model = Visit
-    list_display = ['patient', 'visit_number', 'date', 'time_of_visit', 'assigned_doctor']
+    list_display = ['id', 'patient', 'visit_number', 'date', 'time_of_visit', 'assigned_doctor']
     readonly_fields = ('visit_number',)
     ordering = ['patient__first_name', 'visit_number']
     
