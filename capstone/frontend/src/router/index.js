@@ -6,6 +6,8 @@ import PatientDirectory from '../views/PatientDirectory/PatientDirectory.vue'
 import Report from '../views/Reports/Report.vue'
 import PatientMain from '../views/PatientInfo/PatientMain.vue'
 import Settings from '../views/Settings/Settings.vue'
+import NewAppointment from '../views/NewAppointment/NewAppointment.vue'
+import NewPatient from '../views/NewPatient/NewPatient.vue'
 
 Vue.use(VueRouter)
 
@@ -56,6 +58,16 @@ const routes = [
     ]
   },
   {
+    path: '/add/a',
+    name: 'add-appointment',
+    component: NewAppointment
+  },
+  {
+    path: '/add/p',
+    name: 'add-patient',
+    component: NewPatient
+  },
+  {
     path: '/settings',
     name: 'settings',
     component: Settings
@@ -72,6 +84,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () => import('../components/LoginPage.vue')
+  },
+  {
+    path: '/*',
+    name: 'NotFound',
+    component: Settings
   }
 ]
 
