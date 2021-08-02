@@ -162,6 +162,11 @@ section {
     background: #DBDBDB;
     border-radius: 5px;
     margin-bottom: 15px;
+    &:focus {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom: 1px solid var(--focus-blue)
+    }
   }
   textarea {
     height: 120px;

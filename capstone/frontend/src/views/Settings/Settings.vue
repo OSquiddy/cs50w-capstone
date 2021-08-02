@@ -39,17 +39,17 @@
                   <div class="settings-group-item">
                     <img src="../../assets/globe.svg" alt="globe-icon" />
                     <div class="settings-group-option">Language</div>
-                    <button class="settings-group-button"><img src="../../assets/right-arrow.svg" alt="right-arrow" /></button>
+                    <button class="settings-group-button"><img src="../../assets/right-chevron.svg" alt="right-chevron" /></button>
                   </div>
                   <div class="settings-group-item">
                     <img src="../../assets/notification.svg" alt="notification-icon" />
                     <div class="settings-group-option">Notifications</div>
-                    <button class="settings-group-button"><img src="../../assets/right-arrow.svg" alt="right-arrow" /></button>
+                    <button class="settings-group-button"><img src="../../assets/right-chevron.svg" alt="right-chevron" /></button>
                   </div>
                   <div class="settings-group-item">
                     <img src="../../assets/dark-mode.svg" alt="dark-mode-icon" />
                     <label class="settings-group-option form-check-label" for="flexSwitchCheckChecked">Dark Mode</label>
-                    <button class="settings-group-button"><img src="../../assets/switch.svg" alt="right-arrow" /></button>
+                    <button class="settings-group-button"><img src="../../assets/switch.svg" alt="right-chevron" /></button>
                     <!-- <div class="form-check form-switch">
                       <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
                     </div> -->
@@ -57,7 +57,7 @@
                   <div class="settings-group-item">
                     <img src="../../assets/help.svg" alt="help-icon" />
                     <div class="settings-group-option">Help</div>
-                    <button class="settings-group-button"><img src="../../assets/right-arrow.svg" alt="right-arrow" /></button>
+                    <button class="settings-group-button"><img src="../../assets/right-chevron.svg" alt="right-chevron" /></button>
                   </div>
                 </div>
               </div>
@@ -514,7 +514,9 @@ export default {
       border-radius: 5px;
       margin-top: 5px;
       &:focus {
-        border-bottom: 1px solid var(--link-blue);
+        border-bottom: 1px solid var(--focus-blue);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
       }
     }
   }
