@@ -1,118 +1,37 @@
 <template>
   <div class="appointment-main">
     <div class="container appointment-list">
-      <!-- <div v-for="item in items" :key="item.id">
-        {{ item }}
-      </div> -->
-      <!-- Each row will either be its own component or will go in the v-for as is. -->
-      <div class="row">
+      <div v-for="appointment in appointmentsList" :key="appointment.date">
+        <div class="row">
         <div class="col appointment-day">
           <div class="appointment-title">
             <div>
-              <span class="appointment-date">July 3rd</span>
-              <span class="appointment-meta">Today</span>
+              <span class="appointment-date">{{ formatDate(appointment.date) }}</span>
+              <span class="appointment-meta">{{ appointment.meta }}</span>
             </div>
           </div>
-          <div class="appointment-patient-list">
-            <div class="patient-appt-container">
-              <div class="vertical-accent"></div>
-              <div class="patient-appt-details">
-                <div class="patient-appt-name">Ronald Weasley</div>
-                <div class="patient-appt-time">11:00 AM - 11:30 AM</div>
+          <template v-if="appointment.patientsList.length">
+          <div class="appointment-patient-list" v-for="patient in appointment.patientsList" :key="patient.id">
+              <div class="patient-appt-container">
+                <div class="vertical-accent"></div>
+                <div class="patient-appt-details">
+                  <div class="patient-appt-name">{{ patient.name }}</div>
+                  <div class="patient-appt-time">{{ patient.time }}</div>
+                </div>
+                <button class="patient-appt-join">Join</button>
               </div>
-              <button class="patient-appt-join">Join</button>
             </div>
-            <div class="patient-appt-container">
-              <div class="vertical-accent"></div>
-              <div class="patient-appt-details">
-                <div class="patient-appt-name">Harry Potter</div>
-                <div class="patient-appt-time">11:30 AM - 12:0 PM</div>
+          </template>
+          <template v-else>
+            <div class="appointment-patient-list">
+              <div class="patient-appt-container">
+                <div class="vertical-accent"></div>
+                <div class="patient-appt-details">
+                  <span class="no-patient">No meetings</span>
+                </div>
               </div>
-              <button class="patient-appt-join">Join</button>
             </div>
-          </div>
-        </div>
-      </div>
-      <!-- Each row will either be its own component or will go in the v-for as is. -->
-      <div class="row">
-        <div class="col appointment-day">
-          <div class="appointment-title">
-            <div>
-              <span class="appointment-date">July 4th</span>
-              <span class="appointment-meta">Tomorrow</span>
-            </div>
-          </div>
-          <div class="appointment-patient-list">
-            <div class="patient-appt-container">
-              <div class="vertical-accent"></div>
-              <div class="patient-appt-details">
-                <div class="patient-appt-name">Fred Weasley</div>
-                <div class="patient-appt-time">11:00 AM - 11:30 AM</div>
-              </div>
-              <button class="patient-appt-join">Join</button>
-            </div>
-            <div class="patient-appt-container">
-              <div class="vertical-accent"></div>
-              <div class="patient-appt-details">
-                <div class="patient-appt-name">Sirius Black</div>
-                <div class="patient-appt-time">11:30 AM - 12:0 PM</div>
-              </div>
-              <button class="patient-appt-join">Join</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Each row will either be its own component or will go in the v-for as is. -->
-      <div class="row">
-        <div class="col appointment-day">
-          <div class="appointment-title">
-            <span class="appointment-date">July 5th</span>
-            <!-- <span v-if="item.meta" class="appointment-meta"></span> -->
-          </div>
-          <div class="appointment-patient-list">
-            <div class="patient-appt-container">
-              <div class="vertical-accent"></div>
-              <div class="patient-appt-details">
-                <span class="no-patient">No meetings</span>
-              </div>
-              <button class="patient-appt-join">Join</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Each row will either be its own component or will go in the v-for as is. -->
-      <div class="row">
-        <div class="col appointment-day">
-          <div class="appointment-title">
-            <span class="appointment-date">July 6th</span>
-            <!-- <span v-if="item.meta" class="appointment-meta"></span> -->
-          </div>
-          <div class="appointment-patient-list">
-            <div class="patient-appt-container">
-              <div class="vertical-accent"></div>
-              <div class="patient-appt-details">
-                <span class="no-patient">No meetings</span>
-              </div>
-              <button class="patient-appt-join">Join</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Each row will either be its own component or will go in the v-for as is. -->
-      <div class="row">
-        <div class="col appointment-day">
-          <div class="appointment-title">
-            <span class="appointment-date">July 7th</span>
-            <!-- <span v-if="item.meta" class="appointment-meta"></span> -->
-          </div>
-          <div class="appointment-patient-list">
-            <div class="patient-appt-container">
-              <div class="vertical-accent"></div>
-              <div class="patient-appt-details">
-                <span class="no-patient">No meetings</span>
-              </div>
-              <button class="patient-appt-join">Join</button>
-            </div>
+          </template>
           </div>
         </div>
       </div>
@@ -124,6 +43,9 @@
 </template>
 
 <script>
+import axios from 'axios'
+import { mapState } from 'vuex'
+import { DateTime } from 'luxon'
 
 export default {
   name: 'Appointments',
@@ -131,7 +53,38 @@ export default {
   //   SearchContainer
   // },
   data() {
-    return {}
+    return {
+      appointmentsList: []
+    }
+  },
+  computed: {
+    ...mapState('search', ['searchKeyword'])
+  },
+  watch: {
+    searchKeyword() {
+      if (this.searchKeyword !== '') {
+        this.getFilteredList()
+      } else {
+        this.getAppointmentsList()
+      }
+    }
+  },
+  mounted () {
+    this.getAppointmentsList()
+  },
+  methods: {
+    async getAppointmentsList () {
+      const list = await axios.get(process.env.VUE_APP_API_URL + '/appointmentsList')
+      this.appointmentsList = list.data.appointmentsList
+    },
+    async getFilteredList () {
+      const list = await axios.get(process.env.VUE_APP_API_URL + '/appointmentsList/' + this.searchKeyword)
+      this.appointmentsList = list.data.appointmentsList
+    },
+    formatDate (date) {
+      const dt = DateTime.fromISO(date)
+      return dt.toFormat('LLL dd')
+    }
   }
 }
 </script>
@@ -182,9 +135,9 @@ export default {
         padding: 3px 19px;
         font-size: 0.75rem;
         margin-left: auto;
-        &:hover {
-          background: yellow;
-        }
+        // &:hover {
+        //   background: yellow;
+        // }
       }
     }
   }

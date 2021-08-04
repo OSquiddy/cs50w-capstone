@@ -22,62 +22,6 @@
         </div>
         </router-link>
       </template>
-      <!-- This entire row will be one component or it will be repeated in v-for as is -->
-      <router-link to="/p/2453">
-      <div class="row patient-small-container">
-        <div class="col-3 patient-photo"></div>
-        <div class="col-9 patient-info">
-          <h3 class="patient-name">Ronald Weasley</h3>
-          <div class="row patient-details-row">
-            <div class="col patient-details">ID: 2453</div>
-            <div class="col patient-details">Age: 17yrs</div>
-          </div>
-          <div class="row patient-details-row">
-            <div class="col patient-details">Blood Type: O+</div>
-            <div class="col patient-details">Gender: Male</div>
-          </div>
-          <div class="row patient-details-row">
-            <div class="col patient-details">Mobile: +1 2092001356</div>
-          </div>
-        </div>
-      </div>
-      </router-link>
-      <!-- This entire row will be one component or it will be repeated in v-for as is -->
-      <div class="row patient-small-container">
-        <div class="col-3 patient-photo"></div>
-        <div class="col-9 patient-info">
-          <h3 class="patient-name">Harry Potter</h3>
-          <div class="row patient-details-row">
-            <div class="col patient-details">ID: 2453</div>
-            <div class="col patient-details">Age: 17yrs</div>
-          </div>
-          <div class="row patient-details-row">
-            <div class="col patient-details">Blood Type: O+</div>
-            <div class="col patient-details">Gender: Male</div>
-          </div>
-          <div class="row patient-details-row">
-            <div class="col patient-details">Mobile: +1 2092001356</div>
-          </div>
-        </div>
-      </div>
-      <!-- This entire row will be one component or it will be repeated in v-for as is -->
-      <div class="row patient-small-container">
-        <div class="col-3 patient-photo"></div>
-        <div class="col-9 patient-info">
-          <h3 class="patient-name">Hermione Granger</h3>
-          <div class="row patient-details-row">
-            <div class="col patient-details">ID: 2453</div>
-            <div class="col patient-details">Age: 17yrs</div>
-          </div>
-          <div class="row patient-details-row">
-            <div class="col patient-details">Blood Type: O+</div>
-            <div class="col patient-details">Gender: Male</div>
-          </div>
-          <div class="row patient-details-row">
-            <div class="col patient-details">Mobile: +1 2092001356</div>
-          </div>
-        </div>
-      </div>
     </div>
     <button class="new-appointment">
       <img src="../../assets/plus.svg" alt="add-symbol">
@@ -87,6 +31,7 @@
 
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex'
 
 export default {
   name: 'PatientDirectory',
@@ -95,13 +40,28 @@ export default {
       patientsList: []
     }
   },
+  computed: {
+    ...mapState('search', ['searchKeyword'])
+  },
+  watch: {
+    searchKeyword() {
+      if (this.searchKeyword !== '') {
+        this.getFilteredPatientsList()
+      } else {
+        this.getPatientsList()
+      }
+    }
+  },
   mounted () {
     this.getPatientsList()
-    console.log(process.env)
   },
   methods: {
     async getPatientsList () {
       const list = await axios.get(process.env.VUE_APP_API_URL + '/patientList')
+      this.patientsList = list.data.patientList
+    },
+    async getFilteredPatientsList () {
+      const list = await axios.get(process.env.VUE_APP_API_URL + '/patientList/' + this.searchKeyword)
       this.patientsList = list.data.patientList
     }
   }
