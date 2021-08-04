@@ -20,6 +20,9 @@ class MyBaseUser(AbstractUser):
     address = models.TextField(null=True)
     date_of_birth = models.DateField(null=True)
     
+    def fullname(self):
+        return f"{self.first_name} {self.last_name}"
+
     def __str__(self):
         return f"{self.username}"
 
@@ -131,7 +134,8 @@ class Visit(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True, null=True, related_name="visits")
     visit_number = models.PositiveIntegerField()
     date = models.DateField()
-    time_of_visit = models.TimeField()
+    time_from = models.TimeField()
+    time_till = models.TimeField()
     payment = models.DecimalField(max_digits=20, decimal_places=2)
     assigned_doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, blank=True, null=True)
       
