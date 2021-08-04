@@ -7,7 +7,7 @@
             <form action="/" method="post">
               <div class="search-bar mt-2 mb-3">
                 <img src="../assets/search.svg" alt="">
-                <input type="text" name="search" id="search" placeholder="Search">
+                <input type="text" name="search" id="search" placeholder="Search" v-model="keyword">
               </div>
               <div class="date-picker mb-2">
                 <div class="month-group">
@@ -27,15 +27,36 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+import { debounce } from '../util/util'
 export default {
   name: 'SearchContainer',
   data() {
-    return { }
+    return {
+      keyword: null
+    }
   },
   props: {
     searchHeader: {
       type: String
     }
+  },
+  watch: {
+    keyword () {
+      this.debounceInput()
+    }
+  },
+  computed: {
+    ...mapState('search', ['searchKeyword'])
+  },
+  mounted () {
+    this.updateSearchKeyWord(this.keyword)
+  },
+  methods: {
+    ...mapActions('search', ['updateSearchKeyWord']),
+    debounceInput: debounce(function (e) {
+      this.updateSearchKeyWord(this.keyword)
+    }, 250)
   }
 }
 </script>
