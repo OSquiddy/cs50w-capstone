@@ -4,7 +4,7 @@ JSON Data Formats for the views.
 
 appointmentList = [
     {
-        date: "1st July",
+        date: "July 1" //Formated from YYYY-mm-dd,
         meta: "Tomorrow",
         patientsList: [
             {
@@ -18,7 +18,7 @@ appointmentList = [
         ]
     },
     {
-        date: "2nd July",
+        date: "July 2",
         meta: null,
         patientsList: null
     }
