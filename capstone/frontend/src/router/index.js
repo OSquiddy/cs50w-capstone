@@ -1,25 +1,37 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from '../components/Layout.vue'
+import LayoutMobile from '../components/LayoutMobile.vue'
+// eslint-disable-next-line no-unused-vars
 import Appointments from '../views/Appointments/Appointments.vue'
-import PatientDirectory from '../views/PatientDirectory/PatientDirectory.vue'
-import Report from '../views/Reports/Report.vue'
-import PatientMain from '../views/PatientInfo/PatientMain.vue'
+import AppointmentsMobile from '../views/Appointments/AppointmentsMobile.vue'
+import PatientDirectoryMobile from '../views/PatientDirectory/PatientDirectoryMobile.vue'
+import ReportMobile from '../views/Reports/ReportMobile.vue'
+import PatientMainMobile from '../views/PatientInfo/PatientMainMobile.vue'
 import Settings from '../views/Settings/Settings.vue'
+import SettingsMobile from '../views/Settings/SettingsMobile.vue'
 import NewAppointment from '../views/NewAppointment/NewAppointment.vue'
+import NewAppointmentMobile from '../views/NewAppointment/NewAppointmentMobile.vue'
 import NewPatient from '../views/NewPatient/NewPatient.vue'
+import NewPatientMobile from '../views/NewPatient/NewPatientMobile.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    component: Layout,
+    components: {
+      default: Layout,
+      mobile: LayoutMobile
+    },
     children: [
       {
         path: '',
         name: 'mainPage',
-        component: () => import('../views/MainPage/MainContainer.vue')
+        components: {
+          default: () => import('../views/MainPage/MainContainer.vue'),
+          mobile: () => import('../views/MainPage/MainContainerMobile.vue')
+        }
       },
       {
         path: 'schedule',
@@ -28,24 +40,36 @@ const routes = [
       {
         path: 'appointments',
         name: 'appointments',
-        component: Appointments
-        // component: () => import('../views/Appointments/Appointments.vue')
+        components: {
+          default: Appointments,
+          mobile: AppointmentsMobile
+        }
+        // component: () => import('../views/AppointmentsMobile/AppointmentsMobile.vue')
       },
       {
         path: 'directory',
         name: 'directory',
-        component: PatientDirectory
+        components: {
+          default: null,
+          mobile: PatientDirectoryMobile
+        }
       },
       {
         path: 'p/:id',
         name: 'patient-main',
-        component: PatientMain,
+        components: {
+          default: null,
+          mobile: PatientMainMobile
+        },
         props: (route) => ({ id: parseInt(route.params.id) })
       },
       {
         path: 'p/:id/v/:visitNumber',
         name: 'report',
-        component: Report,
+        components: {
+          default: null,
+          mobile: ReportMobile
+        },
         props: (route) => ({
           id: parseInt(route.params.id),
           visitNumber: parseInt(route.params.visitNumber)
@@ -54,23 +78,32 @@ const routes = [
       {
         path: 'support',
         name: 'support'
+      },
+      {
+        path: '/add/a',
+        name: 'add-appointment',
+        components: {
+          default: NewAppointment,
+          mobile: NewAppointmentMobile
+        }
+      },
+      {
+        path: '/add/p',
+        name: 'add-patient',
+        components: {
+          default: NewPatient,
+          mobile: NewPatientMobile
+        }
+      },
+      {
+        path: '/settings',
+        name: 'settings',
+        components: {
+          default: Settings,
+          mobile: SettingsMobile
+        }
       }
     ]
-  },
-  {
-    path: '/add/a',
-    name: 'add-appointment',
-    component: NewAppointment
-  },
-  {
-    path: '/add/p',
-    name: 'add-patient',
-    component: NewPatient
-  },
-  {
-    path: '/settings',
-    name: 'settings',
-    component: Settings
   },
   {
     path: '/about',
@@ -88,7 +121,7 @@ const routes = [
   {
     path: '/*',
     name: 'NotFound',
-    component: Settings
+    component: SettingsMobile
   }
 ]
 
