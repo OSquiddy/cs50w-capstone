@@ -1,59 +1,48 @@
 <template>
-  <div class="appointment-main">
-    <div class="container appointment-list">
-      <div v-for="appointment in appointmentsList" :key="appointment.date">
-        <div class="row">
-        <div class="col appointment-day">
-          <div class="appointment-title">
-            <div>
-              <span class="appointment-date">{{ formatDate(appointment.date) }}</span>
-              <span class="appointment-meta">{{ appointment.meta }}</span>
-            </div>
-          </div>
-          <template v-if="appointment.patientsList.length">
-          <div class="appointment-patient-list" v-for="patient in appointment.patientsList" :key="patient.id">
-              <div class="patient-appt-container">
-                <div class="vertical-accent"></div>
-                <div class="patient-appt-details">
-                  <div class="patient-appt-name">{{ patient.name }}</div>
-                  <div class="patient-appt-time">{{ patient.time }}</div>
-                </div>
-                <button class="patient-appt-join">Join</button>
+  <div class="appointment-main h-100">
+    <div class="calendar-wrapper">
+      <div class="text-center section">
+        <!-- <h2 class="h2">Custom Calendars</h2>
+        <p class="text-lg font-medium text-gray-600 mb-6">
+          Roll your own calendars using scoped slots
+        </p> -->
+        <Calendar class="custom-calendar max-w-full" :masks="masks" :attributes="appointmentsList" disable-page-swipe is-expanded>
+          <template v-slot:day-content="{ day, attributes }">
+            <div class="d-flex flex-column h-100">
+              <span class="day-label">{{ day.day }}</span>
+              <div class="flex-grow-1 cal-appt-container">
+                <template v-for="attr in attributes">
+                  <div v-if="attr.customData.patientsList.length" :key="attr.key" class="text-xs p-1 mt-0 mb-1 text-white">
+                  <div v-for="patient in attr.customData.patientsList" :key="patient.id" class="appointment" :style="'background:' + patient.background">
+                    <div class="name">{{ patient.name }} </div>
+                    <div class="time"> {{ patient.time }} </div>
+                  </div>
+                  </div>
+                </template>
               </div>
             </div>
           </template>
-          <template v-else>
-            <div class="appointment-patient-list">
-              <div class="patient-appt-container">
-                <div class="vertical-accent"></div>
-                <div class="patient-appt-details">
-                  <span class="no-patient">No meetings</span>
-                </div>
-              </div>
-            </div>
-          </template>
-          </div>
-        </div>
+        </Calendar>
       </div>
     </div>
-    <button class="new-appointment">
-      <img src="../../assets/plus.svg" alt="add-symbol">
-    </button>
   </div>
 </template>
 
 <script>
+import Calendar from 'v-calendar/lib/components/calendar.umd'
 import axios from 'axios'
 import { mapState } from 'vuex'
-import { DateTime } from 'luxon'
 
 export default {
   name: 'Appointments',
-  // components: {
-  //   SearchContainer
-  // },
-  data() {
+  components: {
+    Calendar
+  },
+  data () {
     return {
+      masks: {
+        weekdays: 'WWW'
+      },
       appointmentsList: []
     }
   },
@@ -80,82 +69,107 @@ export default {
     async getFilteredList () {
       const list = await axios.get(process.env.VUE_APP_API_URL + '/appointmentsList/' + this.searchKeyword)
       this.appointmentsList = list.data.appointmentsList
-    },
-    formatDate (date) {
-      const dt = DateTime.fromISO(date)
-      return dt.toFormat('LLL dd')
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.appointment-list {
-  height: calc(100vh - 197px);
-  overflow-y: scroll;
-  padding-bottom: 55px;
-  margin-top: -1px;
-  .appointment-day {
-    .appointment-title {
-      display: flex;
-      margin:0 -12px 15px;
-      background: white;
-      position: sticky;
-      padding: 15px 12px 0;
-      top: 0px;
-      .appointment-date {
-        display: inline-flex;
-        font-weight: 500;
-        font-size: 0.95rem;
-        margin-right: 12px;
-      }
-      .appointment-meta {
-        display: inline-flex;
-        font-size: 0.7rem;
-        align-self: center;
-      }
-    }
-    .patient-appt-container {
-      display: flex;
-      background: #f4f4f4;
-      border-radius: 5px;
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
-      padding: 8px 10px;
-      margin-bottom: 15px;
-      .vertical-accent {
-        width: 4px;
-        border-radius: 3px;
-        background: #c4c4c4;
-        margin-right: 12px;
-      }
-      .patient-appt-join {
-        border-radius: 5px;
-        border: 1px solid #353535;
-        align-self: center;
-        padding: 3px 19px;
-        font-size: 0.75rem;
-        margin-left: auto;
-        // &:hover {
-        //   background: yellow;
-        // }
-      }
-    }
+.appointment-main {
+  margin-top: 30px;
+}
+
+.appointment {
+  padding: 4px;
+  border-radius: 5px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  .name {
+    color: white;
+    font-size: 0.75rem;
+  }
+  .time {
+    color: white;
+    font-size: 0.625rem;
   }
 }
 
-.appointment-main {
-  position: relative;
+.calendar-wrapper {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--background-primary);
+  // height: inherit;
+  margin-bottom: 20px;
 }
-.new-appointment {
-  background-color: #353535;
-  border-radius: 50%;
-  aspect-ratio: 1;
-  border: none;
-  position: absolute;
-  bottom: 30px;
-  right: 35px;
-  img {
-    padding: 8px;
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+::-webkit-scrollbar-track {
+  display: none;
+}
+
+.cal-appt-container {
+  overflow: scroll;
+}
+
+::v-deep .custom-calendar.vc-container {
+  --day-border: 1px solid #b8c2cc;
+  --day-border-highlight: 1px solid #b8c2cc;
+  --day-width: 90px;
+  --day-height: 90px;
+  --weekday-bg: #f8fafc;
+  --weekday-border: 1px solid #eaeaea;
+  border-radius: 0;
+  width: 100%;
+  & .vc-nav-header {
+    .vc-svg-icon path {
+      fill: #ebf8ff;
+    }
+  }
+  & .vc-nav-item {
+    color: #ebf8ff;
+  }
+  & .is-active {
+    color: #2a4365 ;
+  }
+  & .vc-header {
+    background-color: #f1f5f8;
+    padding: 10px 0;
+  }
+  & .vc-weeks {
+    padding: 0;
+  }
+  & .vc-weekday {
+    background-color: var(--weekday-bg);
+    border-bottom: var(--weekday-border);
+    border-top: var(--weekday-border);
+    padding: 5px 0;
+  }
+  & .vc-day {
+    padding: 0 5px 3px 5px;
+    text-align: left;
+    height: calc((100vh - 100px) / 7);
+    min-height: var(--day-height);
+    min-width: var(--day-width);
+    background-color: white;
+    &.weekday-1,
+    &.weekday-7 {
+      background-color: #eff8ff;
+    }
+    &:not(.on-bottom) {
+      border-bottom: var(--day-border);
+      &.weekday-1 {
+        border-bottom: var(--day-border-highlight);
+      }
+    }
+    &:not(.on-right) {
+      border-right: var(--day-border);
+    }
+  }
+  & .vc-day-dots {
+    overflow: auto;
+    margin-bottom: 5px;
   }
 }
 </style>

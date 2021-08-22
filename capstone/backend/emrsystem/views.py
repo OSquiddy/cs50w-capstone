@@ -1,4 +1,5 @@
 from time import strftime
+from random import randint
 from warnings import catch_warnings
 from django.contrib.auth import authenticate, login, logout
 from rest_framework import status
@@ -85,13 +86,16 @@ def getReport(request, id, visitNumber):
     
 @api_view(['GET'])
 def appointmentsList(request):
-    lastAppointment = Visit.objects.all().order_by('-date').first().date
+    visits = Visit.objects.all().order_by('date')
+    firstAppointment = visits.first().date
+    lastAppointment = visits.last().date
     today = date.today()
     tomorrow = date.today() + timedelta(days=1)
-    numDates = lastAppointment - today
+    numDates = lastAppointment - firstAppointment
     appointmentsList = []
+    colors = ['#1976D2', '#558B2F', '#AD1457', '#7C4DFF', '#C62828', '#004D40' ]
     for i in range(numDates.days + 1):
-        day = today + timedelta(days=i)
+        day = firstAppointment + timedelta(days=i)
         # print('day -> ', day.strftime('%b %d, %Y \n'))
         patientsList = []
         visits = Visit.objects.all().filter(date=day).order_by('time_from')
@@ -99,21 +103,26 @@ def appointmentsList(request):
         try:
             # visits = VisitSerializer(visits)
             # print('serialized visits', visits)
-            for visit in visits:
+            for j, visit in enumerate(visits):
                 appointment = {}
                 appointment['id'] = visit.patient.id
                 appointment['name'] = f"{visit.patient.fullname()}"
                 appointment['time'] = f"{visit.time_from.strftime('%I:%M %p')} - {visit.time_till.strftime('%I:%M %p')}"
+                appointment['background'] = colors[randint(0, len(colors)-1)]
                 patientsList.append(appointment)
             obj = {}
-            obj['date'] = day
-            obj['patientsList'] = patientsList
+            obj['key'] = i
+            customData = {}
+            customData['patientsList'] = patientsList
+            # obj['patientsList'] = patientsList
             if day == today:
-                obj['meta'] = 'Today'
+                customData['meta'] = 'Today'
             elif day == tomorrow:
-                obj['meta'] = 'Tomorrow'
+                customData['meta'] = 'Tomorrow'
             else:
-                obj['meta'] = day.strftime('%A')
+                customData['meta'] = day.strftime('%A')
+            obj['customData'] = customData
+            obj['dates'] = day
             appointmentsList.append(obj)
         except AttributeError:
             appointmentsList.append({})
