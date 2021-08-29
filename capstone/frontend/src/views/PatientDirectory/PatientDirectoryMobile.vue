@@ -57,11 +57,11 @@ export default {
   },
   methods: {
     async getPatientsList () {
-      const list = await axios.get(process.env.VUE_APP_API_URL + '/patientList')
+      const list = await axios.get(process.env.VUE_APP_API_URL + '/patientList/name')
       this.patientsList = list.data.patientList
     },
     async getFilteredPatientsList () {
-      const list = await axios.get(process.env.VUE_APP_API_URL + '/patientList/' + this.searchKeyword)
+      const list = await axios.get(process.env.VUE_APP_API_URL + '/patientList/name/' + this.searchKeyword)
       this.patientsList = list.data.patientList
     }
   }
