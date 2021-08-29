@@ -25,6 +25,10 @@ a {
     }
   }
 
+  .mirror {
+    transform: scaleX(-1);
+  }
+
 @media (min-width: 991px) {
   * {
     scrollbar-color: #7f8fa4 transparent;
