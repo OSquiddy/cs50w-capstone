@@ -1,0 +1,5 @@
+Approach 1:
+Have both mobile view and desktop views in vue one file. Use media queries to find out which element to display
+
+Approach 2:
+Have separate view files for mobile and desktop. Import components in router as per requirement. (Better, lesser code will be imoprted)
