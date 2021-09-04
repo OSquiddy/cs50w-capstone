@@ -18,25 +18,25 @@
         </div>
           <ul class="menu my-4" :class="[isCollapsed ? 'font-small' : '']">
             <router-link to="/">
-              <li class="menu-item" @click="selectTab(0)">
+              <li class="menu-item" @click="selectTab(0)" :class="selectedTab == 0 ? 'active' : ''">
                 <img src="../../src/assets/overview.svg" alt="main-page" class="menu-icon"/>
                 <span class="menu-item-text">Overview</span>
               </li>
             </router-link>
             <router-link to="/directory">
-              <li class="menu-item" @click="selectTab(1)">
+              <li class="menu-item" @click="selectTab(1)" :class="selectedTab == 1 || patientHeader ? 'active' : ''">
                 <img src="../../src/assets/patientsDesktop.svg" alt="patients-page" class="menu-icon"/>
                 <span class="menu-item-text">Patients</span>
               </li>
             </router-link>
             <router-link to="/appointments">
-              <li class="menu-item" @click="selectTab(2)">
+              <li class="menu-item" @click="selectTab(2)" :class="selectedTab == 2 ? 'active' : ''">
                 <img src="../../src/assets/calendar.svg" alt="appointments-page" class="menu-icon"/>
                 <span class="menu-item-text">Appointments</span>
               </li>
             </router-link>
             <router-link to="/settings">
-              <li class="menu-item" @click="selectTab(3)">
+              <li class="menu-item" @click="selectTab(3)" :class="selectedTab == 3 ? 'active' : ''">
                 <img src="../../src/assets/settings.svg" alt="settings-page" class="menu-icon"/>
                 <span class="menu-item-text">Settings</span>
               </li>
@@ -50,12 +50,27 @@
     </div>
     <div class="main-view-wrapper flex-seven">
       <header>
+        <button class="add-button">
+          <router-link :to="{name: 'add-appointment' }">
+          <img src="../assets/add-appointment.svg" class="button-logo" alt="new-appointment-logo">
+          <div class="add-button-text">New Appointment</div>
+          </router-link>
+        </button>
+        <button class="add-button">
+          <router-link :to="{name: 'add-patient' }">
+          <img src="../assets/add-patient.svg" class="button-logo" alt="new-patient-logo">
+          <div class="add-button-text">New Patient</div>
+          </router-link>
+        </button>
         <div class="user-options">
           <div class="header-profile-pic"></div>
           <div class="header-username">John Doe</div>
         </div>
       </header>
-      <PatientHeader v-if="patientHeader"/>
+      <template v-if="patientHeader">
+        <PatientHeader/>
+        <LocalTabs />
+      </template>
       <div class="main-view">
         <div class="padding-sides" :class="[patientHeader ?'change-height' : '']">
           <router-view />
@@ -68,41 +83,35 @@
 
 <script>
 import PatientHeader from './PatientHeader.vue'
+import LocalTabs from '../components/LocalTabs.vue'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'Layout',
-  components: { PatientHeader },
+  components: { PatientHeader, LocalTabs },
   data() {
     return {
-      patientHeaderRoutes: ['add-appointment']
+      pageNames: ['mainPage', 'directory', 'appointments', 'settings'],
+      selectedTab: null
     }
   },
   computed: {
-    ...mapState(['isCollapsed', 'selectedTab']),
+    ...mapState(['isCollapsed']),
     patientHeader() {
-      return this.patientHeaderRoutes.includes(this.$route.name)
+      return this.$route.matched.some(({ name }) => name === 'patient-main')
     }
   },
   mounted () {
     this.setTab()
-    if (sessionStorage.getItem('selectedTab')) {
-      this.selectTab(sessionStorage.getItem('selectedTab'))
-    }
-    if (sessionStorage.getItem('isCollapsed') === 'true') {
-      this.toggleCollapse()
-    }
   },
   methods: {
-    ...mapActions(['toggleCollapse', 'updateSelectedTab']),
+    ...mapActions(['toggleCollapse']),
     selectTab (tabIndex) {
-      const tabs = document.querySelectorAll('.menu-item')
-      tabs[this.selectedTab].classList.remove('active')
-      tabs[tabIndex].classList.add('active')
-      this.updateSelectedTab(tabIndex)
+      this.selectedTab = tabIndex
     },
     setTab () {
-      const tabs = document.querySelectorAll('.menu-item')
-      tabs[this.selectedTab].classList.add('active')
+      if (this.pageNames.indexOf(this.$route.name) !== -1) {
+        this.selectedTab = this.pageNames.indexOf(this.$route.name)
+      }
     }
   }
 }
@@ -122,7 +131,6 @@ export default {
   flex-direction: column;
   height: 82.5%;
   .menu-item {
-    // font-size: 0.875rem;
     .menu-item-text {
       text-align: left;
       transition: font-size 0.3s ease-out;
@@ -131,11 +139,8 @@ export default {
     img {
       display: none;
       margin: 0 auto;
-      // margin-left: 30px;
-      // opacity: 0;
-      // transition: opacity 0.3s ease-out;
     }
-    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
     &:hover {
       .menu-item-text {
         color: white;
@@ -175,6 +180,7 @@ export default {
       background: white;
       padding: 9px 15px;
       width: 100%;
+      z-index: 5;
       .user-options {
         margin-left: auto;
         display: flex;
@@ -187,12 +193,38 @@ export default {
           margin-right: 0.625rem;
         }
       }
+      .add-button {
+        a {
+          display: flex;
+        }
+        border: none;
+        padding: 0 10px;
+        background-color: #2785FF;
+        background-color: var(--primary-accent-light);
+        border-radius: 50px;
+        width: max-content;
+        align-items: center;
+        margin-right: 10px;
+        .add-button-text {
+          // border: 1px solid yellow;
+          color: #FFFFFF;
+          width: 100%;
+          margin: 0 10px;
+          font-size: 0.875rem;
+        }
+      }
     }
   .main-view {
     width: 100%;
     overflow-y: auto;
     height: 100vh;
   }
+}
+
+::v-deep .button-logo {
+  display: flex;
+  filter: invert(100);
+  fill: white;
 }
 
 .sidepanel-wrapper {
@@ -219,6 +251,7 @@ export default {
     }
     .hide {
       opacity: 0;
+      pointer-events: none;
     }
   }
   .toggle {
@@ -248,7 +281,7 @@ export default {
   width: calc(100% - 270px);
   height: calc(100vh - 53px);
   box-shadow: inset 0 1px 8px 0px rgb(0 0 0 / 25%);
-  transition: 0.3s ease-out;
+  transition: width 0.3s ease-out;
   pointer-events: none;
 }
 
@@ -257,8 +290,8 @@ export default {
 }
 
 .change-height {
-  height: calc(100% - 175px);
-  top: 175px;
+  height: calc(100% - 219px);
+  top: 219px;
 }
 
 .isCollapsed {
