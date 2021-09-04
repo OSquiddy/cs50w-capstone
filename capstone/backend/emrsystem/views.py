@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
+from django.db.models import Q, functions
 from datetime import date, datetime, timedelta
 from django.utils import timezone
 from django.utils.dateparse import parse_date
@@ -50,6 +50,76 @@ def patientInfo(request, id):
     patientInfo = Patient.objects.get(id=id)
     serializer = PatientSerializer(patientInfo)
     return Response({ "patientInfo": serializer.data })
+
+@api_view(['GET'])
+def numPatients(request):
+    patients = Patient.objects.all()
+    return Response({ "numPatients": len(patients) })
+
+@api_view(['GET'])
+def getEarnings(request):
+    appointments = Visit.objects.all().order_by('date')
+    totalEarnings = 0
+    earnings = []
+    obj = {}
+    obj['value'] = 0
+    prevDate = appointments[0].date
+    for appt in appointments:
+        if appt.date != prevDate:
+            earnings.append(obj)
+            obj = {}
+            obj['value'] = 0
+        obj['date'] = appt.date
+        obj['value'] += appt.payment
+        totalEarnings += appt.payment
+        prevDate = appt.date
+    # appointments = Visit.objects.all().order_by('date')
+    # totalEarnings = 0
+    # earnings = []
+    # obj = {}
+    # obj['value'] = 0
+    # prevDate = appointments[0].date
+    # obj['date'] = prevDate
+    # count = 0
+    # for appt in appointments:
+    #     if appt.date != prevDate:
+    #         # print(appt.date, prevDate)
+    #         lastVal = obj['value']
+    #         earnings.append(obj)
+    #         obj = {}
+    #         obj['value'] = lastVal
+    #         obj['date'] = appt.date
+    #     obj['value'] += appt.payment
+    #     prevDate = appt.date
+    #     totalEarnings += appt.payment
+    earnings.append(obj)
+    return Response({ "earnings": totalEarnings, "earningsData": earnings })
+
+@api_view(['GET'])
+def getEarningsByMonth(request):
+    appointments = Visit.objects.all().order_by('date')
+    totalEarnings = 0
+    earnings = []
+    obj = {}
+    obj['value'] = 0
+    prevMonth = appointments[0].date.month
+    for appt in appointments:
+        if appt.date.month != prevMonth:
+            earnings.append(obj)
+            obj = {}
+            obj['value'] = 0
+        obj['date'] = appt.date
+        obj['value'] += appt.payment
+        totalEarnings += appt.payment
+        prevMonth = appt.date.month
+    earnings.append(obj)
+    return Response({ "earnings": totalEarnings, "earningsData": earnings })
+
+@api_view(['GET'])
+def lastPatient(request):
+    patient = Patient.objects.all().order_by('-date_joined').first()
+    serializer = PatientSerializer(patient)
+    return Response({ "lastPatient": serializer.data })
 
 @api_view(['GET'])
 def getReport(request, id, visitNumber):

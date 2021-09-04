@@ -10,12 +10,16 @@ urlpatterns = [
     # path("", views.index, name="index"),
     path("hello", views.hello_world, name="hello"),
     path("userList", views.users, name="users"),
-    path("patientList", views.patients, name="patients"),
-    path("patientList/<str:query>", views.filteredPatients, name="filteredPatients"),
+    path("patientList/<str:orderBy>", views.patients, name="patients"),
+    path("patientList/<str:orderBy>/<str:query>", views.filteredPatients, name="filteredPatients"),
     path("p/<int:id>", views.patientInfo, name="patientInfo"),
     path("p/<int:id>/v/<int:visitNumber>", views.getReport, name="report"),
     path("appointmentsList", views.appointmentsList, name="appointmentsList"),
     path("appointmentsList/<str:query>", views.filteredAppointments, name="filteredAppointments"),
+    path("numPatients", views.numPatients, name="numPatients"),
+    path("lastPatient", views.lastPatient, name="lastPatient"),
+    path("getEarnings", views.getEarnings, name="getEarnings"),
+    path("getEarnings/m", views.getEarningsByMonth, name="getEarningsByMonth"),
     # path('', include(vue_urls)),
     
     # api urls
