@@ -13,17 +13,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="patient in patientsList" :key="patient.id">
-            <td>{{patient.id}}</td>
-            <td>
-              <div class="patient-name">
-                <div class="patient-img"><img src="" alt=""></div>
-                {{patient.fullname}}
-              </div>
-            </td>
-            <td>{{patient.email}}</td>
-            <td>04-06-2021</td>
-          </tr>
+          <template v-for="patient in patientsList">
+            <router-link :to="'/p/' + patient.id" class="patient-link" :key="patient.id">
+              <tr>
+                <td>{{patient.id}}</td>
+                <td>
+                  <div class="patient-name">
+                    <div class="patient-img"><img src="" alt=""></div>
+                    {{patient.fullname}}
+                  </div>
+                </td>
+                <td>{{patient.email}}</td>
+                <td>04-06-2021</td>
+              </tr>
+            </router-link>
+          </template>
           </tbody>
       </table>
     </div>
@@ -103,6 +107,9 @@ export default {
 
 .patients-table {
   width: 100%;
+  .patient-link {
+    display: contents;
+  }
   th, td {
     text-align: center;
     padding: 0.625rem 0;
