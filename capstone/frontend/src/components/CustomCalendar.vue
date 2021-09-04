@@ -7,7 +7,7 @@
       <button class="left-arrow" @click="getPrevWeek"><img src="../assets/right-chevron.svg" alt="prev-dates" class="mirror"></button>
       <div class="date-slider">
           <div class="currWeek">
-            <div class="day-date-box" v-for="day in currentWeek" :key="day.date.day" @click="selectDate(day)">
+            <div class="day-date-box" v-for="day in currentWeek" :key="day.date.day" @click="selectDate(day, $event)" :class="[selectedDate.date.day == day.date.day ? 'active' : '']">
               <div class="day">{{day.day}}</div>
               <div class="date" v-if="day.date.month === currentMonth.index">{{day.date.day}}</div>
             </div>
@@ -107,10 +107,16 @@ export default {
       }
       return array
     },
-    selectDate (day) {
-      this.selectedDate = {
-        name: `${day.date.year}-${day.date.month}-${day.date.day}`,
-        date: DateTime.fromObject({ year: day.date.year, month: day.date.month, day: day.date.day })
+    selectDate (day, e) {
+      const elem = e.target.parentElement
+      if (elem.classList.contains('day-date-box')) {
+        this.selectedDate = {
+          name: `${day.date.year}-${day.date.month}-${day.date.day}`,
+          date: DateTime.fromObject({ year: day.date.year, month: day.date.month, day: day.date.day })
+        }
+        const buttons = document.querySelectorAll('.day-date-box')
+        buttons.forEach(button => button.classList.remove('active'))
+        elem.classList.add('active')
       }
     },
     getNextWeek () {
@@ -170,7 +176,19 @@ export default {
 
 .day-date-box {
   cursor: pointer;
+  // border: 1px solid red;
+  width: 2.5rem;
+  padding: 2px 4px;
+  border-radius: 5px;
   // min-width: 2.2rem;
+}
+
+.active {
+  // background: var(--primary-accent-dark);
+  background: #000;
+  *{
+    color: white;
+  }
 }
 
 .left-arrow, .right-arrow {
@@ -214,7 +232,7 @@ export default {
   .vertical-accent {
     width: 4px;
     border-radius: 3px;
-    background: #c4c4c4;
+    background: var(--primary-accent-light);
     margin-right: 12px;
   }
   .patient-appt-name {
