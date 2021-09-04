@@ -4,11 +4,13 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div> -->
+    <div class="custom-tooltip bottom-arrow" id="common-tooltip"></div>
     <router-view v-if="!$store.state.isMobile"/>
     <router-view v-else name="mobile" />
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -18,8 +20,12 @@ export default {
   mounted () {
     this.onResize()
     window.addEventListener('resize', this.onResize, { passive: true })
+    if (sessionStorage.getItem('isCollapsed') === 'true') {
+      this.toggleCollapse()
+    }
   },
   methods: {
+    ...mapActions(['toggleCollapse']),
     onResize () {
       this.$store.state.isMobile = window.innerWidth < 600
     }
