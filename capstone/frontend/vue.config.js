@@ -5,8 +5,9 @@ module.exports = {
     //   'port': 3000,
       'compress': true,
     //   'public': 'http://192.168.1.35:8080/',
-      'host': 'localhost'
-    //   'disableHostCheck': true
+      'public': 'http://localhost:8080/',
+      'host': 'localhost',
+      'disableHostCheck': true
     }
     // 'chainWebpack': config => {
     //   config.module
