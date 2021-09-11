@@ -31,9 +31,13 @@ class VisitSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class ExaminationSerializer(serializers.ModelSerializer):
+    visit_id = serializers.IntegerField()
+    visit_number = serializers.ReadOnlyField(source='visit.visit_number')
+
     class Meta:
         model = Examination
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ['visit']
 
 class PastHistorySerializer(serializers.ModelSerializer):
     class Meta:
