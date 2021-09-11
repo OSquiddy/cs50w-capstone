@@ -377,6 +377,10 @@ export default {
 
 .settings-outer-container {
   overflow-x: auto;
+  scrollbar-color: transparent;
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
   scroll-snap-type: x mandatory;
   .settings-inner-container {
     display: flex;
