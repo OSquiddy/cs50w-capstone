@@ -20,20 +20,27 @@ export default {
   },
   watch: {
     selectedTab (newValue, oldValue) {
-      if (this.$route.path !== this.tabPaths[newValue]) {
+      if (this.$route.name !== this.tabPaths[newValue]) {
         this.$router.push({ name: this.tabPaths[newValue] })
       }
       document.querySelectorAll('.tab')[oldValue].classList.remove('active')
     }
   },
   mounted () {
-    // console.log(this.$router)
+    this.setTab()
   },
   methods: {
     selectTab (index, event) {
       this.selectedTab = index
       const elem = event.target
       elem.classList.add('active')
+    },
+    setTab () {
+      const index = this.tabPaths.findIndex((elem) => {
+        return elem === this.$route.name
+      })
+      this.selectedTab = index
+      document.querySelectorAll('.tab')[index].classList.add('active')
     }
   }
 }

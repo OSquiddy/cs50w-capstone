@@ -1,12 +1,17 @@
+/* eslint-disable no-unused-vars */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from '../components/Layout.vue'
 import LayoutMobile from '../components/LayoutMobile.vue'
-// eslint-disable-next-line no-unused-vars
+import AppointmentEntry from '../views/AppointmentEntry/AppointmentEntry.vue'
 import Appointments from '../views/Appointments/Appointments.vue'
 import AppointmentsMobile from '../views/Appointments/AppointmentsMobile.vue'
+import PatientDirectory from '../views/PatientDirectory/PatientDirectory.vue'
 import PatientDirectoryMobile from '../views/PatientDirectory/PatientDirectoryMobile.vue'
+import Reports from '../views/Reports/Reports.vue'
 import ReportMobile from '../views/Reports/ReportMobile.vue'
+import PatientMain from '../views/PatientInfo/PatientMain.vue'
+import Upcoming from '../views/PatientInfo/Upcoming.vue'
 import PatientMainMobile from '../views/PatientInfo/PatientMainMobile.vue'
 import Settings from '../views/Settings/Settings.vue'
 import SettingsMobile from '../views/Settings/SettingsMobile.vue'
@@ -50,24 +55,59 @@ const routes = [
         path: 'directory',
         name: 'directory',
         components: {
-          default: null,
+          default: PatientDirectory,
           mobile: PatientDirectoryMobile
         }
       },
       {
         path: 'p/:id',
         name: 'patient-main',
+        redirect: 'p/:id/upcoming',
         components: {
-          default: null,
+          default: PatientMain,
           mobile: PatientMainMobile
         },
-        props: (route) => ({ id: parseInt(route.params.id) })
+        props: (route) => ({ id: parseInt(route.params.id) }),
+        children: [
+          {
+            path: 'upcoming',
+            name: 'upcoming',
+            components: {
+              default: Upcoming,
+              mobile: null
+            }
+          },
+          {
+            path: 'history',
+            name: 'history',
+            components: {
+              default: Upcoming,
+              mobile: null
+            }
+          },
+          {
+            path: 'reports',
+            name: 'reports',
+            components: {
+              default: Reports,
+              mobile: null
+            }
+          },
+          {
+            path: 'notes',
+            name: 'notes',
+            components: {
+              default: Upcoming,
+              mobile: null
+            }
+          }
+        ]
       },
       {
         path: 'p/:id/v/:visitNumber',
-        name: 'report',
+        name: 'visit',
         components: {
-          default: null,
+          default: AppointmentEntry,
           mobile: ReportMobile
         },
         props: (route) => ({
@@ -117,11 +157,6 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () => import('../components/LoginPage.vue')
-  },
-  {
-    path: '/*',
-    name: 'NotFound',
-    component: SettingsMobile
   }
 ]
 
