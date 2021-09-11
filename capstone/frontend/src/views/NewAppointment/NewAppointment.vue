@@ -1,229 +1,222 @@
 <template>
-  <div class="add-appointment-main">
-    <header>
-      <div class="container">
-        <div class="row">
-          <div class="col header px-4 py-3">
-            <img src="../../assets/cancel.svg" class="cancel" alt="cross/cancel-icon" />
-            <div class="page-header">New Appointment</div>
-            <img src="../../assets/tick.svg" class="accept" alt="accept-icon" />
+  <div class="new-appointment-main mb-4">
+    <div class="page-title">Appointment</div>
+    <div class="add-appointment-main">
+      <div class="container-fluid">
+        <form action="" method="post">
+        <div class="row new-section">
+          <div class="col">
+            <div class="section-header">Chief Complaints</div>
+            <div class="section-input">
+              <textarea name="complaints" id="complaints"></textarea>
+            </div>
           </div>
         </div>
+        <div class="row new-section">
+          <div class="col">
+            <div class="section-header">Vitals</div>
+            <div class="section-input input-group">
+              <div class="input-group-item">
+                <label for="blood-pressure">BP:</label>
+                <input type="text" name="blood-pressure" id="blood-pressure" />
+              </div>
+              <div class="input-group-item">
+                <label for="blood-pressure">SpO2:</label>
+                <input type="text" name="spo2" id="spo2" />
+              </div>
+              <div class="input-group-item">
+                <label for="blood-pressure">Pulse:</label>
+                <input type="text" name="pulse" id="pulse" />
+              </div>
+              <div class="input-group-item">
+                <label for="blood-pressure">Temp:</label>
+                <input type="text" name="temp" id="temp" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row new-section">
+          <div class="col">
+            <div class="section-header">Examination</div>
+            <div class="row">
+              <div class="col-6">
+                <div class="section-input">
+                  <label for="respiratory">Respiratory:</label>
+                  <textarea name="respriatory" id="respriatory"></textarea>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="section-input">
+                  <label for="cereberovascular">Cereberovascular:</label>
+                  <textarea name="cereberovascular" id="cereberovascular"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="section-input">
+                  <label for="cardiovascular">Cardiovascular:</label>
+                  <textarea name="cardiovascular" id="cardiovascular"></textarea>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="section-input">
+                  <label for="localExam">Local Examination:</label>
+                  <textarea name="localExam" id="localExam"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="section-input">
+                  <label for="abdominal">Per Abdominal:</label>
+                  <textarea name="abdominal" id="abdominal"></textarea>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="section-input">
+                  <label for="localExam">Local Examination:</label>
+                  <textarea name="localExam" id="localExam"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row new-section">
+          <div class="col">
+            <div class="section-header">General</div>
+            <div class="section-input general-checklist">
+              <div class="row mb-2">
+                <div class="form-group general-checklist-item">
+                <input type="checkbox" name="pallor" id="pallor" />
+                <label for="pallor">Pallor</label>
+              </div>
+              <div class="form-group general-checklist-item">
+                <input type="checkbox" name="clubbing" id="clubbing" />
+                <label for="clubbing">Clubbing</label>
+              </div>
+              <div class="form-group general-checklist-item">
+                <input type="checkbox" name="lymphadenopathy" id="lymphadenopathy" class="general-checklist-item" />
+                <label for="lymphadenopathy">Lymphadenopathy</label>
+              </div>
+              </div>
+              <div class="row">
+              <div class="form-group general-checklist-item">
+                <input type="checkbox" name="icterus" id="icterus" />
+                <label for="icterus">Icterus</label>
+              </div>
+                <div class="form-group general-checklist-item">
+                <input type="checkbox" name="koilonychia" id="koilonychia" />
+                <label for="koilonychia">Koilonychia</label>
+              </div>
+              <div class="form-group general-checklist-item">
+                <input type="checkbox" name="oedema" id="oedema" class="general-checklist-item" />
+                <label for="oedema">Oedema</label>
+              </div>
+              </div>
+            </div>
+            <div class="section-input my-3">
+              <div class="input-group-item">
+                <label for="others">Others:</label>
+                <textarea name="others" id="others"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row new-section">
+          <div class="col">
+            <div class="section-header">Probable Diagnosis</div>
+            <div class="section-input">
+              <textarea name="diagnosis" id="diagnosis"></textarea>
+            </div>
+          </div>
+        </div>
+        <input type="submit" value="Save" @click.prevent="submitForm" class="save-button">
+        </form>
       </div>
-    </header>
-    <div class="add-appointment-container">
-      <form action="" method="post">
-        <div class="container new-section">
-          <div class="row">
-            <div class="col">
-              <div class="row email-section justify-content-between">
-                <div class="col-1 section-icon">
-                  <img src="../../assets/patient.svg" alt="patient-icon" class="patient-icon" />
-                </div>
-                <div class="col-10 section-info">
-                  <div class="section-info-container">
-                    <div class="section-input-group">
-                      <input type="text" name="patient" id="patient" placeholder="Patient Name" autocomplete="off" />
-                      <SearchableDropdown :placeholder="'Patient Name'" />
-                      <!-- <vSelect :options="patients" v-model="fullname" label="fullname">
-                        <template v-slot:option="option">
-                          <div class="dropdown-row-container">
-                          <div class="img"></div>
-            <div class="dropdown-content-text patient-group">
-              <div class="patient-name"> {{option.fullname}} </div>
-              <div class="patient-id"> ID: {{option.id}} </div>
-            </div>
-                          </div>
-                        </template>
-                      </vSelect> -->
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <hr class="section-divider" />
-        <div class="container new-section">
-          <div class="row">
-            <div class="col">
-              <div class="row name-section justify-content-between">
-                <div class="col-1 section-icon align-self-start">
-                  <img src="../../assets/clock.svg" alt="clock-icon" class="clock-icon" />
-                </div>
-                <div class="col-10 section-info">
-                  <div class="section-info-container">
-                    <div class="section-input-group">
-                      <label for="first-name">Date:</label>
-                      <datetime v-model="date" type="date" :format="'ccc, MMM dd, yyyy'"></datetime>
-                    </div>
-                    <div class="section-input-group">
-                      <label for="last-name">Time:</label>
-                      <div class="time-input-group">
-                        <datetime type="time" v-model="time1" use12-hour :format="'hh:mm a'"></datetime>
-                        <img src="../../assets/right-arrow.svg" alt="right-arrow" />
-                        <datetime type="time" v-model="time2" use12-hour :format="'hh:mm a'"></datetime>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <hr class="section-divider" />
-        <div class="container new-section">
-          <div class="row">
-            <div class="col">
-              <div class="row name-section justify-content-between">
-                <div class="col-1 section-icon">
-                  <img src="../../assets/doctor.svg" alt="doctor-icon" class="doctor-icon" />
-                </div>
-                <div class="col-10 section-info">
-                  <div class="section-info-container">
-                    <div class="section-input-group">
-                      <input type="text" name="doctor" id="doctor" placeholder="Doctor Name" autocomplete="off" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <hr class="section-divider" />
-      </form>
     </div>
   </div>
 </template>
 
 <script>
-import { Datetime } from 'vue-datetime'
-import SearchableDropdown from '../../components/SearchableDropdown.vue'
-// import vSelect from 'vue-select'
-export default {
-  name: 'NewPatient',
-  components: {
-    Datetime,
-    SearchableDropdown
-    // vSelect
-  },
-  data() {
-    return {
-      time1: '07:00',
-      time2: '07:30',
-      patients: [
-        { id: 12, fullname: 'Harry Potter' },
-        { id: 14, fullname: 'Hermione Granger' },
-        { id: 13, fullname: 'Ron Weasley' }
-      ],
-      fullname: null
-    }
-  },
-  computed: {
-    date() {
-      return new Date().toISOString().slice(0, 10)
-    }
-  }
-}
+export default {}
 </script>
 
 <style lang="scss" scoped>
-.header {
-  display: flex;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
-  .accept {
-    margin-left: auto;
-  }
-  .cancel {
-    margin-right: 1.25rem;
-  }
+.page-title {
+  margin-top: 15px;
+}
+.add-appointment-main {
+  background-color: var(--background-primary);
+  padding: 1rem;
+  margin-top: 15px;
+  border-radius: 0.75rem;
 }
 
 .new-section {
-  padding: 0 25px;
-}
-
-.add-appointment-container {
-  margin-top: 1.5rem;
-}
-.section-divider {
-  width: 80%;
-  margin-left: auto;
-  margin-top: 0.5rem;
-  margin-bottom: 1.25rem;
-}
-
-::v-deep .section-info-container {
-  .section-input-group {
-    margin-bottom: 12px;
-    input {
-      background: transparent;
-      border: none;
-      outline: none;
-      width: 90%;
-      font-size: 1.125rem;
-      padding: 2px 0px;
-      color: var(--input-text-color);
-      margin-top: 5px;
-      &:focus {
-        border-bottom: 1px solid var(--focus-blue);
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-      }
+  margin-bottom: 30px;
+  .section-header {
+    margin-bottom: 15px;
+  }
+  .section-input {
+    input,
+    textarea {
+      border-radius: 0.625rem;
+      padding: 5px 10px;
+      border: 1px solid var(--input-border-color);
+      font-size: 0.875rem;
     }
-
-    .time-input-group {
-      display: flex;
-      input.vdatetime-input {
-        background: transparent;
-        border: none;
-        outline: none;
-        width: 6rem;
-        font-size: 1.125rem;
-        padding: 2px 0px;
-        color: var(--input-text-color);
-        margin-top: 5px;
+    textarea {
+      width: 100%;
+      height: 120px;
+    }
+    label {
+      font-size: 0.875rem;
+    }
+  }
+  .input-group {
+    // justify-content: space-evenly;
+    .input-group-item {
+      margin-right: 25px;
+      label {
+        font-size: 0.875rem;
+        margin-right: 15px;
       }
-      .vdatetime {
-        &:first-of-type {
-          margin-right: 0.5rem;
-        }
-        &:last-of-type {
-          margin-left: 1.5rem;
-        }
+      input {
+        border-radius: 0.375rem;
+        width: 150px;
       }
     }
   }
+   .general-checklist-item {
+     display: flex;
+     align-items: center;
+     width: 20%;
+      label {
+      font-size: 0.875rem;
+        margin-left: 0.625rem;
+      }
+      input[type="checkbox"] {
+      font-size: 0.875rem;
+        width: fit-content;
+      }
+    }
 }
 
-.section-info-container > .section-input-group:last-child {
-  margin-bottom: 0;
-}
-
-.section-info {
-  padding-left: 0;
-}
-
-.section-icon {
-  align-self: center;
-}
-
-.img {
-  background: var(--medium-gray);
-  width: 30px;
-  aspect-ratio: 1;
+.save-button {
+  padding: 0.325rem 0.625rem;
   display: flex;
-  align-self: center;
-  border-radius: 50%;
-  margin-right: 20px;
+  justify-content: center;
+  border: none;
+  outline: none;
+  width: 100px;
+  font-size: 0.75rem;
+  border-radius: 5px;
+  background: var(--button-blue);
+  color: white;
+  margin-left: auto;
+  // position: sticky;
+  // top: 20px;
+  // right: 0;
 }
-
-.dropdown-row-container {
-  display: flex;
-}
-
-// .vs__dropdown-menu {
-//   background: green;
-// }
-
 </style>

@@ -1,7 +1,6 @@
 <template>
-  <div class="add-patient-main">
-    <form action="" class="add-patient-form" method="POST">
-    <input type="submit" value="Save" @click.prevent="submitForm" class="save-button">
+  <div class="settings-main">
+    <form action="" class="settings-form" method="POST">
     <div class="container-fluid new-section">
       <div class="row">
         <div class="col image-section">
@@ -21,7 +20,17 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid new-section">
+    <div class="container-fluid new-section" v-if="!edit">
+      <div class="row">
+        <div class="col-6">
+          <div class="user-title-section">
+            <div class="user-title">Dr. Severus Snape</div>
+            <img src="../../assets/edit.svg" alt="edit-icon" class="edit-icon" @click="toggleEdit"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid new-section" v-if="edit">
       <div class="row">
         <div class="col name-section">
           <div class="row">
@@ -29,7 +38,7 @@
               <div class="section-info-container">
                 <div class="section-input-group">
                   <label for="first-name">First Name:</label>
-                  <input type="text" name="first-name" id="first-name" autocomplete="off" />
+                  <input type="text" name="first-name" id="first-name" autocomplete="off" v-if="edit"/>
                 </div>
               </div>
             </div>
@@ -37,8 +46,22 @@
               <div class="section-info-container">
                 <div class="section-input-group">
                   <label for="last-name">Last Name:</label>
-                  <input type="text" name="last-name" id="last-name" autocomplete="off" />
+                  <input type="text" name="last-name" id="last-name" autocomplete="off" v-if="edit"/>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid new-section">
+      <div class="row">
+        <div class="col occupation-section">
+          <div class="row">
+            <div class="col-6 section-info">
+              <div class="section-info-container">
+                <div class="section-title">ID Number:</div>
+                <div class="section-data" v-if="!edit">21510</div>
               </div>
             </div>
           </div>
@@ -53,8 +76,9 @@
               <div class="section-info-container">
                 <div class="section-input-group">
                   <label for="last-name">Email:</label>
-                  <input type="email" name="email" id="email" value="severus.snape@hogwarts.com" autocomplete="off" />
+                  <input type="email" name="email" id="email" value="severus.snape@hogwarts.com" autocomplete="off" v-if="edit"/>
                 </div>
+                <div class="section-data" v-if="!edit">severus.snape@hogwarts.com</div>
               </div>
             </div>
           </div>
@@ -68,7 +92,7 @@
             <div class="col-6 section-info">
               <div class="section-info-container">
                 <div class="section-title">Mobile:</div>
-                <vue-tel-input :autoDefaultCountry="true" :dropdownOptions="{ showDialCodeInSelection: true, showDialCodeInList: true, showFlags: true }">
+                <vue-tel-input :autoDefaultCountry="true" :dropdownOptions="{ showDialCodeInSelection: true, showDialCodeInList: true, showFlags: true }" v-if="edit">
                   <template v-slot:arrow-icon>
                     <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left: 3px;" xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -78,6 +102,7 @@
                     </svg>
                   </template>
                 </vue-tel-input>
+                <div class="section-data" v-if="!edit">+1 (324) 2626 2356</div>
               </div>
             </div>
           </div>
@@ -92,8 +117,9 @@
               <div class="section-info-container">
                 <div class="section-input-group">
                   <label for="last-name">Date of Birth:</label>
-                  <input type="date" name="dob" id="dob" autocomplete="off" />
+                  <input type="date" name="dob" id="dob" autocomplete="off" v-if="edit"/>
                 </div>
+                <div class="section-data" v-if="!edit">2021-06-12</div>
               </div>
             </div>
           </div>
@@ -102,7 +128,7 @@
     </div>
     <div class="container-fluid new-section">
       <div class="row">
-        <div class="col address-section">
+        <div class="col address-section" v-if="edit">
           <div class="row">
             <div class="col-6 section-info">
               <div class="section-info-container">
@@ -150,6 +176,14 @@
             </div>
           </div>
         </div>
+        <div class="col address-section" v-if="!edit">
+          <div class="col-6">
+            <div class="section-info-container">
+              <div class="section-title">Address:</div>
+              <div class="section-data" >Lorem ipsum dolor sit amet, consectetur adipisicing elit. At recusandae saepe expedita iste quam quibusdam officia perferendis neque eligendi. Quae culpa aliquid rem a illum, quaerat ut nobis recusandae atque.</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="container-fluid new-section">
@@ -179,7 +213,7 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid new-section">
+    <div class="container-fluid new-section" v-if="edit">
       <div class="row">
         <div class="col father-section">
           <div class="row">
@@ -195,55 +229,41 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid new-section">
+    <div class="container-fluid">
       <div class="row">
-        <div class="col mother-section">
-          <div class="row">
-            <div class="col-6 section-info">
-              <div class="section-info-container">
-                <div class="section-input-group">
-                  <label for="mother">Mother's Name:</label>
-                  <input type="text" name="mother" id="mother" autocomplete="off" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container-fluid new-section">
-      <div class="row">
-        <div class="col occupation-section">
-          <div class="row">
-            <div class="col-6 section-info">
-              <div class="section-info-container">
-                <div class="section-input-group">
-                  <label for="occupation">Occupation:</label>
-                  <input type="text" name="occupation" id="occupation" autocomplete="off" />
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="col-6 d-flex">
+          <input type="button" value="Cancel" @click="toggleEdit" class="cancel-button" v-if="edit">
+          <input type="submit" value="Save" @click.prevent="submitForm" class="save-button" v-if="edit">
         </div>
       </div>
     </div>
     </form>
+  <router-view name="default" />
   </div>
 </template>
 
 <script>
 import { VueTelInput } from 'vue-tel-input'
 export default {
-  name: 'NewPatient',
+  name: 'Upcoming',
   components: {
     VueTelInput
+  },
+  data () {
+    return {
+      edit: false
+    }
+  },
+  methods: {
+    toggleEdit () {
+      this.edit = !this.edit
+    }
   }
-
 }
 </script>
 
 <style lang="scss" scoped>
-.add-patient-main {
+.settings-main {
   background-color: var(--background-primary);
   padding: 1rem;
   margin-top: 30px;
@@ -294,6 +314,20 @@ export default {
     .upload {
       color: var(--link-blue);
     }
+  }
+}
+
+.user-title-section {
+  display: flex;
+  .user-title {
+    font-size: 1.5rem;
+    display: flex;
+  }
+  .edit-icon {
+    display: flex;
+    align-self: center;
+    margin-left: auto;
+    cursor: pointer;
   }
 }
 
@@ -357,6 +391,9 @@ export default {
       background: var(--light-gray);
       border-radius: 50%;
       appearance: none;
+      & ~ label {
+        cursor: pointer;
+      }
       &:checked {
         background: var(--primary-accent-dark);
         & ~ label {
@@ -405,10 +442,10 @@ export default {
   }
 }
 
-.add-patient-form {
+.settings-form {
   position: relative;
 }
-.save-button {
+.save-button, .cancel-button {
   padding: 0.325rem 0.625rem;
   display: flex;
   justify-content: center;
@@ -419,9 +456,16 @@ export default {
   border-radius: 5px;
   background: var(--button-blue);
   color: white;
+  // position: sticky;
+  // top: 20px;
+  // right: 0;
+}
+
+.cancel-button {
   margin-left: auto;
-  position: sticky;
-  top: 20px;
-  right: 0;
+  margin-right: 0.625rem;
+  background-color: var(--light-gray);
+  color: var(--primary);
+  border: 1px solid #ccc;
 }
 </style>

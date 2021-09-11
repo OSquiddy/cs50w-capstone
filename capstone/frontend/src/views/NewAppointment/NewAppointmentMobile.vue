@@ -98,6 +98,7 @@
 
 <script>
 import { Datetime } from 'vue-datetime'
+import { DateTime } from 'luxon'
 import SearchableDropdown from '../../components/SearchableDropdown.vue'
 // import vSelect from 'vue-select'
 export default {
@@ -116,13 +117,16 @@ export default {
         { id: 14, fullname: 'Hermione Granger' },
         { id: 13, fullname: 'Ron Weasley' }
       ],
-      fullname: null
+      fullname: null,
+      date: DateTime.now().toFormat('yyyy-MM-dd')
     }
   },
-  computed: {
-    date() {
-      return new Date().toISOString().slice(0, 10)
-    }
+  // computed: {
+  //   date() {
+  //     return
+  //   }
+  // },
+  mounted () {
   }
 }
 </script>
@@ -194,6 +198,11 @@ export default {
       }
     }
   }
+}
+
+::v-deep .vdatetime-popup__year, ::v-deep .vdatetime-popup__date {
+  color: white;
+  opacity: 1;
 }
 
 .section-info-container > .section-input-group:last-child {
