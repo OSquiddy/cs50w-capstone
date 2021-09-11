@@ -13,6 +13,10 @@ def calc_visit(patient):
     else:
         return 1
 
+# def check_validity(visit):
+#     prev_visit = Visit.objects.filter(patient=visit.patient).order_by('-visit_number')
+#     return visit.date < prev_visit.date
+
 
 # Create your models here.
 class MyBaseUser(AbstractUser):
@@ -96,6 +100,7 @@ class Patient(MyBaseUser):
     mothers_name = models.CharField("Mother's Name", null=True, max_length=50)
     occupation = models.CharField(null=True, max_length=55)
     blood_type = models.CharField(max_length=5, null=True, blank=True)
+    last_visit = models.DateField(null=True)
     
     # UNIT1 = '01'
     # UNIT2 = '02'
@@ -147,6 +152,7 @@ class Visit(models.Model):
         (UNIT2, '02')
     ]
     Unit = models.CharField(blank=True, max_length=2, choices=unit_choices)
+    visit_completed = models.BooleanField()
 
     class Meta:
         constraints = [
@@ -169,14 +175,29 @@ class Examination(models.Model):
     SpO2 = models.DecimalField(max_digits=5, decimal_places=2)
     temperature = models.DecimalField(max_digits=5, decimal_places=2)
     pulse_rate = models.CharField(max_length=10, blank=True, null=True)
-    general = models.TextField()
-    respiratory = models.TextField()
-    cardiovascular = models.TextField()
-    cereberovascular = models.TextField()
+    respiratory = models.TextField(default='NAD')
+    cardiovascular = models.TextField(default='NAD')
+    cereberovascular = models.TextField(default='NAD')
+    per_abdominal = models.TextField(default='NAD')
+    local_examination = models.TextField(default='NAD')
+    others = models.TextField(null=True)
+    complaints = models.TextField()
+    diagnosis = models.TextField()
+    pallor = models.BooleanField(default=False)
+    clubbing = models.BooleanField(default=False)
+    lymphadenopathy = models.BooleanField(default=False)
+    icterus = models.BooleanField(default=False)
+    koilonychia = models.BooleanField(default=False)
+    oedema = models.BooleanField(default=False)
     
     def __str__(self):
 
         return f"Examination for {self.visit}"
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['visit'], name='Examination Number')
+        ]
 
 class PastHistory(models.Model):
     visit = models.ForeignKey(Visit, on_delete=models.CASCADE, null=True, blank=True, related_name='past_histories')

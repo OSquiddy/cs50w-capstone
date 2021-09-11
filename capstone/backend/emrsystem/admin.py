@@ -12,6 +12,12 @@ class VisitAdmin(admin.ModelAdmin):
     #     return obj.patient.first_name + ' ' + obj.patient.last_name
     # patient_name.admin_order_field = 'patient__first_name'
 
+class ExaminationAdmin(admin.ModelAdmin):
+    model = Examination
+    list_display = ['id', 'visit']
+    ordering = ['visit__patient__first_name', 'visit__visit_number']
+    fieldsets = ((None, { 'fields': ('visit', 'complaints', 'blood_pressure', 'SpO2', 'temperature', 'pulse_rate', 'respiratory', 'cardiovascular', 'cereberovascular')}),('General', { 'fields': (('pallor', 'clubbing', 'lymphadenopathy'), ('icterus', 'koilonychia'), 'others')}),('Diagnosis', { 'fields': ('diagnosis',)}) )
+
 class CustomUserAdmin(admin.ModelAdmin):
     model = MyBaseUser
     readonly_fields = ['fullname']
@@ -29,6 +35,6 @@ admin.site.register(MyBaseUser, CustomUserAdmin)
 admin.site.register(Doctor)
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(Visit, VisitAdmin)
-admin.site.register(Examination)
+admin.site.register(Examination, ExaminationAdmin)
 admin.site.register(PastHistory)
 admin.site.register(GynecHistory)
