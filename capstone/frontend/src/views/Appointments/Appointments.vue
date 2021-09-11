@@ -14,8 +14,14 @@
                 <template v-for="attr in attributes">
                   <div v-if="attr.customData.patientsList.length" :key="attr.key" class="text-xs p-1 mt-0 mb-1 text-white">
                   <div v-for="patient in attr.customData.patientsList" :key="patient.id" class="appointment" :style="'background:' + patient.background">
-                    <div class="name">{{ patient.name }} </div>
-                    <div class="time"> {{ patient.time }} </div>
+                    <router-link :to="!patient.visitCompleted ? {name: 'visit', params: {id: patient.id, visitNumber: patient.visitNumber }} : {}">
+                      <div class="appointment-info">
+                        <div class="name">{{ patient.name }} </div>
+                        <div class="time"> {{ patient.time }} </div>
+                      </div>
+                      <button class="join-appt" v-if="!patient.visitCompleted">Join</button>
+                      <img class="completed-appt" src="../../assets/completed.svg" alt="completed-logo" v-else>
+                    </router-link>
                   </div>
                   </div>
                 </template>
@@ -69,6 +75,24 @@ export default {
     async getFilteredList () {
       const list = await axios.get(process.env.VUE_APP_API_URL + '/appointmentsList/' + this.searchKeyword)
       this.appointmentsList = list.data.appointmentsList
+    },
+    apptPathObject (id) {
+      return {
+        name: 'visit',
+        params: {
+          id: id,
+          visitNumber: 0
+        }
+      }
+    },
+    reportPathObject (id) {
+      return {
+        name: 'visit',
+        params: {
+          id: id,
+          visitNumber: 0
+        }
+      }
     }
   }
 }
@@ -83,14 +107,44 @@ export default {
   padding: 4px;
   border-radius: 5px;
   margin-bottom: 8px;
+  display: flex;
   cursor: pointer;
-  .name {
-    color: white;
-    font-size: 0.75rem;
+  a {
+    display: flex;
+    width: 100%;
+    .name {
+      color: white;
+      font-size: 0.75rem;
+    }
+    .time {
+      color: white;
+      font-size: 0.625rem;
+    }
+    .join-appt {
+      outline: none;
+      font-size: 0.625rem;
+      margin-left: auto;
+      display: flex;
+      align-self: center;
+      border: 1px solid hsl(0%, 0%, 90%);
+      color: white;
+      border-radius: 3px;
+      position: relative;
+      background-color: transparent;
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-color: white;
+        // color: white;
+        transition: 0.3s ease-in-out;
+      }
+    }
   }
-  .time {
-    color: white;
-    font-size: 0.625rem;
+  .completed-appt {
+    display: flex;
+    margin-left: auto;
+    width: 20px;
+    height: 20px;
+    align-self: center;
   }
 }
 
@@ -153,6 +207,7 @@ export default {
     min-height: var(--day-height);
     min-width: var(--day-width);
     background-color: white;
+    z-index: 0;
     &.weekday-1,
     &.weekday-7 {
       background-color: #eff8ff;
