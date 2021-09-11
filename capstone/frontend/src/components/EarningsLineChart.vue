@@ -149,13 +149,6 @@ export default {
           .attr('stroke-width', 1.5)
           .attr('d', line)
 
-        // svg.selectAll('path')
-        //   .transition()
-        //   .duration(800)
-        //   .attr('y', d => y(d.value))
-        //   .attr('height', d => height - y(d.value))
-        //   .delay((d, i) => { return i * 100 })
-
         const focus = svg.append('g')
           .attr('class', 'focus')
           .style('display', 'none')
@@ -182,6 +175,22 @@ export default {
         const text = focus.append('text')
           .attr('x', 15)
           .attr('y', 20)
+
+        svg.append('rect')
+          .attr('class', 'curtain')
+          .style('fill', 'white')
+          .style('float', 'right')
+          .attr('width', width + 6)
+          .attr('height', height + 5)
+          .attr('transform', 'rotate(180)')
+          .attr('x', -1 * (width + 6))
+          .attr('y', -1 * (height))
+
+        svg.select('.curtain')
+          .transition()
+          .duration(3000)
+          .attr('width', 0)
+          .delay((d, i) => { return i * 100 })
 
         svg.append('rect')
           .attr('class', 'overlay')
