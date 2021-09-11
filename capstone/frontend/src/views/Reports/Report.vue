@@ -15,7 +15,7 @@
             <!-- <li class="generated-report report" v-for="visit, index in visitList" :key="visit.visit_number" @click="selectGenerated($event, index, visit.visit_number)">
               Report for Visit {{visit.visit_number}} <span class="report-date">{{visit.date}}</span>
             </li> -->
-            <li class="report" v-for="visit, index in visitList" :key="visit.visit_number" :class="index === generatedSelected  && 'active'" @click="selectGenerated($event, index)">
+            <li class="report" v-for="visit, index in visitList" :key="visit.visit_number" :class="index === generatedSelected  && 'active'" @click="selectGenerated($event, index, visit.visit_number)">
               Report for Visit {{visit.visit_number}} <span class="report-date">{{visit.date}}</span>
             </li>
           </ol>
