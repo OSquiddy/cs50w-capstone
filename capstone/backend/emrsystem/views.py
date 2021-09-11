@@ -12,6 +12,18 @@ from django.db.models import Q, functions
 from datetime import date, datetime, timedelta
 from django.utils import timezone
 from django.utils.dateparse import parse_date
+import json
+
+from django.shortcuts import render, redirect
+import calendar
+from calendar import HTMLCalendar
+from django.http import HttpResponseRedirect, HttpResponse, FileResponse
+
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
+from reportlab.lib.units import inch, cm
+from reportlab.lib.pagesizes import letter, A4
 
 from .models import *
 from .serializers import *
@@ -65,14 +77,15 @@ def getEarnings(request):
     obj['value'] = 0
     prevDate = appointments[0].date
     for appt in appointments:
-        if appt.date != prevDate:
-            earnings.append(obj)
-            obj = {}
-            obj['value'] = 0
-        obj['date'] = appt.date
-        obj['value'] += appt.payment
-        totalEarnings += appt.payment
-        prevDate = appt.date
+        if appt.visit_completed:
+            if appt.date != prevDate:
+                earnings.append(obj)
+                obj = {}
+                obj['value'] = 0
+            obj['date'] = appt.date
+            obj['value'] += appt.payment
+            totalEarnings += appt.payment
+            prevDate = appt.date
     # appointments = Visit.objects.all().order_by('date')
     # totalEarnings = 0
     # earnings = []
@@ -104,14 +117,15 @@ def getEarningsByMonth(request):
     obj['value'] = 0
     prevMonth = appointments[0].date.month
     for appt in appointments:
-        if appt.date.month != prevMonth:
-            earnings.append(obj)
-            obj = {}
-            obj['value'] = 0
-        obj['date'] = appt.date
-        obj['value'] += appt.payment
-        totalEarnings += appt.payment
-        prevMonth = appt.date.month
+        if appt.visit_completed:
+            if appt.date.month != prevMonth:
+                earnings.append(obj)
+                obj = {}
+                obj['value'] = 0
+            obj['date'] = appt.date
+            obj['value'] += appt.payment
+            totalEarnings += appt.payment
+            prevMonth = appt.date.month
     earnings.append(obj)
     return Response({ "earnings": totalEarnings, "earningsData": earnings })
 
@@ -181,6 +195,8 @@ def appointmentsList(request):
                 appointment['name'] = f"{visit.patient.fullname()}"
                 appointment['time'] = f"{visit.time_from.strftime('%I:%M %p')} - {visit.time_till.strftime('%I:%M %p')}"
                 appointment['background'] = colors[randint(0, len(colors)-1)]
+                appointment['visitNumber'] = visit.visit_number
+                appointment['visitCompleted'] = visit.visit_completed
                 patientsList.append(appointment)
             obj = {}
             obj['key'] = i
@@ -212,3 +228,51 @@ def filteredAppointments(request, query):
         appointmentsList = getAppointmentsByName(query)
     return Response({ "appointmentsList": appointmentsList })
 
+@api_view(['GET', 'POST'])
+def createReport(request, patient_id, visitNumber):
+    visit = Visit.objects.get(patient=patient_id, visit_number=visitNumber)
+    if request.method == "POST":
+        data = json.loads(request.body)
+        cardio = data['cardio'] if data['cardio'] is not None else 'NAD'
+        cerebero = data['cerebero'] if data['cerebero'] is not None else 'NAD'
+        respiratory = data['respiratory'] if data['respiratory'] is not None else 'NAD'
+        local_examination = data['localExam'] if data['localExam'] is not None else 'NAD'
+        per_abdominal = data['per_abdominal'] if data['per_abdominal'] is not None else 'NAD'
+        try:
+            examination = Examination.objects.get(visit=visit)
+            examination.cardiovascular = cardio
+            examintaion.cereberovascular = cerebero
+            examination.respiratory = respiratory
+            examination.local_examination = local_examination
+            examination.per_abdominal = per_abdominal
+            examination.temperature = data['temp']
+            examination.pallor = data['pallor']
+            examination.pulse_rate = data['pulse']
+            examination.blood_pressure = data['bloodPressure']
+            examination.SpO2 = data['spo2']
+            examination.others = data['others']
+            examination.koilonychia = data['koilonychia']
+            examination.lymphadenopathy = data['lymphadenopathy']
+            examination.clubbing = data['clubbing']
+            examination.diagnosis = data['diagnosis']
+            examination.oedema = data['oedema']
+            examination.icterus = data['icterus']
+            examination.complaints = data['complaints']
+        except ObjectDoesNotExist:
+            pass
+        examination = Examination.objects.create(
+        visit=visit, blood_pressure=data['bloodPressure'], SpO2=data['spo2'], temperature=data['temp'], respiratory=respiratory, cardiovascular=cardio, cereberovascular=cerebero, others=data['others'], pallor=data['pallor'], pulse_rate=data['pulse'], koilonychia=data['koilonychia'], oedema=data['oedema'], icterus=data['icterus'], lymphadenopathy=data['lymphadenopathy'], clubbing=data['clubbing'], diagnosis=data['diagnosis'], per_abdominal=per_abdominal, local_examination=local_examination, complaints=data['complaints']
+        )
+        report = generatePDFReport(visit, examination)
+        return Response()
+    examination = Examination.objects.get(visit=visit)
+    report = generatePDFReport(visit, examination)
+    return Response()
+
+@api_view(['GET'])
+def getNumReports(request, patientID):
+    totalCompletedVisits = Visit.objects.filter(patient=patientID, visit_completed=True).order_by('-visit_number')
+    serializer = VisitSerializer(totalCompletedVisits, many=True)
+    patient = Patient.objects.get(id=patientID)
+    patient = PatientSerializer(patient)
+    return Response({ "completedVisits": serializer.data, "patient": patient.data })
