@@ -5,13 +5,13 @@ class UserSerializer(serializers.ModelSerializer):
     fullname = serializers.CharField()
     class Meta:
         model = MyBaseUser
-        fields = '__all__'
+        exclude = ['password', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'groups', 'user_permissions']
         
 class DoctorSerializer(serializers.ModelSerializer):
     fullname = serializers.CharField()
     class Meta:
         model = Doctor
-        fields = '__all__'
+        exclude = ['password', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'groups', 'user_permissions']
         
 class PatientSerializer(serializers.ModelSerializer):
     sex = serializers.SerializerMethodField()

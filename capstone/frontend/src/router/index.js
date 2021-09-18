@@ -12,6 +12,7 @@ import Reports from '../views/Reports/Report.vue'
 import ReportMobile from '../views/Reports/ReportMobile.vue'
 import PatientMain from '../views/PatientInfo/PatientMain.vue'
 import Upcoming from '../views/PatientInfo/Upcoming.vue'
+import History from '../views/PatientInfo/History.vue'
 import PatientMainMobile from '../views/PatientInfo/PatientMainMobile.vue'
 import Settings from '../views/Settings/Settings.vue'
 import SettingsMobile from '../views/Settings/SettingsMobile.vue'
@@ -19,6 +20,7 @@ import NewAppointment from '../views/NewAppointment/NewAppointment.vue'
 import NewAppointmentMobile from '../views/NewAppointment/NewAppointmentMobile.vue'
 import NewPatient from '../views/NewPatient/NewPatient.vue'
 import NewPatientMobile from '../views/NewPatient/NewPatientMobile.vue'
+import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -28,6 +30,9 @@ const routes = [
     components: {
       default: Layout,
       mobile: LayoutMobile
+    },
+    meta: {
+      requireLogin: true
     },
     children: [
       {
@@ -81,7 +86,7 @@ const routes = [
             path: 'history',
             name: 'history',
             components: {
-              default: Upcoming,
+              default: History,
               mobile: null
             }
           },
@@ -92,15 +97,15 @@ const routes = [
               default: Reports,
               mobile: null
             }
-          },
-          {
-            path: 'notes',
-            name: 'notes',
-            components: {
-              default: Upcoming,
-              mobile: null
-            }
           }
+          // {
+          //   path: 'notes',
+          //   name: 'notes',
+          //   components: {
+          //     default: Upcoming,
+          //     mobile: null
+          //   }
+          // }
         ]
       },
       {
@@ -157,6 +162,8 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () => import('../components/LoginPage.vue')
+    // beforeEnter: (to, from, next) => {
+    // }
   }
 ]
 
@@ -164,6 +171,15 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (localStorage.getItem('isAuthenticated') !== 'true' && to.matched.some(record => record.meta.requireLogin)) {
+    console.log('To.path is', to.path)
+    next('/login')
+  } else {
+    next()
+  }
 })
 
 export default router

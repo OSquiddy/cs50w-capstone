@@ -1,37 +1,50 @@
 <template>
-  <div class="container-fluid">
-    <div v-if="!form" class="row login-img-container my-4 justify-content-around border border-dark">
-      <div class="col-md-4 col-lg-3 my-3 p-0" @click="changeTab(0)">
-        <img class="login-img" src="https://thumbs.dreamstime.com/t/international-doctors-day-greeting-card-design-159838679.jpg" alt="doctor-image" width="320" height="160" />
-        <span class="doctor-img-text">Doctor</span>
+  <div class="container">
+    <form class="text-left" @submit.prevent="submitForm">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Email address</label>
+        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" v-model="email" />
+        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
       </div>
-      <div class="col-md-4 col-lg-3 my-3 p-0" @click="changeTab(1)">
-        <img class="login-img" src="https://motionarray.imgix.net/preview-462404-H5o4XXyCSeJ16iIT-large.jpg?w=1400&q=60&fit=max&auto=format" alt="doctor-image" width="320" height="160" />
-        <span class="patient-img-text">Patient</span>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" v-model="password" />
       </div>
-    </div>
-    <div v-else>
-      <LoginForm :user="user" @cancel="cancel" />
-    </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
   </div>
 </template>
 
 <script>
-import LoginForm from './LoginForm.vue'
+// import LoginForm from './LoginForm.vue'
+/* eslint-disable dot-notation */
+import axios from 'axios'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'LoginPage',
   components: {
-    LoginForm
+    // LoginForm
   },
   data() {
     return {
       tabs: ['doctor', 'patient'],
       form: false,
-      user: ''
+      user: '',
+      email: '',
+      password: '',
+      errors: []
     }
   },
+  computed: {
+    ...mapState(['currentUser'])
+  },
   methods: {
+    ...mapActions(['setToken', 'removeToken', 'setCurrentUser']),
     changeTab(index) {
       this.user = this.tabs[index]
       this.form = true
@@ -39,6 +52,77 @@ export default {
     cancel(payload) {
       this.form = payload
       console.log('Payload is ', payload)
+    },
+    async submitForm () {
+      console.log('Form was submitted')
+      axios.defaults.headers.common['Authorization'] = ''
+      localStorage.removeItem('token')
+
+      console.log(this.email)
+      const formData = {
+        username: this.email,
+        password: this.password
+      }
+      try {
+        const response = await axios.post(process.env.VUE_APP_API_URL + '/token/login', formData)
+        const token = response.data.auth_token
+        this.setToken(token)
+        axios.defaults.headers.common['Authorization'] = 'Token ' + token
+        localStorage.setItem('token', token)
+        // console.log(axios.defaults.headers.common)
+        localStorage.setItem('isAuthenticated', 'true')
+        // console.log('Redirect to ', this.$route)
+        const user = await axios.get(process.env.VUE_APP_API_URL + '/users/me')
+        // const user = await axios.get(process.env.VUE_APP_API_URL + '/users/me', {
+        //   headers: {
+        //     Authorization: 'Token ' + token
+        //   }
+        // })
+        if (user.data && user.data.isDoctor) {
+          // console.log(user.data)
+          this.setCurrentUser(user.data)
+          localStorage.setItem('currentUser', JSON.stringify(user.data))
+          const toPath = this.$route.query.to || '/'
+          this.$router.push(toPath)
+        } else {
+          console.log('This id does not belong to a doctor')
+        }
+        // }
+      } catch (error) {
+        if (error.response) {
+          for (const property in error.response.data) {
+            this.errors.push(`${property}: ${error.response.data[property]}`)
+          }
+        } else {
+          this.errors.push('Something went wrong. Please try again')
+
+          console.log(JSON.stringify(error))
+        }
+      }
+      // } else {
+      // console.log('User is not a doctor')
+      // }
+      // await axios.post(process.env.VUE_APP_API_URL + '/token/login', formData).then((response) => {
+      //   const token = response.data.auth_token
+      //   this.setToken(token)
+      //   axios.defaults.headers.common['Authorization'] = 'Token ' + token
+      //   localStorage.setItem('token', token)
+      //   localStorage.setItem('isAuthenticated', 'true')
+      //   console.log('Redirect to ', this.$route)
+      //   const toPath = this.$route.query.to || '/'
+      //   this.$router.push(toPath)
+      // })
+      //   .catch(error => {
+      //     if (error.response) {
+      //       for (const property in error.response.data) {
+      //         this.errors.push(`${property}: ${error.response.data[property]}`)
+      //       }
+      //     } else {
+      //       this.errors.push('Something went wrong. Please try again')
+
+      //       console.log(JSON.stringify(error))
+      //     }
+      //   })
     }
   }
 }

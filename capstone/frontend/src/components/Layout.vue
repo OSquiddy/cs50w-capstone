@@ -41,7 +41,7 @@
                 <span class="menu-item-text">Settings</span>
               </li>
             </router-link>
-            <li class="menu-item mt-auto">
+            <li class="menu-item mt-auto" @click="logout">
               <img src="../../src/assets/logout.svg" alt="logout" class="menu-icon" />
               <span class="menu-item-text">Logout</span>
             </li>
@@ -64,7 +64,7 @@
         </button>
         <div class="user-options">
           <div class="header-profile-pic"></div>
-          <div class="header-username">John Doe</div>
+          <div class="header-username">{{currentUser.fullname}}</div>
         </div>
       </header>
       <template v-if="patientHeader">
@@ -85,6 +85,7 @@
 import PatientHeader from './PatientHeader.vue'
 import LocalTabs from '../components/LocalTabs.vue'
 import { mapState, mapActions } from 'vuex'
+import axios from 'axios'
 export default {
   name: 'Layout',
   components: { PatientHeader, LocalTabs },
@@ -95,16 +96,28 @@ export default {
     }
   },
   computed: {
-    ...mapState(['isCollapsed']),
+    ...mapState(['isCollapsed', 'patient', 'currentUser']),
     patientHeader() {
       return this.$route.matched.some(({ name }) => name === 'patient-main')
     }
   },
+  watch: {
+    patientHeader(newValue, oldValue) {
+      if (this.patientHeader) {
+        const patientID = this.$route.path.split('/')[2]
+        this.getPatientInfo(patientID)
+      }
+    }
+  },
   mounted () {
     this.setTab()
+    if (this.patientHeader) {
+      const patientID = this.$route.path.split('/')[2]
+      this.getPatientInfo(patientID)
+    }
   },
   methods: {
-    ...mapActions(['toggleCollapse']),
+    ...mapActions(['toggleCollapse', 'getPatientInfo', 'removeToken']),
     selectTab (tabIndex) {
       this.selectedTab = tabIndex
     },
@@ -112,6 +125,18 @@ export default {
       if (this.pageNames.indexOf(this.$route.name) !== -1) {
         this.selectedTab = this.pageNames.indexOf(this.$route.name)
       }
+    },
+    async logout () {
+      // console.log(axios.defaults.headers.common)
+      await axios.post(process.env.VUE_APP_API_URL + '/token/logout')
+      axios.defaults.headers.common.Authorization = ''
+      // console.log(axios.defaults.headers.common)
+
+      localStorage.removeItem('token')
+      localStorage.setItem('isAuthenticated', false)
+      this.removeToken()
+
+      this.$router.push('/login')
     }
   }
 }
