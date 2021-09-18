@@ -50,6 +50,12 @@ def patients(request, orderBy):
     serializer = PatientSerializer(patientList, many=True)
     return Response({"patientList": serializer.data})
 
+@api_view(['GET'])
+def doctors(request):
+    doctorList = Doctor.objects.all().order_by('first_name')
+    serializer = DoctorSerializer(doctorList, many=True)
+    return Response({"doctorList": serializer.data})
+
 @api_view(['GET', 'POST'])
 def filteredPatients(request, orderBy, query):
     query = str(query)
@@ -62,6 +68,12 @@ def patientInfo(request, id):
     patientInfo = Patient.objects.get(id=id)
     serializer = PatientSerializer(patientInfo)
     return Response({ "patientInfo": serializer.data })
+
+@api_view(['GET'])
+def doctorInfo(request, id):
+    doctorInfo = Doctor.objects.get(id=id)
+    serializer = DoctorSerializer(doctorInfo)
+    return Response({ "doctorInfo": serializer.data })
 
 @api_view(['GET'])
 def numPatients(request):
@@ -276,3 +288,20 @@ def getNumReports(request, patientID):
     patient = Patient.objects.get(id=patientID)
     patient = PatientSerializer(patient)
     return Response({ "completedVisits": serializer.data, "patient": patient.data })
+
+@api_view(['POST'])
+def appointment(request, patientID, doctorID):
+    patient = Patient.objects.get(id=patientID)
+    doctor = Doctor.objects.get(id=doctorID)
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        print(request.body)
+        Visit.objects.create(patient=patient, assigned_doctor=doctor, date=data['date'], time_from=data['time1'], time_till=data['time2'], Unit='01', payment=data['payment'])
+    return Response()
+
+# @api_view(['POST'])
+# def verifyDoctor(request):
+#     data = json.loads(request.body)
+#     response = False
+#     try:
+#         doctor = 

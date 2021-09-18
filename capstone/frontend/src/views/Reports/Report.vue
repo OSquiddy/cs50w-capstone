@@ -20,7 +20,7 @@
             </li>
           </ol>
         </div>
-        <div class="uploaded-reports-section">
+        <!-- <div class="uploaded-reports-section">
           <div class="uploaded-reports-header">Uploaded Reports</div>
           <ol>
             <li class="uploaded-report report">Report for Visit 5 <span class="report-date">05-09-2021</span></li>
@@ -29,7 +29,7 @@
             <li class="uploaded-report report">Report for Visit 2 <span class="report-date">05-09-2021</span></li>
             <li class="uploaded-report report">Report for Visit 1 <span class="report-date">05-09-2021</span></li>
           </ol>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

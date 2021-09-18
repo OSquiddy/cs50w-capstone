@@ -1,61 +1,86 @@
 <template>
   <div class="dropdown">
-    <input type="text" :placeholder="placeholder" id="myInput" @keyup="filterFunction()" @blur="hide()" @focus="show()">
-    <div id="myDropdown" class="dropdown-content">
-      <a href="#about">
+    <input type="text" :placeholder="placeholder" :id="id" :name="id" @keyup="filterFunction()" @focus="toggleDropdown()" v-model="user.fullname" autocomplete="off">
+    <ul id="myDropdown" class="dropdown-content" :class="open && 'show'">
+      <li v-if="isPatient">
         <div class="dropdown-row-container">
           <div class="img add-patient-img-container">
             <img src="../assets/add-patient.svg" alt="add-patient-icon" class="add-patient-img">
           </div>
           <div class="add-patient"> Add new patient </div>
         </div>
-      </a>
-      <a href="#" v-for="patient in patients" :key="patient.id">
+      </li>
+      <li v-for="user in dataList" :key="user.id" @click="isPatient ? selectPatient(user.id) : selectDoctor(user.id)">
         <div class="dropdown-row-container">
           <div class="img"></div>
-          <div class="dropdown-content-text patient-group">
-            <div class="patient-name"> {{patient.first_name}} {{patient.last_name}} </div>
-            <div class="patient-id"> ID: {{patient.id}} </div>
+          <div class="dropdown-content-text user-group">
+            <div class="user-name"> {{user.fullname}} </div>
+            <div class="user-id"> ID: {{user.id}} </div>
           </div>
         </div>
-      </a>
-    </div>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'SearchableDropdown',
-  props: ['placeholder'],
+  props: ['placeholder', 'dataList', 'isPatient', 'id'],
   data() {
     return {
-      patients: [
-        { id: 12, first_name: 'Harry', last_name: 'Potter' },
-        { id: 14, first_name: 'Hermione', last_name: 'Granger' },
-        { id: 13, first_name: 'Ron', last_name: 'Weasley' }
-      ]
+      open: false
     }
   },
+  computed: {
+    ...mapState(['patient', 'doctor']),
+    user () {
+      return this.isPatient ? this.patient : this.doctor
+    }
+  },
+  created () {
+    window.onclick = (event) => {
+      if (event.target.id !== this.id && this.open) {
+        this.toggleDropdown()
+      }
+    }
+  },
+  beforeDestroy () {
+    window.removeEventListener('click', (event) => {
+      if (event.target.id !== this.is && this.open) {
+        this.toggleDropdown()
+      }
+    })
+  },
+  mounted () {
+  },
   methods: {
-    hide () {
-      document.getElementById('myDropdown').classList.remove('show')
-    },
-    show () {
-      document.getElementById('myDropdown').classList.add('show')
+    ...mapActions(['getPatientInfo', 'getDoctorInfo']),
+    toggleDropdown () {
+      this.open = !this.open
     },
     filterFunction () {
-      const input = document.getElementById('myInput')
+      const input = document.getElementById(this.id)
       const filter = input.value.toUpperCase()
       const div = document.getElementById('myDropdown')
-      const a = div.getElementsByTagName('a')
-      for (let i = 0; i < a.length; i++) {
-        const txtValue = a[i].textContent || a[i].innerText
+      const li = div.getElementsByTagName('li')
+      for (let i = 0; i < li.length; i++) {
+        const txtValue = li[i].textContent || li[i].innerText
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          a[i].style.display = ''
+          li[i].style.display = ''
         } else {
-          a[i].style.display = 'none'
+          li[i].style.display = 'none'
         }
       }
+    },
+    selectPatient (id) {
+      this.getPatientInfo(id)
+      this.open = !this.open
+    },
+    selectDoctor (id) {
+      this.getDoctorInfo(id)
+      this.open = !this.open
     }
   }
 }
@@ -90,7 +115,7 @@ export default {
 }
 
 /* The search field when it gets focus/clicked on */
-#myInput:focus {outline: 3px solid #ddd;}
+:where(#doctor, #patient):focus {outline: 3px solid #ddd;}
 
 /* The container <div> - needed to position the dropdown content */
 .dropdown {
@@ -108,10 +133,13 @@ export default {
   z-index: 1;
   max-height: 300px;
   overflow: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 /* Links inside the dropdown */
-.dropdown-content a {
+.dropdown-content li {
   color: black;
   padding: 5px 16px;
   text-decoration: none;
@@ -119,10 +147,11 @@ export default {
   &:first-child {
     padding-top: 15px;
   }
+  &:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+  }
 }
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #f1f1f1}
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
