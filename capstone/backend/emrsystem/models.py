@@ -4,6 +4,7 @@ from io import BytesIO
 from PIL import Image
 from django.core.files import File
 from django.db.models.fields.related import OneToOneField
+from django.core.files.storage import FileSystemStorage
 
 # Functions that a model can use
 def calc_visit(patient):
@@ -12,6 +13,15 @@ def calc_visit(patient):
         return prev_visits[0] + 1
     else:
         return 1
+
+class OverwriteStorage(FileSystemStorage):
+    def get_available_name(self, name, max_length=None):
+        self.delete(name)
+        return name
+
+def new_filename(instance, filename):
+        basename, extension = filename.split('.')
+        return f"{instance.id}_{instance.username}.{extension}"
 
 # def check_validity(visit):
 #     prev_visit = Visit.objects.filter(patient=visit.patient).order_by('-visit_number')
@@ -25,9 +35,17 @@ class MyBaseUser(AbstractUser):
     date_of_birth = models.DateField(null=True)
     isDoctor = models.BooleanField()
     isPatient = models.BooleanField()
+    profilePic = models.ImageField(upload_to=new_filename, storage=OverwriteStorage(), null=True)
     
     def fullname(self):
         return f"{self.first_name} {self.last_name}"
+
+    def geProfileUrl(self):
+        if self.profilePic and hasattr(self.profilePic, 'url'):
+            return self.profilePic.url
+        else:
+            pass
+            # return "/static/network/images/defaultAvatar.png"
 
     def __str__(self):
         return f"{self.username}"

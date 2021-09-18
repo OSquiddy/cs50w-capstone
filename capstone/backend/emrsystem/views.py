@@ -299,9 +299,18 @@ def appointment(request, patientID, doctorID):
         Visit.objects.create(patient=patient, assigned_doctor=doctor, date=data['date'], time_from=data['time1'], time_till=data['time2'], Unit='01', payment=data['payment'])
     return Response()
 
-# @api_view(['POST'])
-# def verifyDoctor(request):
-#     data = json.loads(request.body)
-#     response = False
-#     try:
-#         doctor = 
+@api_view(['POST', 'GET'])
+def uploadImage(request):
+    user = request.user
+    form = ImageUploadForm()
+    if request.method == 'POST':
+        user.profilePic = request.FILES.get('image')
+        user.save()
+        # form = ImageUploadForm(request.POST, request.FILES, instance=user)
+        # if form.is_valid():
+        #     print('Form is valid')
+        #     form.save()
+        # else:
+        #     print(request.POST, request.FILES, form)
+        #     print('Form is invalid')
+    return Response({ "user": UserSerializer(user).data })
