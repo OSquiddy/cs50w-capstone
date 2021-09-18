@@ -39,9 +39,11 @@
         </div>
       </div>
     </div>
-    <button class="new-appointment">
-      <img src="../../assets/plus.svg" alt="add-symbol">
-    </button>
+    <router-link :to="{ name: 'add-appointment' }" >
+      <button class="new-appointment">
+        <img src="../../assets/plus.svg" alt="add-symbol">
+      </button>
+    </router-link>
   </div>
 </template>
 

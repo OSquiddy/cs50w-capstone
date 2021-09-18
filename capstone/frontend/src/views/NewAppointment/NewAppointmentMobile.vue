@@ -4,15 +4,19 @@
       <div class="container">
         <div class="row">
           <div class="col header px-4 py-3">
-            <img src="../../assets/cancel.svg" class="cancel" alt="cross/cancel-icon" />
+            <button class="cancel" @click="$router.go(-1)">
+              <img src="../../assets/cancel.svg" alt="cross/cancel-icon" />
+            </button>
             <div class="page-header">New Appointment</div>
-            <img src="../../assets/tick.svg" class="accept" alt="accept-icon" />
+            <button class="accept" type="submit" form="add-appt-form">
+              <img src="../../assets/tick.svg" alt="accept-icon" />
+            </button>
           </div>
         </div>
       </div>
     </header>
     <div class="add-appointment-container">
-      <form action="" method="post">
+      <form action="" method="post" id="add-appt-form" @submit.prevent="createAppointment">
         <div class="container new-section">
           <div class="row">
             <div class="col">
@@ -23,19 +27,7 @@
                 <div class="col-10 section-info">
                   <div class="section-info-container">
                     <div class="section-input-group">
-                      <input type="text" name="patient" id="patient" placeholder="Patient Name" autocomplete="off" />
-                      <SearchableDropdown :placeholder="'Patient Name'" />
-                      <!-- <vSelect :options="patients" v-model="fullname" label="fullname">
-                        <template v-slot:option="option">
-                          <div class="dropdown-row-container">
-                          <div class="img"></div>
-            <div class="dropdown-content-text patient-group">
-              <div class="patient-name"> {{option.fullname}} </div>
-              <div class="patient-id"> ID: {{option.id}} </div>
-            </div>
-                          </div>
-                        </template>
-                      </vSelect> -->
+                      <SearchableDropdown :id="'patient'" :placeholder="'Patient Name'" :dataList="patientsList" :isPatient="true"/>
                     </div>
                   </div>
                 </div>
@@ -82,7 +74,7 @@
                 <div class="col-10 section-info">
                   <div class="section-info-container">
                     <div class="section-input-group">
-                      <input type="text" name="doctor" id="doctor" placeholder="Doctor Name" autocomplete="off" />
+                      <SearchableDropdown :id="'doctor'" :placeholder="'Doctor Name'" :dataList="doctorsList"/>
                     </div>
                   </div>
                 </div>
@@ -91,6 +83,24 @@
           </div>
         </div>
         <hr class="section-divider" />
+        <div class="container new-section">
+          <div class="row">
+            <div class="col">
+              <div class="row name-section justify-content-between">
+                <div class="col-1 section-icon">
+                  <img src="../../assets/doctor.svg" alt="doctor-icon" class="doctor-icon" />
+                </div>
+                <div class="col-10 section-info">
+                  <div class="section-info-container">
+                    <div class="section-input-group">
+                      <input type="number" name="payment" id="payment" placeholder="Payment" autocomplete="off" v-model="payment" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
   </div>
@@ -100,6 +110,8 @@
 import { Datetime } from 'vue-datetime'
 import { DateTime } from 'luxon'
 import SearchableDropdown from '../../components/SearchableDropdown.vue'
+import axios from 'axios'
+import { mapState } from 'vuex'
 // import vSelect from 'vue-select'
 export default {
   name: 'NewPatientMobile',
@@ -112,21 +124,46 @@ export default {
     return {
       time1: '07:00',
       time2: '07:30',
-      patients: [
-        { id: 12, fullname: 'Harry Potter' },
-        { id: 14, fullname: 'Hermione Granger' },
-        { id: 13, fullname: 'Ron Weasley' }
-      ],
-      fullname: null,
-      date: DateTime.now().toFormat('yyyy-MM-dd')
+      patientsList: [],
+      doctorsList: [],
+      date: DateTime.now().toFormat('yyyy-MM-dd'),
+      payment: 0
     }
   },
-  // computed: {
-  //   date() {
-  //     return
-  //   }
-  // },
+  computed: {
+    ...mapState(['patient', 'doctor'])
+  },
+  watch: {
+    date(newValue, oldValue) {
+      console.log(newValue, typeof (newValue))
+    }
+  },
   mounted () {
+    this.getPatientsList()
+    this.getDoctorsList()
+  },
+  methods: {
+    async getPatientsList () {
+      const list = await axios.get(process.env.VUE_APP_API_URL + '/patientList/id')
+      this.patientsList = list.data.patientList
+    },
+    async getDoctorsList () {
+      const list = await axios.get(process.env.VUE_APP_API_URL + '/doctorList')
+      this.doctorsList = list.data.doctorList
+    },
+    async createAppointment () {
+      const data = {
+        date: DateTime.fromISO(this.date).toFormat('yyyy-MM-dd'),
+        time1: DateTime.fromISO(this.time1).toFormat('HH:mm'),
+        time2: DateTime.fromISO(this.time2).toFormat('HH:mm'),
+        payment: this.payment
+      }
+      const response = await axios.post(process.env.VUE_APP_API_URL + '/createAppointment/' + this.patient.id + '/' + this.doctor.id, data)
+
+      if (response.status === 200) {
+        this.$router.push({ name: 'appointments' })
+      }
+    }
   }
 }
 </script>

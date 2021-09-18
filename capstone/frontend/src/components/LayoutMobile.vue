@@ -66,9 +66,9 @@ export default {
   }
 }
 
-.main {
-  overflow: hidden;
-}
+// .main {
+//   // overflow: hidden;
+// }
 
 .container-shadow {
   box-shadow: 0 1px 3px 0px rgba(0,0,0,0.2);
