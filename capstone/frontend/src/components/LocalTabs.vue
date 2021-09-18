@@ -4,7 +4,7 @@
       <li class="tab active" @click="selectTab(0, $event)">Upcoming</li>
       <li class="tab" @click="selectTab(1, $event)">History</li>
       <li class="tab" @click="selectTab(2, $event)">Reports</li>
-      <li class="tab" @click="selectTab(3, $event)">Notes</li>
+      <!-- <li class="tab" @click="selectTab(3, $event)">Notes</li> -->
     </ul>
   </div>
 </template>
