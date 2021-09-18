@@ -5,27 +5,31 @@
     </div>
     <div class="patient-info-container">
       <div class="patient-title">
-        Ronald Weasley, 17, M
+        {{patient.fullname}}, {{patient.age}}, {{patient.sex}}
       </div>
       <div class="patient-address">
-        The Burrow, St. Ottery Catchpole
+        {{patient.address}}
         <br>
         UK
       </div>
       <div class="patient-meta">
-        <div class="patient-dob">31/04/1980</div>
-        <div class="patient-mobile">+1 324 (634) 4295</div>
-        <div class="patient-email">roonil_wazlib@hogwarts.com</div>
+        <div class="patient-dob">{{patient.date_of_birth}}</div>
+        <div class="patient-mobile">{{patient.Phone_Number}}</div>
+        <div class="patient-email">{{patient.email}}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'PatientHeader',
   data () {
     return {}
+  },
+  computed: {
+    ...mapState(['patient'])
   }
 }
 </script>
