@@ -22,11 +22,13 @@ const store = new Vuex.Store({
     async getPatientInfo({ commit }, patientID) {
       const response = await axios.get(process.env.VUE_APP_API_URL + '/p/' + patientID)
       const value = response.data.patientInfo
+      sessionStorage.setItem('patient', JSON.stringify(value))
       commit('GET_PATIENT_INFO', value)
     },
     async getDoctorInfo({ commit }, doctorID) {
       const response = await axios.get(process.env.VUE_APP_API_URL + '/d/' + doctorID)
       const value = response.data.doctorInfo
+      sessionStorage.setItem('doctor', JSON.stringify(value))
       commit('GET_DOCTOR_INFO', value)
     },
     setCurrentUser({ commit }, value) {
