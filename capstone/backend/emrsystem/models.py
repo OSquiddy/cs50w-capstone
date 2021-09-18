@@ -23,6 +23,8 @@ class MyBaseUser(AbstractUser):
     Phone_Number = models.CharField(null=True, max_length=15)
     address = models.TextField(null=True)
     date_of_birth = models.DateField(null=True)
+    isDoctor = models.BooleanField()
+    isPatient = models.BooleanField()
     
     def fullname(self):
         return f"{self.first_name} {self.last_name}"
@@ -152,7 +154,7 @@ class Visit(models.Model):
         (UNIT2, '02')
     ]
     Unit = models.CharField(blank=True, max_length=2, choices=unit_choices)
-    visit_completed = models.BooleanField()
+    visit_completed = models.BooleanField(default=False)
 
     class Meta:
         constraints = [
