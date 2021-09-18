@@ -18,22 +18,29 @@ export default {
     return {}
   },
   computed: {
-    ...mapState(['isMobile', 'token', 'isAuthenticated'])
+    ...mapState(['isMobile', 'token', 'isAuthenticated', 'currentUser', 'patient'])
   },
   beforeCreate () {
-    const token = this.token
     this.$store.commit('CHECK_TOKEN')
-
+  },
+  created () {
+    // this.checkToken()
+    if (localStorage.getItem('currentUser')) {
+      const user = JSON.parse(localStorage.getItem('currentUser'))
+      this.setCurrentUser(user)
+    }
+    if (sessionStorage.getItem('patient') && this.patient === {}) {
+      const patient = JSON.parse(sessionStorage.getItem('patient'))
+      this.$store.commit('GET_PATIENT_INFO', patient)
+    }
+  },
+  mounted () {
+    const token = this.token
     if (token) {
       axios.defaults.headers.common['Authorization'] = 'Token ' + token
     } else {
       axios.defaults.headers.common['Authorization'] = ''
     }
-  },
-  created () {
-    // this.checkToken()
-  },
-  mounted () {
     this.onResize()
     window.addEventListener('resize', this.onResize, { passive: true })
     if (sessionStorage.getItem('isCollapsed') === 'true') {
@@ -41,7 +48,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['toggleCollapse', 'setMobileView', 'checkToken']),
+    ...mapActions(['toggleCollapse', 'setMobileView', 'checkToken', 'setCurrentUser']),
     onResize () {
       const payload = window.innerWidth < 600
       this.setMobileView(payload)
