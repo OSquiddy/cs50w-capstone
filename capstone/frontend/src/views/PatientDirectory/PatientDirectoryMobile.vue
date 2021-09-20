@@ -23,9 +23,11 @@
         </router-link>
       </template>
     </div>
-    <button class="new-appointment">
-      <img src="../../assets/plus.svg" alt="add-symbol">
-    </button>
+    <router-link :to="'add/p'">
+      <button class="new-appointment">
+        <img src="../../assets/plus.svg" alt="add-symbol">
+      </button>
+    </router-link>
   </div>
 </template>
 
