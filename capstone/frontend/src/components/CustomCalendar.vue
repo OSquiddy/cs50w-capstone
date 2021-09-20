@@ -18,14 +18,17 @@
     <template v-if="appointmentsList.length">
     <div class="appointment-list mt-3" v-for="appointment in appointmentsList" :key="appointment.key">
         <div class="appointment-patient-list" v-for="patient in appointment.customData.patientsList" :key="patient.id">
-          <div class="patient-appt-container">
-            <div class="vertical-accent"></div>
-            <div class="patient-appt-details">
-              <div class="patient-appt-name">{{ patient.name }}</div>
-              <div class="patient-appt-time">{{ patient.time }}</div>
+          <router-link :to="{name: 'visit', params: {id: patient.id, visitNumber: patient.visitNumber }}">
+            <div class="patient-appt-container">
+              <div class="vertical-accent"></div>
+              <div class="patient-appt-details">
+                <div class="patient-appt-name">{{ patient.name }}</div>
+                <div class="patient-appt-time">{{ patient.time }}</div>
+              </div>
+              <button class="patient-appt-join" v-if="!patient.visitCompleted">Join</button>
+              <img class="completed-appt" src="../assets/completed.svg" svg-inline alt="completed-logo" v-if="patient.visitCompleted">
             </div>
-            <button class="patient-appt-join">Join</button>
-          </div>
+          </router-link>
         </div>
     </div>
     </template>
@@ -251,6 +254,18 @@ export default {
     // &:hover {
     //   background: yellow;
     // }
+  }
+}
+
+::v-deep .completed-appt {
+  display: flex;
+  margin-left: auto;
+  width: 30px;
+  height: 30px;
+  // filter: brightness(0) invert(24%) sepia(0%) saturate(1180%) hue-rotate(135deg) brightness(96%) contrast(86%);
+  align-self: center;
+  * {
+    fill: var(--dark-gray);
   }
 }
 </style>
