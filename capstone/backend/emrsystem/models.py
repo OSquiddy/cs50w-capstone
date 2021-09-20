@@ -35,8 +35,15 @@ class MyBaseUser(AbstractUser):
     date_of_birth = models.DateField(null=True)
     isDoctor = models.BooleanField()
     isPatient = models.BooleanField()
-    profilePic = models.ImageField(upload_to=new_filename, storage=OverwriteStorage(), null=True)
-    
+    profilePic = models.ImageField(upload_to=new_filename, storage=OverwriteStorage(), null=True, blank=True)
+    sex_choices = [
+        ('',''),
+        ('m', 'Male'),
+        ('f', 'Female'),
+        ('o', 'Other')
+    ]
+    sex = models.CharField(null=True, blank=True, max_length=1, choices=sex_choices)
+
     def fullname(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -139,14 +146,6 @@ class Patient(MyBaseUser):
         (OPD, 'Out-Patient Department')
     ]
     patient_type = models.CharField(null=True, blank=True, max_length=3, choices=patientType_choices)
-    
-    sex_choices = [
-        ('',''),
-        ('m', 'Male'),
-        ('f', 'Female'),
-        ('o', 'Other')
-    ]
-    sex = models.CharField(null=True, blank=True, max_length=1, choices=sex_choices)
     
     class Meta:
         verbose_name="patient"
