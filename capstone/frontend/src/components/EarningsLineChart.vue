@@ -58,7 +58,7 @@ export default {
       // set the dimensions and margins of the graph
       d3.select('.earnings-chart-container > *').remove()
       const container = document.querySelector('.earnings-chart-container')
-      const margin = { top: 10, right: 30, bottom: 30, left: 60 }
+      const margin = { top: 10, right: 30, bottom: 30, left: 50 }
       const width = container.clientWidth - margin.left - margin.right
       const height = container.clientHeight - margin.top - margin.bottom
 
