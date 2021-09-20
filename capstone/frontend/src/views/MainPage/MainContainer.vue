@@ -8,7 +8,7 @@
               <div class="row tiles-container">
                 <div class="col">
                   <div class="greeting-section tile">
-                  <div class="greeting">Hello, <span class="doctor-name">John Doe</span></div>
+                  <div class="greeting">Hello, <span class="doctor-name">{{currentUser.fullname}}</span></div>
                   <div class="greeting-text">Have a nice day and don't forget to take care of your health!</div>
                   <div class="greetings-img">
                     <img src="../../assets/greetingsBg.svg" alt="greetings-img">
@@ -81,6 +81,7 @@ import axios from 'axios'
 import CustomCalendar from '../../components/CustomCalendar.vue'
 import EarningsChart from '../../components/EarningsLineChart.vue'
 import BarChart from '../../components/EarningsBarChart.vue'
+import { mapState } from 'vuex'
 export default {
   components: { CustomCalendar, EarningsChart, BarChart },
   name: 'MainContainer',
@@ -89,6 +90,9 @@ export default {
       numPatients: null,
       lastPatient: null
     }
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   mounted () {
     this.getLastPatient()
