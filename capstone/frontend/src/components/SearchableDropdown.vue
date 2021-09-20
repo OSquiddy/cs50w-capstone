@@ -7,7 +7,9 @@
           <div class="img add-patient-img-container">
             <img src="../assets/add-patient.svg" alt="add-patient-icon" class="add-patient-img">
           </div>
-          <div class="add-patient"> Add new patient </div>
+          <router-link :to="{ name: 'add-patient' }">
+            <div class="add-patient"> Add new patient </div>
+          </router-link>
         </div>
       </li>
       <li v-for="user in dataList" :key="user.id" @click="isPatient ? selectPatient(user.id) : selectDoctor(user.id)">
