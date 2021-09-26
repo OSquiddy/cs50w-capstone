@@ -40,7 +40,7 @@ As I said, I got a bit too ambitious. Shortly after I started this project I was
 
 # *Electronic Medical Record / Hospital Management System*
 
-This project was built using Django + Django Rest Framework (DRF) as the backend, with Vue.js (Vue 2) as the frontend. All generated information is stored in the default SQLite database. If I am able to host this site on a platform, like my other CS50W I'll probably go ahead with PostgreSQL. 
+This project was built using Django + Django Rest Framework (DRF) as the backend, with Vue.js (Vue 2) as the frontend. All generated information is stored in the default SQLite database. If I am able to host this site on a platform, like my other CS50W projects I'll probably go ahead with PostgreSQL. 
 
 ## Installation
 
@@ -69,7 +69,7 @@ Complexity for this project can be argued in a few different ways.
 
 The first complexity I'd say came from learning how to integrate Django with a frontend framework like Vue. There were a lot of different approaches available, and I was very keen on being able to implement one that would allow me to keep the Django templating engine, alongside whatever frontend framework I was using. I grew somewhat attached to the simplicity of Django's frontend management, and felt that keeping Django as just a backend would be limiting its potential.
 
-I read quite a few different articles and blogs to find out if there was a way to get the behaviour I wanted, and there *was* one person who did it... but unfortunately, their method did not work for me. I've included a link though. Maybe someone else will be able to figure out something. I might try that method again later.
+I read quite a few different articles and blogs to find out if there was a way to get the behaviour I wanted, and there *was* one person who did it... but unfortunately, their method did not work for me. I've included a link though. Maybe someone else will be able to figure out something. I will definitely be revisiting that method later.
 
 What I finally settled with was the Django Rest Framework (DRF), where Django is used only for the API endpoints. The frontend is completely managed by Vue.
 
@@ -95,7 +95,7 @@ Another
     - **emrsystem** - the app created for this project
       - **migrations** - contains the migration data for the app
       - **admin.py** - contains the admin panel related code
-      - apps.py
+      - **apps.py**
       - **models.py** - contains all the models for the app
       - **serializers.py** - contains all the serializers for the models *(JSON)*. This is needed for communication with the frontend using the Rest Framework
       - **urls.py** - contains the urls for the app
@@ -110,7 +110,7 @@ Another
   - **node_modules** - contains all the dependencies and sub-dependencies installed through npm
   - **public** - contains all public assets *This mainly contains the reports generated through the ReportLab library*
   - **src** - contains the source code for the Vue app
-    - assets - contains the static data that needs to be served on the app using the **development server**
+    - **assets** - contains the static data that needs to be served on the app using the **development server**
     - **components** - contains all the reusable Vue components created for the app
       - **CustomCalendar.vue** - Code for the daily upcoming appointments viewer. The doctor can view all upcoming appointments for a certain day by clicking on it's date. This components only shows the doctor the appointments for the current month. For the rest of the appointments the doctor can visit the dedicated Appointments page.
       - **EarningsBarChart.vue** - contains the code for the barchart found on the Overview page. The chart is generated using the **D3.js** library. It shows the month-wise earnings of the establishment.
