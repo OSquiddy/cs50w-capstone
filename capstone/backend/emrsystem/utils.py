@@ -245,7 +245,7 @@ def generatePDFReport(visit, examination):
     tbl_data = [['PAST MEDICAL HISTORY'],]
     tbl = Table(tbl_data, colWidths='100%', style=sectionHeaderStyle, spaceAfter= 15)
     Story.append(tbl)
-    chiefComplaints = 'Patient came in with rash on their back, constantly talking shit about their gramma'
+    # chiefComplaints = 'Patient came in with rash on their back, constantly talking shit about their gramma'
     Story.append(Paragraph(chiefComplaints, styles["BodyText"]))
     Story.append(Spacer(1, 25))
 
@@ -314,7 +314,7 @@ def generatePDFReport(visit, examination):
     tbl = Table(tbl_data, colWidths='100%', style=sectionHeaderStyle, spaceAfter= 15)
     Story.append(tbl)
     tbl_data = [
-        [Paragraph(f": {diagnosis}", styles["BodyText"])]
+        [Paragraph(f"{diagnosis}", styles["BodyText"])]
     ]
     tbl = Table(tbl_data, colWidths='100%', spaceAfter=10)
     tbl.setStyle(TableStyle([

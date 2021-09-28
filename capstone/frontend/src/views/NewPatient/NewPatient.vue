@@ -1,7 +1,7 @@
 <template>
   <div class="add-patient-main">
-    <form action="" class="add-patient-form" method="POST">
-    <input type="submit" value="Save" @click.prevent="submitForm" class="save-button">
+    <form action="" class="add-patient-form" method="POST" @submit.prevent="submitForm">
+    <input type="submit" value="Save" class="save-button">
     <div class="container-fluid new-section">
       <div class="row">
         <div class="col image-section">
@@ -28,16 +28,16 @@
             <div class="col-3 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="first-name">First Name:</label>
-                  <input type="text" name="first-name" id="first-name" autocomplete="off" />
+                  <label for="first_name">First Name:</label>
+                  <input type="text" name="first_name" id="first_name" autocomplete="off" v-model="first_name" />
                 </div>
               </div>
             </div>
             <div class="col-3 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="last-name">Last Name:</label>
-                  <input type="text" name="last-name" id="last-name" autocomplete="off" />
+                  <label for="last_name">Last Name:</label>
+                  <input type="text" name="last_name" id="last_name" autocomplete="off" v-model="last_name" />
                 </div>
               </div>
             </div>
@@ -52,8 +52,8 @@
             <div class="col-6 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="last-name">Email:</label>
-                  <input type="email" name="email" id="email" value="severus.snape@hogwarts.com" autocomplete="off" />
+                  <label for="email">Email:</label>
+                  <input type="email" name="email" id="email" value="severus.snape@hogwarts.com" autocomplete="off" v-model="email" />
                 </div>
               </div>
             </div>
@@ -68,7 +68,7 @@
             <div class="col-6 section-info">
               <div class="section-info-container">
                 <div class="section-title">Mobile:</div>
-                <vue-tel-input :autoDefaultCountry="true" :dropdownOptions="{ showDialCodeInSelection: true, showDialCodeInList: true, showFlags: true }">
+                <vue-tel-input :autoDefaultCountry="true" :dropdownOptions="{ showDialCodeInSelection: true, showDialCodeInList: true, showFlags: true }" v-model="mobile">
                   <template v-slot:arrow-icon>
                     <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left: 3px;" xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -91,8 +91,8 @@
             <div class="col-6 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="last-name">Date of Birth:</label>
-                  <input type="date" name="dob" id="dob" autocomplete="off" />
+                  <label for="dob">Date of Birth:</label>
+                  <input type="date" name="dob" id="dob" autocomplete="off" v-model="dob" />
                 </div>
               </div>
             </div>
@@ -107,8 +107,8 @@
             <div class="col-6 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="last-name">Address:</label>
-                  <input type="text" name="address" id="address" autocomplete="off" />
+                  <label for="address">Address:</label>
+                  <input type="text" name="address" id="address" autocomplete="off" v-model="address" />
                 </div>
               </div>
             </div>
@@ -117,16 +117,16 @@
             <div class="col-3 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="last-name">City:</label>
-                  <input type="text" name="city" id="city" autocomplete="off" />
+                  <label for="city">City:</label>
+                  <input type="text" name="city" id="city" autocomplete="off" v-model="city" />
                 </div>
               </div>
             </div>
             <div class="col-3 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="last-name">State:</label>
-                  <input type="text" name="state" id="state" autocomplete="off" />
+                  <label for="state">State:</label>
+                  <input type="text" name="state" id="state" autocomplete="off" v-model="state" />
                 </div>
               </div>
             </div>
@@ -135,16 +135,16 @@
             <div class="col-3 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="last-name">Zipcode:</label>
-                  <input type="text" name="zipcode" id="zipcode" autocomplete="off" />
+                  <label for="zipcode">Zipcode:</label>
+                  <input type="text" name="zipcode" id="zipcode" autocomplete="off" v-model="zipcode" />
                 </div>
               </div>
             </div>
             <div class="col-3 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="last-name">Country:</label>
-                  <input type="text" name="Country" id="Country" autocomplete="off" />
+                  <label for="country">Country:</label>
+                  <input type="text" name="Country" id="Country" autocomplete="off" v-model="country"/>
                 </div>
               </div>
             </div>
@@ -161,15 +161,15 @@
                 <div class="section-title">Gender:</div>
                 <div class="section-data gender-options-container">
                   <div class="gender-option">
-                    <input type="radio" name="gender-option" id="male" />
+                    <input type="radio" name="sex" id="male" v-model="sex" value="m" />
                     <label for="male">M</label>
                   </div>
                   <div class="gender-option">
-                    <input type="radio" name="gender-option" id="female" />
+                    <input type="radio" name="sex" id="female"  v-model="sex" value="f" />
                     <label for="female">F</label>
                   </div>
                   <div class="gender-option">
-                    <input type="radio" name="gender-option" id="other" />
+                    <input type="radio" name="sex" id="other" v-model="sex" value="o" />
                     <label for="other">O</label>
                   </div>
                 </div>
@@ -186,8 +186,8 @@
             <div class="col-6 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="father">Father's Name:</label>
-                  <input type="text" name="father" id="father" autocomplete="off" />
+                  <label for="fathers_name">Father's Name:</label>
+                  <input type="text" name="fathers_name" id="fathers_name" autocomplete="off" v-model="fathers_name"/>
                 </div>
               </div>
             </div>
@@ -202,8 +202,62 @@
             <div class="col-6 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="mother">Mother's Name:</label>
-                  <input type="text" name="mother" id="mother" autocomplete="off" />
+                  <label for="mothers_name">Mother's Name:</label>
+                  <input type="text" name="mothers_name" id="mothers_name" autocomplete="off" v-model="mothers_name" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid new-section">
+      <div class="row">
+        <div class="col occupation-section">
+          <div class="row">
+            <div class="col-3 section-info">
+              <div class="section-info-container">
+                <div class="section-input-group">
+                  <label for="blood_type">Blood Type:</label>
+                  <input list="blood_type_list" type="text" name="blood_type" id="blood_type" autocomplete="off" v-model="blood_type"/>
+                  <datalist id="blood_type_list">
+                    <option value="A+" />
+                    <option value="A-" />
+                    <option value="B+" />
+                    <option value="B-" />
+                    <option value="O+" />
+                    <option value="O-" />
+                    <option value="AB+" />
+                    <option value="AB-" />
+                  </datalist>
+                </div>
+              </div>
+            </div>
+            <div class="col-3 section-info">
+              <div class="section-info-container">
+                <div class="section-input-group">
+                  <label for="patient_type">Patient Type:</label>
+                  <input type="text" name="patient_type" id="patient_type" autocomplete="off" v-model="patient_type" list="patient_type_list"/>
+                  <datalist id="patient_type_list">
+                    <option value="In-Patient Department (IPD)" />
+                    <option value="Out-Patient Department (OPD)" />
+                  </datalist>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid new-section">
+      <div class="row">
+        <div class="col age-section">
+          <div class="row">
+            <div class="col-6 section-info">
+              <div class="section-info-container">
+                <div class="section-input-group">
+                  <label for="age">Age:</label>
+                  <input type="text" name="age" id="age" autocomplete="off" v-model="age"/>
                 </div>
               </div>
             </div>
@@ -219,7 +273,7 @@
               <div class="section-info-container">
                 <div class="section-input-group">
                   <label for="occupation">Occupation:</label>
-                  <input type="text" name="occupation" id="occupation" autocomplete="off" />
+                  <input type="text" name="occupation" id="occupation" autocomplete="off" v-model="occupation"/>
                 </div>
               </div>
             </div>
@@ -233,10 +287,61 @@
 
 <script>
 import { VueTelInput } from 'vue-tel-input'
+import axios from 'axios'
+
 export default {
   name: 'NewPatient',
   components: {
     VueTelInput
+  },
+  data () {
+    return {
+      first_name: '',
+      last_name: '',
+      sex: null,
+      country: '',
+      address: '',
+      city: '',
+      zipcode: '',
+      state: '',
+      dob: '',
+      email: '',
+      fathers_name: '',
+      mothers_name: '',
+      occupation: '',
+      mobile: null,
+      blood_type: '',
+      patient_type: '',
+      age: null
+    }
+  },
+  methods: {
+    async submitForm () {
+      const formData = {
+        first_name: this.first_name,
+        last_name: this.last_name,
+        email: this.email,
+        mobile: this.mobile,
+        dob: this.dob,
+        address: this.address,
+        city: this.city,
+        state: this.state,
+        zipcode: this.zipcode,
+        country: this.country,
+        fathers_name: this.fathers_name,
+        mothers_name: this.mothers_name,
+        occupation: this.occupation,
+        blood_type: this.blood_type,
+        patient_type: this.patient_type,
+        sex: this.sex,
+        age: this.age
+      }
+      const response = await axios.post(process.env.VUE_APP_API_URL + '/create/p', formData)
+      console.log(response)
+      if (response.status === 200) {
+        this.$router.push('/')
+      }
+    }
   }
 
 }
@@ -344,12 +449,15 @@ export default {
       z-index: 5;
       position: absolute;
       color: var(--input-text-color);
-      top: 19%;
+      top: 0;
       left: 0;
       width: 40px;
       height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    input[name='gender-option'] {
+    input[name='sex'] {
       width: 40px;
       height: 40px;
       position: relative;
@@ -357,24 +465,15 @@ export default {
       background: var(--light-gray);
       border-radius: 50%;
       appearance: none;
+      & ~ label {
+        cursor: pointer;
+      }
       &:checked {
         background: var(--primary-accent-dark);
         & ~ label {
           color: white;
         }
       }
-      // &::after {
-      //   // content: ' ';
-      //   position: absolute;
-      //   width: 40px;
-      //   height: 40px;
-      //   border-radius: 50%;
-      //   border: none;
-      //   background: var(--light-gray);
-      //   // background: var(--primary-accent-dark);
-      //   top: 0;
-      //   left: 0;
-      // }
     }
   }
 }

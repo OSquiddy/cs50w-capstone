@@ -33,8 +33,8 @@ class MyBaseUser(AbstractUser):
     Phone_Number = models.CharField(null=True, max_length=15)
     address = models.TextField(null=True)
     date_of_birth = models.DateField(null=True)
-    isDoctor = models.BooleanField()
-    isPatient = models.BooleanField()
+    isDoctor = models.BooleanField(null=True)
+    isPatient = models.BooleanField(null=True)
     profilePic = models.ImageField(upload_to=new_filename, storage=OverwriteStorage(), null=True, blank=True)
     sex_choices = [
         ('',''),
@@ -219,7 +219,7 @@ class Examination(models.Model):
         ]
 
 class PastHistory(models.Model):
-    visit = models.ForeignKey(Visit, on_delete=models.CASCADE, null=True, blank=True, related_name='past_histories')
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, null=True, blank=True, related_name='past_histories')
     surgeries = models.TextField()
     allergies = models.TextField()
     general = models.TextField()
@@ -234,7 +234,7 @@ class PastHistory(models.Model):
         verbose_name_plural="Past History"
     
     def __str__(self):
-        return f"Past History for {self.visit}"
+        return f"Past History for {self.patient}"
     
 class GynecHistory(models.Model):
     visit = models.ForeignKey(Visit, on_delete=models.CASCADE, null=True, blank=True, related_name='gynec_histories')

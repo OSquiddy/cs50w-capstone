@@ -314,3 +314,31 @@ def uploadImage(request):
         #     print(request.POST, request.FILES, form)
         #     print('Form is invalid')
     return Response({ "user": UserSerializer(user).data })
+
+@api_view(['POST'])
+def createPatient(request):
+    data = json.loads(request.body)
+    print(data)
+    fName = data['fathers_name']
+    mName = data['mothers_name']
+    firstName = data['first_name']
+    lastName = data['last_name']
+    email = data['email']
+    occupation = data['occupation']
+    sex = data['sex']
+    address = data['address'] + '\n' + data['city'] + '\n' + data['state'] + '\n' + data['zipcode'] + '\n' + data['country']
+    dob = data['dob']
+    age = data['age']
+    pType = data['patient_type']
+    blood_type = data['blood_type']
+    mob = data['mobile']
+    patient = []
+    serializer = None
+    try:
+        patient = Patient.objects.create(email=email, first_name=firstName, last_name=lastName, Phone_Number=mob,address=address, date_of_birth=dob, isDoctor=False, isPatient=True, sex=sex, age=age, fathers_name=fName, mothers_name=mName, occupation=occupation)
+        serializer = PatientSerializer(patient)
+    except Exception as e:
+        print(e)
+    return Response({ "patient": serializer.data })
+
+        # email, is_active, first_name, last_name, is_staff, date_joined, Phone_Number, address, date_of_birth, isDoctor, isPatient, sex, age, fathers_name, mothers_name, occupation, blood_type, last_visit, patient_type
