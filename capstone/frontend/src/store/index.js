@@ -22,13 +22,11 @@ const store = new Vuex.Store({
     async getPatientInfo({ commit }, patientID) {
       const response = await axios.get(process.env.VUE_APP_API_URL + '/p/' + patientID)
       const value = response.data.patientInfo
-      sessionStorage.setItem('patient', JSON.stringify(value))
       commit('GET_PATIENT_INFO', value)
     },
     async getDoctorInfo({ commit }, doctorID) {
       const response = await axios.get(process.env.VUE_APP_API_URL + '/d/' + doctorID)
       const value = response.data.doctorInfo
-      sessionStorage.setItem('doctor', JSON.stringify(value))
       commit('GET_DOCTOR_INFO', value)
     },
     setCurrentUser({ commit }, value) {
@@ -56,12 +54,15 @@ const store = new Vuex.Store({
       sessionStorage.setItem('isCollapsed', state.isCollapsed)
     },
     SET_CURRENT_USER(state, payload) {
+      sessionStorage.setItem('currentUser', JSON.stringify(payload))
       state.currentUser = payload
     },
     GET_PATIENT_INFO(state, payload) {
+      sessionStorage.setItem('patient', JSON.stringify(payload))
       state.patient = payload
     },
     GET_DOCTOR_INFO(state, payload) {
+      sessionStorage.setItem('doctor', JSON.stringify(payload))
       state.doctor = payload
     },
     SET_TOKEN(state, payload) {

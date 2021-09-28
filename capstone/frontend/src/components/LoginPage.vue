@@ -81,7 +81,6 @@ export default {
         if (user.data && user.data.isDoctor) {
           // console.log(user.data)
           this.setCurrentUser(user.data)
-          localStorage.setItem('currentUser', JSON.stringify(user.data))
           const toPath = this.$route.query.to || '/'
           this.$router.push(toPath)
         } else {
