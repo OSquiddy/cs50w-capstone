@@ -560,10 +560,13 @@ export default {
       z-index: 5;
       position: absolute;
       color: var(--input-text-color);
-      top: 19%;
+      top: 0;
       left: 0;
       width: 40px;
       height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     input[name='gender-option'] {
       width: 40px;
