@@ -19,25 +19,25 @@
           <ul class="menu my-4" :class="[isCollapsed ? 'font-small' : '']">
             <router-link to="/">
               <li class="menu-item" @click="selectTab(0)" :class="selectedTab == 0 ? 'active' : ''">
-                <img src="../../src/assets/overview.svg" alt="main-page" class="menu-icon"/>
+                <img src="../../src/assets/overview.svg" svg-inline alt="main-page" class="menu-icon"/>
                 <span class="menu-item-text">Overview</span>
               </li>
             </router-link>
             <router-link to="/directory">
               <li class="menu-item" @click="selectTab(1)" :class="selectedTab == 1 || patientHeader ? 'active' : ''">
-                <img src="../../src/assets/patientsDesktop.svg" alt="patients-page" class="menu-icon"/>
+                <img src="../../src/assets/patientsDesktop.svg" svg-inline alt="patients-page" class="menu-icon"/>
                 <span class="menu-item-text">Patients</span>
               </li>
             </router-link>
             <router-link to="/appointments">
               <li class="menu-item" @click="selectTab(2)" :class="selectedTab == 2 ? 'active' : ''">
-                <img src="../../src/assets/calendar.svg" alt="appointments-page" class="menu-icon"/>
+                <img src="../../src/assets/calendar.svg" svg-inline alt="appointments-page" class="menu-icon"/>
                 <span class="menu-item-text">Appointments</span>
               </li>
             </router-link>
             <router-link to="/settings">
               <li class="menu-item" @click="selectTab(3)" :class="selectedTab == 3 ? 'active' : ''">
-                <img src="../../src/assets/settings.svg" alt="settings-page" class="menu-icon"/>
+                <img src="../../src/assets/settings.svg" svg-inline alt="settings-page" class="menu-icon"/>
                 <span class="menu-item-text">Settings</span>
               </li>
             </router-link>
@@ -50,18 +50,18 @@
     </div>
     <div class="main-view-wrapper flex-seven">
       <header>
-        <button class="add-button">
-          <router-link :to="{name: 'add-appointment' }">
-          <img src="../assets/add-appointment.svg" class="button-logo" alt="new-appointment-logo">
-          <div class="add-button-text">New Appointment</div>
-          </router-link>
-        </button>
-        <button class="add-button">
-          <router-link :to="{name: 'add-patient' }">
-          <img src="../assets/add-patient.svg" class="button-logo" alt="new-patient-logo">
-          <div class="add-button-text">New Patient</div>
-          </router-link>
-        </button>
+        <router-link :to="{name: 'add-appointment' }" class="button-link">
+          <button class="add-button">
+            <img src="../assets/add-appointment.svg" class="button-logo" alt="new-appointment-logo">
+            <div class="add-button-text">New Appointment</div>
+          </button>
+        </router-link>
+        <router-link :to="{name: 'add-patient' }" class="button-link">
+          <button class="add-button">
+            <img src="../assets/add-patient.svg" class="button-logo" alt="new-patient-logo">
+            <div class="add-button-text">New Patient</div>
+          </button>
+        </router-link>
         <div class="user-options">
           <div class="header-profile-pic"></div>
           <div class="header-username">{{currentUser.fullname}}</div>
@@ -148,7 +148,7 @@ export default {
   overflow: hidden;
   display: flex;
 }
-.menu {
+::v-deep .menu {
   list-style-type: none;
   color: #c4c4c4;
   margin-left: 30px;
@@ -161,9 +161,10 @@ export default {
       transition: font-size 0.3s ease-out;
       color: #c4c4c4;
     }
-    img {
+    img, svg {
       display: none;
       margin: 0 auto;
+      outline: none;
     }
     padding-bottom: 1.25rem;
     &:hover {
@@ -172,8 +173,19 @@ export default {
       }
       cursor: pointer;
       .menu-icon{
-        filter: brightness(100) saturate(100%);
+        // filter: brightness(100) saturate(100%);
+        * {
+          fill: white;
+        }
+
       }
+    }
+  }
+  .active{
+    color: white;
+    // filter: brightness(100) saturate(100%);
+    * {
+      fill: white;
     }
   }
 }
@@ -185,10 +197,10 @@ export default {
   .menu-item {
     text-align: center;
     .menu-item-text{
-      // display: none;
+      display: none;
       font-size: 0.625rem;
     }
-    img {
+    img, svg {
       display: block;
       margin-bottom: 5px;
       width: 25px;
@@ -218,24 +230,25 @@ export default {
           margin-right: 0.625rem;
         }
       }
-      .add-button {
-        a {
+      .button-link {
+        display: flex;
+        .add-button {
           display: flex;
-        }
-        border: none;
-        padding: 0 10px;
-        background-color: #2785FF;
-        background-color: var(--primary-accent-light);
-        border-radius: 50px;
-        width: max-content;
-        align-items: center;
-        margin-right: 10px;
-        .add-button-text {
-          // border: 1px solid yellow;
-          color: #FFFFFF;
-          width: 100%;
-          margin: 0 10px;
-          font-size: 0.875rem;
+          border: none;
+          padding: 0 10px;
+          background-color: #2785FF;
+          background-color: var(--primary-accent-light);
+          border-radius: 50px;
+          width: max-content;
+          align-items: center;
+          margin-right: 10px;
+          .add-button-text {
+            // border: 1px solid yellow;
+            color: #FFFFFF;
+            width: 100%;
+            margin: 0 10px;
+            font-size: 0.875rem;
+          }
         }
       }
     }
@@ -323,8 +336,4 @@ export default {
   width: 85px;
 }
 
-.active {
-  color: white;
-  filter: brightness(100) saturate(100%);
-}
 </style>
