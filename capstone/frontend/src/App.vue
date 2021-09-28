@@ -25,11 +25,11 @@ export default {
   },
   created () {
     // this.checkToken()
-    if (localStorage.getItem('currentUser')) {
-      const user = JSON.parse(localStorage.getItem('currentUser'))
+    if (sessionStorage.getItem('currentUser')) {
+      const user = JSON.parse(sessionStorage.getItem('currentUser'))
       this.setCurrentUser(user)
     }
-    if (sessionStorage.getItem('patient') && this.patient === {}) {
+    if (sessionStorage.getItem('patient')) {
       const patient = JSON.parse(sessionStorage.getItem('patient'))
       this.$store.commit('GET_PATIENT_INFO', patient)
     }
