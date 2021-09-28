@@ -33,4 +33,4 @@ capstone/frontend/pnpm-debug.log*
 capstone/backend/capstone/__pycache__
 capstone/backend/emrsystem/__pycache__
 capstone/backend/emrsystem/migrations/__pycache__
-capstone/backend/capstone/settings.py
+#capstone/backend/capstone/settings.py
