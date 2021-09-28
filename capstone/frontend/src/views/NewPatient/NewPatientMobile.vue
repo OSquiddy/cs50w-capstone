@@ -4,9 +4,11 @@
       <div class="container">
         <div class="row">
           <div class="col header px-4 py-3">
-            <img src="../../assets/cancel.svg" class="cancel" alt="cross/cancel-icon" />
+            <img src="../../assets/cancel.svg" class="cancel" alt="cross/cancel-icon" @click="$router.go(-1)"/>
             <div class="page-header">New Patient</div>
-            <img src="../../assets/tick.svg" class="accept" alt="accept-icon" />
+            <button class="accept">
+              <img src="../../assets/tick.svg" alt="accept-icon" />
+            </button>
           </div>
         </div>
       </div>
@@ -135,6 +137,8 @@ section {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
   .accept {
     margin-left: auto;
+    background: transparent;
+    border: none;
   }
   .cancel {
     margin-right: 1.25rem;
