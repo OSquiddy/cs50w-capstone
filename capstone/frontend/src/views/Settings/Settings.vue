@@ -1,5 +1,6 @@
 <template>
   <div class="settings-container">
+    <form action="" method="post" enctype="multipart/form-data" class="settings-form" @submit.prevent="upload">
     <aside class="settings-sidepanel">
       <div class="container-fluid new-section">
         <div class="row">
@@ -8,12 +9,14 @@
               <div class="col section-info">
                 <div class="section-info-container">
                   <div class="image-container">
-            <img src="../../assets/camera.svg" alt="camera-icon">
-          </div>
-                  <!-- <div class="image-button-group">
-                    <button class="image-button upload">Upload</button>
-                    <button class="image-button discard">Discard</button>
-                  </div> -->
+                    <img :src="currentUser.profilePic" class="profilePic" id="image" v-show="showImage">
+                    <img src="../../assets/camera.svg" class="camera-icon" svg-inline alt="camera-icon" id="image" v-show="!showImage">
+                  </div>
+                  <div class="image-button-group" v-if="edit">
+                    <input type="file" name="profilePic" id="id_profilePic" accept="image/*" @change="showPreview($event)" class="d-none">
+                    <label class="image-button upload" for="id_profilePic">Upload</label>
+                    <button class="image-button discard" @click="removePic" type="button">Discard</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -22,7 +25,6 @@
       </div>
     </aside>
     <section class="settings-main">
-      <form action="" class="settings-form" method="POST">
       <!-- <div class="container-fluid new-section">
         <div class="row">
           <div class="col image-section">
@@ -46,7 +48,7 @@
         <div class="row">
           <div class="col-6">
             <div class="user-title-section">
-              <div class="user-title">Dr. Severus Snape</div>
+              <div class="user-title">Dr. {{currentUser.fullname}}</div>
               <img src="../../assets/edit.svg" alt="edit-icon" class="edit-icon" @click="toggleEdit"/>
             </div>
           </div>
@@ -60,7 +62,7 @@
                 <div class="section-info-container">
                   <div class="section-input-group">
                     <label for="first-name">First Name:</label>
-                    <input type="text" name="first-name" id="first-name" autocomplete="off" v-if="edit"/>
+                    <input type="text" name="first-name" id="first-name" autocomplete="off" v-if="edit" :value="currentUser.first_name"/>
                   </div>
                 </div>
               </div>
@@ -68,7 +70,7 @@
                 <div class="section-info-container">
                   <div class="section-input-group">
                     <label for="last-name">Last Name:</label>
-                    <input type="text" name="last-name" id="last-name" autocomplete="off" v-if="edit"/>
+                    <input type="text" name="last-name" id="last-name" autocomplete="off" :value="currentUser.last_name" v-if="edit"/>
                   </div>
                 </div>
               </div>
@@ -83,7 +85,7 @@
               <div class="col-6 section-info">
                 <div class="section-info-container">
                   <div class="section-title">ID Number:</div>
-                  <div class="section-data" v-if="!edit">21510</div>
+                  <div class="section-data">{{currentUser.id}}</div>
                 </div>
               </div>
             </div>
@@ -98,9 +100,9 @@
                 <div class="section-info-container">
                   <div class="section-input-group">
                     <label for="last-name">Email:</label>
-                    <input type="email" name="email" id="email" value="severus.snape@hogwarts.com" autocomplete="off" v-if="edit"/>
+                    <input type="email" name="email" id="email" :value="currentUser.email" autocomplete="off" v-if="edit"/>
                   </div>
-                  <div class="section-data" v-if="!edit">severus.snape@hogwarts.com</div>
+                  <div class="section-data" v-if="!edit">{{currentUser.email}}</div>
                 </div>
               </div>
             </div>
@@ -124,7 +126,7 @@
                       </svg>
                     </template>
                   </vue-tel-input>
-                  <div class="section-data" v-if="!edit">+1 (324) 2626 2356</div>
+                  <div class="section-data" v-if="!edit">{{currentUser.Phone_Number}}</div>
                 </div>
               </div>
             </div>
@@ -139,9 +141,9 @@
                 <div class="section-info-container">
                   <div class="section-input-group">
                     <label for="last-name">Date of Birth:</label>
-                    <input type="date" name="dob" id="dob" autocomplete="off" v-if="edit"/>
+                    <input type="date" name="dob" id="dob" autocomplete="off" v-if="edit" :value="currentUser.date_of_birth"/>
                   </div>
-                  <div class="section-data" v-if="!edit">2021-06-12</div>
+                  <div class="section-data" v-if="!edit">{{currentUser.date_of_birth}}</div>
                 </div>
               </div>
             </div>
@@ -202,7 +204,7 @@
             <div class="col-6">
               <div class="section-info-container">
                 <div class="section-title">Address:</div>
-                <div class="section-data" >Lorem ipsum dolor sit amet, consectetur adipisicing elit. At recusandae saepe expedita iste quam quibusdam officia perferendis neque eligendi. Quae culpa aliquid rem a illum, quaerat ut nobis recusandae atque.</div>
+                <div class="section-data" >{{currentUser.address}}</div>
               </div>
             </div>
           </div>
@@ -217,15 +219,15 @@
                   <div class="section-title">Gender:</div>
                   <div class="section-data gender-options-container">
                     <div class="gender-option">
-                      <input type="radio" name="gender-option" id="male" />
+                      <input type="radio" name="gender-option" id="male" :checked="currentUser.sex === 'Male'" />
                       <label for="male">M</label>
                     </div>
                     <div class="gender-option">
-                      <input type="radio" name="gender-option" id="female" />
+                      <input type="radio" name="gender-option" id="female" :checked="currentUser.sex === 'Female'" />
                       <label for="female">F</label>
                     </div>
                     <div class="gender-option">
-                      <input type="radio" name="gender-option" id="other" />
+                      <input type="radio" name="gender-option" id="other" :checked="currentUser.sex === 'Other'" />
                       <label for="other">O</label>
                     </div>
                   </div>
@@ -255,17 +257,19 @@
         <div class="row">
           <div class="col-6 d-flex">
             <input type="button" value="Cancel" @click="toggleEdit" class="cancel-button" v-if="edit">
-            <input type="submit" value="Save" @click.prevent="submitForm" class="save-button" v-if="edit">
+            <input type="submit" value="Save" class="save-button" v-if="edit">
           </div>
         </div>
       </div>
-      </form>
     </section>
+    </form>
   </div>
 </template>
 
 <script>
 import { VueTelInput } from 'vue-tel-input'
+import { mapState } from 'vuex'
+import axios from 'axios'
 export default {
   name: 'Settings',
   components: {
@@ -273,12 +277,49 @@ export default {
   },
   data () {
     return {
-      edit: false
+      edit: false,
+      imageURL: null,
+      image: null,
+      showImage: false
     }
+  },
+  computed: {
+    ...mapState(['currentUser']),
+    profile () {
+      return this.currentUser.profilePic
+    }
+  },
+  // watch: {
+  //   'currentUser.profilePic'(newValue, oldValue) {
+  //     this.$refs.profilePic.src = newValue
+  //   }
+  // },
+  mounted () {
+    // console.log(this.currentUser.profilePic)
   },
   methods: {
     toggleEdit () {
       this.edit = !this.edit
+    },
+    showPreview (event) {
+      this.showImage = true
+      const img = document.querySelector('#image')
+      this.image = event.target.files[0]
+      img.src = URL.createObjectURL(event.target.files[0])
+      this.imageURL = img.src
+    },
+    removePic () {
+      // const img = document.querySelector('#image')
+      // img.src = 'img/camera.34ea8771.svg'
+      this.showImage = false
+    },
+    async upload () {
+      const formData = new FormData()
+      formData.append('imageURL', this.imageURL)
+      formData.append('image', this.image)
+      const response = await axios.post(process.env.VUE_APP_API_URL + '/uploadImage', formData)
+      console.log('Response', response)
+      this.setCurrentUser(response.data)
     }
   }
 }
@@ -323,14 +364,18 @@ export default {
   border: 1px solid var(--light-gray);
   // margin-left: auto;
   // margin-right: 1rem;
+  overflow: hidden;
   margin: auto;
-  img {
+  .camera-icon {
     display: flex;
     align-self: center;
     margin: 0 auto;
     width: 36px;
     height: 36px;
-    filter: invert(100);
+    // filter: invert(100);
+    * {
+      fill: white;
+    }
   }
 }
 
@@ -353,6 +398,8 @@ export default {
       background: none;
       border: none;
       color: white;
+      padding: 1px 6px;
+      cursor: pointer;
     }
     .upload {
       color: lightblue;
@@ -421,10 +468,13 @@ export default {
       z-index: 5;
       position: absolute;
       color: var(--input-text-color);
-      top: 19%;
+      top: 0;
       left: 0;
       width: 40px;
       height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     input[name='gender-option'] {
       width: 40px;
@@ -443,18 +493,6 @@ export default {
           color: white;
         }
       }
-      // &::after {
-      //   // content: ' ';
-      //   position: absolute;
-      //   width: 40px;
-      //   height: 40px;
-      //   border-radius: 50%;
-      //   border: none;
-      //   background: var(--light-gray);
-      //   // background: var(--primary-accent-dark);
-      //   top: 0;
-      //   left: 0;
-      // }
     }
   }
 }
@@ -487,6 +525,7 @@ export default {
 
 .settings-form {
   position: relative;
+  display: contents;
 }
 .save-button, .cancel-button {
   padding: 0.325rem 0.625rem;
@@ -510,5 +549,10 @@ export default {
   background-color: var(--light-gray);
   color: var(--primary);
   border: 1px solid #ccc;
+}
+
+.profilePic {
+  width: 100%;
+  object-fit: fill;
 }
 </style>
