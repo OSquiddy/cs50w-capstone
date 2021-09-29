@@ -35,7 +35,19 @@
     </div>
     <div class="row">
       <div class="col report-section">
-        <h2 class="report-section-title">Reports</h2>
+        <h2 class="report-section-title">View Reports</h2>
+        <div class="report-train">
+          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
+          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
+          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
+          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
+          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col report-section">
+        <h2 class="report-section-title">Download Reports</h2>
         <div class="report-train">
           <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
           <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
@@ -90,6 +102,7 @@ export default {
     background-color: var(--primary-accent-light);
     padding: 7px 0;
     color: white;
+    min-height: 38px;
   }
   .patient-card-details-box {
     padding-top: 20px;

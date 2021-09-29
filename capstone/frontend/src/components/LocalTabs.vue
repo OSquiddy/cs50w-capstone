@@ -24,6 +24,9 @@ export default {
         this.$router.push({ name: this.tabPaths[newValue] })
       }
       document.querySelectorAll('.tab')[oldValue].classList.remove('active')
+    },
+    '$route.path' () {
+      this.setTab()
     }
   },
   mounted () {
@@ -32,8 +35,8 @@ export default {
   methods: {
     selectTab (index, event) {
       this.selectedTab = index
-      const elem = event.target
-      elem.classList.add('active')
+      // const elem = event.target
+      // elem.classList.add('active')
     },
     setTab () {
       const index = this.tabPaths.findIndex((elem) => {

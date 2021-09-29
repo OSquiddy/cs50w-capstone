@@ -107,6 +107,9 @@ export default {
         const patientID = this.$route.path.split('/')[2]
         this.getPatientInfo(patientID)
       }
+    },
+    '$route.path' () {
+      this.setTab()
     }
   },
   mounted () {
@@ -177,15 +180,16 @@ export default {
         * {
           fill: white;
         }
-
       }
     }
   }
   .active{
     color: white;
-    // filter: brightness(100) saturate(100%);
     * {
       fill: white;
+    }
+    .menu-item-text {
+      color: white;
     }
   }
 }
