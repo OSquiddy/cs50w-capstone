@@ -302,7 +302,7 @@ def appointment(request, patientID, doctorID):
 @api_view(['POST', 'GET'])
 def uploadImage(request):
     user = request.user
-    form = ImageUploadForm()
+    # form = ImageUploadForm()
     if request.method == 'POST':
         user.profilePic = request.FILES.get('image')
         user.save()
@@ -342,3 +342,9 @@ def createPatient(request):
     return Response({ "patient": serializer.data })
 
         # email, is_active, first_name, last_name, is_staff, date_joined, Phone_Number, address, date_of_birth, isDoctor, isPatient, sex, age, fathers_name, mothers_name, occupation, blood_type, last_visit, patient_type
+
+@api_view(['GET'])
+def getHistory(request, id):
+    history = PastHistory.objects.get(patient=id)
+    serializer = PastHistorySerializer(history)
+    return Response({ "history": serializer.data })

@@ -18,17 +18,17 @@ from reportlab.lib import colors
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-pdfmetrics.registerFont(TTFont('Roboto-Medium', 'Roboto-Medium.ttf'))
-pdfmetrics.registerFont(TTFont('Roboto-Italic', 'Roboto-Italic.ttf'))
-pdfmetrics.registerFont(TTFont('Roboto-MediumItalic', 'Roboto-MediumItalic.ttf'))
-pdfmetrics.registerFont(TTFont('Roboto-BoldItalic', 'Roboto-BoldItalic.ttf'))
-pdfmetrics.registerFont(TTFont('Roboto-Bold', 'Roboto-Bold.ttf'))
-pdfmetrics.registerFont(TTFont('Roboto-ThinItalic', 'Roboto-ThinItalic.ttf'))
-pdfmetrics.registerFont(TTFont('Roboto-Thin', 'Roboto-Thin.ttf'))
-pdfmetrics.registerFont(TTFont('Roboto-Light', 'Roboto-Light.ttf'))
-pdfmetrics.registerFont(TTFont('Roboto-LightItalic', 'Roboto-LightItalic.ttf'))
-pdfmetrics.registerFont(TTFont('Roboto', 'Roboto-Regular.ttf'))
-pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
+# pdfmetrics.registerFont(TTFont('Roboto-Medium', 'Roboto-Medium.ttf'))
+# pdfmetrics.registerFont(TTFont('Roboto-Italic', 'Roboto-Italic.ttf'))
+# pdfmetrics.registerFont(TTFont('Roboto-MediumItalic', 'Roboto-MediumItalic.ttf'))
+# pdfmetrics.registerFont(TTFont('Roboto-BoldItalic', 'Roboto-BoldItalic.ttf'))
+# pdfmetrics.registerFont(TTFont('Roboto-Bold', 'Roboto-Bold.ttf'))
+# pdfmetrics.registerFont(TTFont('Roboto-ThinItalic', 'Roboto-ThinItalic.ttf'))
+# pdfmetrics.registerFont(TTFont('Roboto-Thin', 'Roboto-Thin.ttf'))
+# pdfmetrics.registerFont(TTFont('Roboto-Light', 'Roboto-Light.ttf'))
+# pdfmetrics.registerFont(TTFont('Roboto-LightItalic', 'Roboto-LightItalic.ttf'))
+# pdfmetrics.registerFont(TTFont('Roboto', 'Roboto-Regular.ttf'))
+# pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
 
 def getAppointmentsList(appointments):
     today = date.today()
