@@ -9,7 +9,7 @@
                 <img src="../assets/search.svg" alt="">
                 <input type="text" name="search" id="search" placeholder="Search" v-model="keyword">
               </div>
-              <div class="date-picker mb-2">
+              <!-- <div class="date-picker mb-2">
                 <div class="month-group">
                   <span>April</span>
                   <img src="../assets/dropdown-arrow.svg" alt="dropdown-arrow">
@@ -18,7 +18,7 @@
                   <span>2021</span>
                   <img src="../assets/dropdown-arrow.svg" alt="dropdown-arrow">
                 </div>
-              </div>
+              </div> -->
             </form>
           </div>
         </div>
