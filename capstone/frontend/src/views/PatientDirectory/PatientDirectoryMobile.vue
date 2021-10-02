@@ -1,27 +1,31 @@
 <template>
   <div class="patient-directory-main">
-    <div class="container patients-list">
-      <template v-for="patient in patientsList">
-        <router-link :to="'/p/' + patient.id" :key="patient.id">
-        <div class="row patient-small-container">
-          <div class="col-3 patient-photo"></div>
-          <div class="col-9 patient-info">
-            <h3 class="patient-name">{{patient.first_name}} {{patient.last_name}}</h3>
-            <div class="row patient-details-row">
-              <div class="col patient-details">ID: {{patient.id}}</div>
-              <div class="col patient-details">Age: {{patient.age}}yrs</div>
+    <div class="container-fluid patients-list">
+      <div class="row">
+        <div class="col-lg-11 mx-auto">
+          <template v-for="patient in patientsList">
+            <router-link :to="'/p/' + patient.id" :key="patient.id">
+            <div class="row patient-small-container">
+              <div class="col-3 col-sm-2 mx-sm-auto patient-photo"></div>
+              <div class="col-9 col-sm-10 patient-info">
+                <h3 class="patient-name">{{patient.first_name}} {{patient.last_name}}</h3>
+                <div class="row patient-details-row">
+                  <div class="col col-md-3 patient-details">ID: {{patient.id}}</div>
+                  <div class="col col-md-3 patient-details">Age: {{patient.age}}yrs</div>
+                </div>
+                <div class="row patient-details-row">
+                  <div class="col col-md-3 patient-details">Blood Type: {{patient.age}}</div>
+                  <div class="col col-md-3 patient-details">Gender: {{patient.sex}}</div>
+                </div>
+                <div class="row patient-details-row">
+                  <div class="col patient-details">Mobile: {{patient.Phone_Number}}</div>
+                </div>
+              </div>
             </div>
-            <div class="row patient-details-row">
-              <div class="col patient-details">Blood Type: {{patient.age}}</div>
-              <div class="col patient-details">Gender: {{patient.sex}}</div>
-            </div>
-            <div class="row patient-details-row">
-              <div class="col patient-details">Mobile: {{patient.Phone_Number}}</div>
-            </div>
-          </div>
+            </router-link>
+          </template>
         </div>
-        </router-link>
-      </template>
+      </div>
     </div>
     <router-link :to="'add/p'">
       <button class="new-appointment">
@@ -91,6 +95,7 @@ export default {
         background-color: #c4c4c4;
         border-radius: 50%;
         width: 22%;
+        max-width: 80px;
         aspect-ratio: 1;
         margin-left: auto;
         align-self: flex-start;

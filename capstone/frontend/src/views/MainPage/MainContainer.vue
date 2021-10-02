@@ -180,6 +180,6 @@ export default {
 .doctor-name {
   font-size: 1.375rem;
   color: var(--primary-accent-light);
-  // color: steelblue;
+  // color: #536DFE;
 }
 </style>
