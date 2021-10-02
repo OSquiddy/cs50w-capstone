@@ -95,7 +95,7 @@ const routes = [
             name: 'reports',
             components: {
               default: Reports,
-              mobile: null
+              mobile: ReportMobile
             }
           }
           // {
@@ -161,7 +161,10 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../components/LoginPage.vue')
+    components: {
+      default: () => import('../components/LoginPage.vue'),
+      mobile: () => import('../components/LoginPage.vue')
+    }
     // beforeEnter: (to, from, next) => {
     // }
   }
