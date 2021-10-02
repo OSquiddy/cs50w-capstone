@@ -11,7 +11,7 @@
       <router-link to="/settings">
       <div class="grid-item">Settings</div>
       </router-link>
-      <div class="grid-item">Dev Support</div>
+      <div class="grid-item" @click="logout">Logout</div>
     </div>
     <div v-else>
       Overview Section <span @click="toggleMenu"> Back </span>
@@ -33,6 +33,8 @@
 <script>
 import BarChart from '../../components/EarningsBarChart.vue'
 import EarningsChart from '../../components/EarningsLineChart.vue'
+import axios from 'axios'
+import { mapActions } from 'vuex'
 export default {
   components: { BarChart, EarningsChart },
   name: 'MainContainerMobile',
@@ -42,8 +44,21 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['removeToken']),
     toggleMenu () {
       this.menu = !this.menu
+    },
+    async logout () {
+      // console.log(axios.defaults.headers.common)
+      await axios.post(process.env.VUE_APP_API_URL + '/token/logout')
+      axios.defaults.headers.common.Authorization = ''
+      // console.log(axios.defaults.headers.common)
+
+      localStorage.removeItem('token')
+      localStorage.setItem('isAuthenticated', false)
+      this.removeToken()
+
+      this.$router.push('/login')
     }
   }
 }
