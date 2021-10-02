@@ -37,15 +37,13 @@
       <div class="col report-section">
         <h2 class="report-section-title">View Reports</h2>
         <div class="report-train">
-          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
-          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
-          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
-          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
-          <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
+          <template v-for="visit, index in visitList">
+            <router-link :to="'/p/' + patient.id + '/v/' + index" :key="visit.visit_number"><div class="report"></div></router-link>
+          </template>
         </div>
       </div>
     </div>
-    <div class="row">
+    <!-- <div class="row">
       <div class="col report-section">
         <h2 class="report-section-title">Download Reports</h2>
         <div class="report-train">
@@ -56,29 +54,45 @@
           <router-link :to="'/p/' + patient.id + '/v/1'"><div class="report"></div></router-link>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'PatientMainMobile',
   data() {
     return {
-      patient: {}
+      visitList: [],
+      // patient: {},
+      visitNumber: null,
+      generatedSelected: 0,
+      counter: 0
+    }
+  },
+  computed: {
+    ...mapState(['patient']),
+    numVisits () {
+      return this.visitList.length
     }
   },
   mounted () {
-    this.getPatientInfo()
+    this.getData()
+    this.getReports()
   },
   methods: {
-    async getPatientInfo() {
-      const id = this.$route.params.id
-      console.log(id)
-      const info = await axios.get(process.env.VUE_APP_API_URL + `/p/${id}`)
-      this.patient = info.data.patientInfo
+    ...mapActions(['getPatientInfo']),
+    getData() {
+      // const id = this.$route.params.id
+      this.getPatientInfo(this.patient.id)
+    },
+    async getReports () {
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/getNumReports/' + this.patient.id)
+      this.visitList = response.data.completedVisits
+      // this.patient = response.data.patient
     }
   }
 }
@@ -111,6 +125,7 @@ export default {
     .patient-card-photo {
       background-color: var(--medium-gray);
       border-radius: 50%;
+      max-width: 120px;
       aspect-ratio: 1;
       align-self: flex-start;
     }
