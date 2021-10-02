@@ -332,8 +332,8 @@ export default {
 }
 
 .change-height {
-  height: calc(100% - 219px);
-  top: 219px;
+  height: calc(100% - 218px);
+  top: 218px;
 }
 
 .isCollapsed {
