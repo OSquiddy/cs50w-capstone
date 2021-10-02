@@ -1,7 +1,7 @@
 <template>
   <div class="add-patient-main">
     <header>
-      <div class="container">
+      <div class="container-fluid">
         <div class="row">
           <div class="col header px-4 py-3">
             <img src="../../assets/cancel.svg" class="cancel" alt="cross/cancel-icon" @click="$router.go(-1)"/>

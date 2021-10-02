@@ -1,7 +1,7 @@
 <template>
   <div class="add-appointment-main">
     <header>
-      <div class="container">
+      <div class="container-fluid">
         <div class="row">
           <div class="col header px-4 py-3">
             <button class="cancel" @click="$router.go(-1)">

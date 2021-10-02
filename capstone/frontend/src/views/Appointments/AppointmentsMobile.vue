@@ -1,9 +1,9 @@
 <template>
   <div class="appointment-main">
-    <div class="container appointment-list">
+    <div class="container-fluid appointment-list">
       <div v-for="appointment in appointmentsList" :key="appointment.key">
         <div class="row">
-        <div class="col appointment-day">
+        <div class="col-lg-11 mx-auto appointment-day">
           <div class="appointment-title">
             <div>
               <span class="appointment-date">{{ formatDate(appointment.dates) }}</span>
