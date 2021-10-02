@@ -38,9 +38,9 @@ class MyBaseUser(AbstractUser):
     profilePic = models.ImageField(upload_to=new_filename, storage=OverwriteStorage(), null=True, blank=True)
     sex_choices = [
         ('',''),
-        ('m', 'Male'),
-        ('f', 'Female'),
-        ('o', 'Other')
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other')
     ]
     sex = models.CharField(null=True, blank=True, max_length=1, choices=sex_choices)
 
@@ -127,7 +127,7 @@ class Patient(MyBaseUser):
     mothers_name = models.CharField("Mother's Name", null=True, max_length=50)
     occupation = models.CharField(null=True, max_length=55)
     blood_type = models.CharField(max_length=5, null=True, blank=True)
-    last_visit = models.DateField(null=True)
+    last_visit = models.DateField(null=True, blank=True)
     
     # UNIT1 = '01'
     # UNIT2 = '02'
@@ -220,14 +220,14 @@ class Examination(models.Model):
 
 class PastHistory(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, null=True, blank=True, related_name='past_histories')
-    surgeries = models.TextField()
-    allergies = models.TextField()
-    general = models.TextField()
-    t2dm = models.BooleanField()
-    heart_disease = models.BooleanField()
-    hypothyroidism = models.BooleanField()
-    chronic_kidney_disease = models.BooleanField()
-    cardiovascular_disease = models.BooleanField()
+    surgeries = models.TextField(null=True, blank=True)
+    allergies = models.TextField(null=True, blank=True)
+    general = models.TextField(null=True, blank=True)
+    t2dm = models.BooleanField(default=False)
+    heart_disease = models.BooleanField(default=False)
+    hypothyroidism = models.BooleanField(default=False)
+    chronic_kidney_disease = models.BooleanField(default=False)
+    cardiovascular_disease = models.BooleanField(default=False)
 
     class Meta:
         verbose_name="Past History"
