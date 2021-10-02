@@ -145,7 +145,7 @@ export default {
         svg.append('path')
           .datum(data)
           .attr('fill', 'none')
-          .attr('stroke', 'steelblue')
+          .attr('stroke', '#536DFE')
           .attr('stroke-width', 1.5)
           .attr('d', line)
 

@@ -97,7 +97,7 @@ export default {
           .join('rect')
           .attr('x', d => x(d3.timeFormat('%b %y')(d3.timeParse('%Y-%m-%d')(d.date))))
           .attr('width', x.bandwidth())
-          .attr('fill', 'steelblue')
+          .attr('fill', '#536DFE')
           .style('transition', '0.3s ease-out')
         // no bar at the beginning thus:
           .attr('height', d => height - y(0)) // always equal to 0
@@ -108,7 +108,7 @@ export default {
           })
           .on('mousemove', (event, d) => vueComponent.tooltipFun(event, d, 'in'))
           .on('mouseout', function (event, d) {
-            d3.select(this).attr('fill', 'steelblue')
+            d3.select(this).attr('fill', '#536DFE')
             vueComponent.tooltipFun(event, d, 'out')
           })
 
