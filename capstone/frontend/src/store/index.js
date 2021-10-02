@@ -54,7 +54,7 @@ const store = new Vuex.Store({
       sessionStorage.setItem('isCollapsed', state.isCollapsed)
     },
     SET_CURRENT_USER(state, payload) {
-      sessionStorage.setItem('currentUser', JSON.stringify(payload))
+      localStorage.setItem('currentUser', JSON.stringify(payload))
       state.currentUser = payload
     },
     GET_PATIENT_INFO(state, payload) {

@@ -25,8 +25,8 @@ export default {
   },
   created () {
     // this.checkToken()
-    if (sessionStorage.getItem('currentUser')) {
-      const user = JSON.parse(sessionStorage.getItem('currentUser'))
+    if (localStorage.getItem('currentUser')) {
+      const user = JSON.parse(localStorage.getItem('currentUser'))
       this.setCurrentUser(user)
     }
     if (sessionStorage.getItem('patient')) {
@@ -50,7 +50,7 @@ export default {
   methods: {
     ...mapActions(['toggleCollapse', 'setMobileView', 'checkToken', 'setCurrentUser']),
     onResize () {
-      const payload = window.innerWidth < 600
+      const payload = window.innerWidth < 1200
       this.setMobileView(payload)
     }
   },
