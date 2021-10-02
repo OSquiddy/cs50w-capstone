@@ -50,6 +50,9 @@ Once this repository has been cloned, you can do the following:
 - Navigate to the backend directory by running the command `cd capstone/backend`
 - Install backend dependencies by running `pip install -r requirements.txt`. The main dependencies are Django *(main backend)*, Pillow *(Allows work with images)*, ReportLab *(Used to generate the PDF reports)* and Djoser *(authentication endpoints)*
 - Make and apply migrations by running `python manage.py makemigrations` and `python manage.py migrate`
+- Run the server using `python manage.py runserver 5500`
+
+**Note: It is important to run the backend server on port 5500**
 
 **Frontend Installation:**
 You need to have NPM and Node installed on your machine for the following commands
