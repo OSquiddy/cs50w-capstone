@@ -131,6 +131,7 @@ export default {
         width: 4px;
         border-radius: 3px;
         background: #c4c4c4;
+        background: var(--primary-accent-dark);
         margin-right: 12px;
       }
       .patient-appt-join {
