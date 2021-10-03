@@ -57,6 +57,8 @@ export default {
 <style lang="scss" scoped>
 .header {
   background: #fff;
+  box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.2);
+  // margin-bottom: 30px;
   .logo {
     padding: 23px 23px 12px;
     .logo-text {
