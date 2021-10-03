@@ -99,6 +99,7 @@ export default {
   height: calc(100vh - 197px);
   overflow-y: scroll;
   padding-bottom: 55px;
+  background: #fff;
   margin-top: -1px;
   .appointment-day {
     .appointment-title {
@@ -122,6 +123,7 @@ export default {
     }
     .patient-appt-container {
       display: flex;
+      background: var(--background-primary);
       background: #f4f4f4;
       border-radius: 5px;
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
