@@ -378,6 +378,7 @@ export default {
 .settings-outer-container {
   overflow-x: auto;
   scrollbar-color: transparent;
+  background: var(--background-primary);
   &::-webkit-scrollbar-thumb {
     background-color: transparent;
   }
