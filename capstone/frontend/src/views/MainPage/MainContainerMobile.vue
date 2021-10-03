@@ -87,4 +87,17 @@ export default {
 .tile {
   height: 150px;
 }
+
+@media screen and (min-width: 768px) {
+  .grid-container {
+    // display: flex;
+    // flex-direction: column;
+    padding: 10px 50px;
+    grid-template-columns: 100%;
+    grid-gap: 30px;
+    .grid-item {
+      display: flex;
+    }
+  }
+}
 </style>
