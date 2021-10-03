@@ -1,17 +1,42 @@
 <template>
   <div>
     <div class="grid-container" v-if="menu">
-      <div class="grid-item" @click="toggleMenu">Overview</div>
+      <div class="grid-item" @click="toggleMenu">
+        <div class="grid-item-img">
+          <img src="../../assets/undraw/undraw_progress_overview_red.svg" alt="overwiew-icon">
+        </div>
+        <div class="grid-item-text">Overview</div>
+      </div>
       <router-link to="/appointments">
-        <div class="grid-item">Appointments</div>
+        <div class="grid-item">
+          <div class="grid-item-img">
+            <img src="../../assets/undraw/undraw_online_calendar_blue.svg" alt="overwiew-icon">
+          </div>
+          <div class="grid-item-text">Appointments</div>
+        </div>
       </router-link>
       <router-link to="/directory">
-      <div class="grid-item">Patient Directory</div>
+      <div class="grid-item">
+        <div class="grid-item-img">
+          <img src="../../assets/undraw/undraw_folder_files_red.svg" alt="overwiew-icon">
+        </div>
+        <div class="grid-item-text">Patient Directory</div>
+      </div>
       </router-link>
       <router-link to="/settings">
-      <div class="grid-item">Settings</div>
+      <div class="grid-item">
+        <div class="grid-item-img">
+          <img src="../../assets/undraw/undraw_personal_settings_blue.svg" alt="overwiew-icon">
+        </div>
+        <div class="grid-item-text">Settings</div>
+      </div>
       </router-link>
-      <div class="grid-item" @click="logout">Logout</div>
+      <div class="grid-item" @click="logout">
+        <div class="grid-item-img">
+          <img src="../../assets/undraw/undraw_login_blue.svg" alt="overwiew-icon">
+        </div>
+        <div class="grid-item-text">Logout</div>
+      </div>
     </div>
     <div v-else>
       Overview Section <span @click="toggleMenu"> Back </span>
@@ -66,6 +91,7 @@ export default {
 
 <style lang="scss" scoped>
 .grid-container {
+  margin-top: 30px;
   display: grid;
   justify-content: center;
   grid-template-columns: repeat(auto-fill, 145px);
@@ -76,11 +102,35 @@ export default {
   }
   .grid-item {
     background: #c4c4c4;
+    background: #fff;
     height: 145px;
+    box-shadow: 0 3px 3px 0px rgba(0, 0, 0, 0.2);
     border-radius: 20px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    overflow: hidden;
+    .grid-item-img {
+      width: 100%;
+      height: 75%;
+      // border: 1px solid green;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img {
+        width: inherit;
+        object-fit: contain;
+        height: inherit;
+      }
+    }
+    .grid-item-text {
+      // justify-content: center;
+      width: 100%;
+      text-align: center;
+      margin-top: auto;
+      padding: 5px 0;
+      // border: 1px solid;
+    }
   }
 }
 
@@ -90,13 +140,21 @@ export default {
 
 @media screen and (min-width: 768px) {
   .grid-container {
-    // display: flex;
-    // flex-direction: column;
     padding: 10px 50px;
-    grid-template-columns: 100%;
+    grid-template-columns: repeat(auto-fill, 40%);
     grid-gap: 30px;
     .grid-item {
       display: flex;
+      height: 250px;
+      padding: 15px;
+      .grid-item-img {
+        padding: 0 20px;
+        background: #fff;
+        img {
+          width: 150px;
+          object-fit: contain;
+        }
+      }
     }
   }
 }
