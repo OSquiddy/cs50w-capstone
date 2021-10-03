@@ -100,6 +100,7 @@ export default {
 
 <style lang="scss" scoped>
 .patient-main {
+  margin-top: 30px;
   padding: 0 20px;
 }
 .page-title {
@@ -122,6 +123,7 @@ export default {
     padding-top: 20px;
     padding-bottom: 20px;
     background-color: var(--light-gray);
+    background-color: var(--background-primary);
     .patient-card-photo {
       background-color: var(--medium-gray);
       border-radius: 50%;
