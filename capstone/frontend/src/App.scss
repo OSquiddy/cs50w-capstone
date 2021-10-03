@@ -7,6 +7,10 @@
     color: var(--primary-text-color)
 }
 
+html, body {
+  background-color: var(--lightest-gray);
+}
+
 button {
   background-color: transparent;
   border: none;
