@@ -82,7 +82,7 @@ export default {
   .patients-list {
     .patient-small-container {
       display: flex;
-      background: #f4f4f4;
+      background: #fff;
       border-radius: 20px;
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
       padding: 15px 5px;
