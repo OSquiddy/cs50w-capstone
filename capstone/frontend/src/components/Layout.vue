@@ -76,6 +76,7 @@
           <router-view />
         </div>
         <div class="mask" :class="[patientHeader ? 'change-height' : '', isCollapsed ? 'change-width' : '']"></div>
+        <div class="toast-container" ></div>
       </div>
     </div>
   </div>
@@ -260,6 +261,12 @@ export default {
     width: 100%;
     overflow-y: auto;
     height: 100vh;
+    .toast-container {
+      width: fit-content !important;
+      position: absolute;
+      right: 15px;
+      bottom: 15px;
+    }
   }
 }
 

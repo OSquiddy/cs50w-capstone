@@ -5,6 +5,8 @@ import store from './store'
 
 import { Datetime } from 'vue-datetime'
 import 'vue-datetime/dist/vue-datetime.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap'
 
 // import vSelect from 'vue-select'
 

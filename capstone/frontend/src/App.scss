@@ -7,8 +7,24 @@
     color: var(--primary-text-color)
 }
 
-html, body {
-  background-color: var(--lightest-gray);
+html, body, #app {
+  height: 100%;
+}
+
+.toast {
+  margin: auto;
+  border: none !important;
+  width: fit-content !important;
+  .toast-header{
+    background-color: var(--dark-gray) !important;
+    color: var(--background-primary);
+    border-radius: 5px;
+    font-size: 0.875rem !important;
+    .close-btn {
+      font-size: 0.875rem !important;
+      margin-left: 5px;
+    }
+  }
 }
 
 button {
@@ -17,61 +33,61 @@ button {
 }
 
 a {
-  text-decoration: none;
-  color: var(--primary-text-color)
+  text-decoration: none !important;
+  color: var(--primary-text-color);
 }
   
-  #nav {
-    padding: 30px;
-  
-    a {
-      font-weight: bold;
-      color: #2c3e50;
-  
-      &.router-link-exact-active {
-        color: #42b983;
-      }
+#nav {
+  padding: 30px;
+
+  a {
+    font-weight: bold;
+    color: #2c3e50;
+
+    &.router-link-exact-active {
+      color: #42b983;
     }
   }
+}
 
-  .mirror {
-    transform: scaleX(-1);
-  }
+.mirror {
+  transform: scaleX(-1);
+}
 
-  .custom-tooltip {
-    display: none;
-    position: absolute;
-    background-color: var(--tooltip-background-color);
-    border: none;
-    border-radius: 4px;
-    padding: 10px;
-    box-shadow: 0px 3px 6px #00000029;
-    // font-family: 'ROBOTO';
+.custom-tooltip {
+  display: none;
+  position: absolute;
+  background-color: var(--tooltip-background-color);
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: 0px 3px 6px #00000029;
+  // font-family: 'ROBOTO';
+  font-size: 14px;
+  opacity: 1;
+  z-index: 100;
+  pointer-events: none;
+  max-width: 282px;
+  span {
     font-size: 14px;
-    opacity: 1;
-    z-index: 100;
-    pointer-events: none;
-    max-width: 282px;
-    span {
-      font-size: 14px;
-      color: white;
-    }
+    color: white;
   }
+}
 
-  .bottom-arrow::after {
-    content: '\A';
-    transform: translate(-50%);
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-top: solid 8px var(--tooltip-background-color);
-    border-left: solid 8px transparent;
-    border-right: solid 8px transparent;
-    pointer-events: none;
-  }
+.bottom-arrow::after {
+  content: '\A';
+  transform: translate(-50%);
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-top: solid 8px var(--tooltip-background-color);
+  border-left: solid 8px transparent;
+  border-right: solid 8px transparent;
+  pointer-events: none;
+}
 
 @media (min-width: 991px) {
   * {

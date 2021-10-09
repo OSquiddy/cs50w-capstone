@@ -1,3 +1,5 @@
+const { Toast } = require('bootstrap')
+
 export function debounce (func, wait, immediate) {
   let timeout, args, context, timestamp, result
   if (wait == null) wait = 100
@@ -49,3 +51,29 @@ export function debounce (func, wait, immediate) {
 
   return debounced
 };
+
+export function Snackbar (body, color) {
+  const html = `<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true">
+    <div class="toast-header">
+      ${body}
+      <button type="button" class="close-btn" data-bs-dismiss="toast" aria-label="Close" style="color: ${color}">OK</button>
+    </div>
+  </div>`
+
+  const toastElement = htmlToElement(html)
+  const toastConainerElement = document.querySelector('.toast-container')
+  toastConainerElement.appendChild(toastElement)
+  const toast = new Toast(toastElement, { delay: 5000, animation: true })
+  toast.show()
+
+  toastElement.addEventListener('hidden.bs.toast', () => {
+    toastElement.remove()
+  })
+
+  function htmlToElement (html) {
+    var template = document.createElement('template')
+    html = html.trim() // Never return a text node of whitespace as the result
+    template.innerHTML = html
+    return template.content.firstChild
+  }
+}

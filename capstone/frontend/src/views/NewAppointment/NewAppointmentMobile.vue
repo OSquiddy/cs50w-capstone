@@ -112,6 +112,8 @@ import { DateTime } from 'luxon'
 import SearchableDropdown from '../../components/SearchableDropdown.vue'
 import axios from 'axios'
 import { mapState } from 'vuex'
+import { Snackbar } from '../../util/util'
+
 // import vSelect from 'vue-select'
 export default {
   name: 'NewPatientMobile',
@@ -158,10 +160,14 @@ export default {
         time2: DateTime.fromISO(this.time2).toFormat('HH:mm'),
         payment: this.payment
       }
-      const response = await axios.post(process.env.VUE_APP_API_URL + '/createAppointment/' + this.patient.id + '/' + this.doctor.id, data)
-
-      if (response.status === 200) {
-        this.$router.push({ name: 'appointments' })
+      try {
+        const response = await axios.post(process.env.VUE_APP_API_URL + '/createAppointment/' + this.patient.id + '/' + this.doctor.id, data)
+        if (response.status === 200) {
+          this.$router.push({ name: 'appointments' })
+          Snackbar('Appointment Created!', 'var(--success)')
+        }
+      } catch (error) {
+        Snackbar('Creation Unsuccessful', 'var(--error)')
       }
     }
   }
@@ -185,7 +191,8 @@ export default {
 }
 
 .add-appointment-container {
-  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  height: var(--height);
 }
 .section-divider {
   width: 80%;

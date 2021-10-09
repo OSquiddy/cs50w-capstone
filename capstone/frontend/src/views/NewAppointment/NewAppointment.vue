@@ -58,6 +58,7 @@ import { DateTime } from 'luxon'
 import SearchableDropdown from '../../components/SearchableDropdown.vue'
 import axios from 'axios'
 import { mapState } from 'vuex'
+import { Snackbar } from '../../util/util'
 
 export default {
   name: 'NewAppointment',
@@ -103,7 +104,14 @@ export default {
         time2: DateTime.fromISO(this.time2).toFormat('HH:mm'),
         payment: this.payment
       }
-      await axios.post(process.env.VUE_APP_API_URL + '/createAppointment/' + this.patient.id + '/' + this.doctor.id, data)
+      try {
+        const response = await axios.post(process.env.VUE_APP_API_URL + '/createAppointment/' + this.patient.id + '/' + this.doctor.id, data)
+        if (response.status === 200) {
+          Snackbar('Appointment Created!', 'var(--success)')
+        }
+      } catch (error) {
+        Snackbar('Creation Unsuccessful', 'var(--error')
+      }
     }
   }
 }

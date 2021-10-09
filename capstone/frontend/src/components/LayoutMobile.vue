@@ -13,6 +13,7 @@
       <router-view name="mobile"/>
       <div id="mask"></div>
     </div>
+    <div class="toast-container"></div>
   </div>
 </template>
 
@@ -45,11 +46,21 @@ export default {
       return true
     }
   },
-  methods: {
-    async getUsername() {
-      //   const user = await apiService.getUsers()
-      //   this.username = user.username
+  watch: {
+    '$route.path'(newValue, oldValue) {
+      setTimeout(() => {
+        const headerHeight = document.querySelector('.header').clientHeight
+        const newHeight = window.innerHeight - headerHeight
+        document.documentElement.style.setProperty('--height', `${newHeight}px`)
+      }, 50)
     }
+  },
+  mounted () {
+    setTimeout(() => {
+      const headerHeight = document.querySelector('.header').clientHeight
+      const newHeight = window.innerHeight - headerHeight
+      document.documentElement.style.setProperty('--height', `${newHeight}px`)
+    }, 50)
   }
 }
 </script>
@@ -68,9 +79,17 @@ export default {
   }
 }
 
-// .main {
-//   // overflow: hidden;
-// }
+.main {
+  position: relative;
+  .toast-container {
+    width: 100%;
+    position: absolute;
+    bottom: 15px;
+  }
+  .wrapper {
+    min-height: 100%;
+  }
+}
 
 .container-shadow {
   box-shadow: 0 1px 3px 0px rgba(0,0,0,0.2);
