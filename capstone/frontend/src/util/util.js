@@ -65,6 +65,17 @@ export function Snackbar (body, color) {
   toastConainerElement.appendChild(toastElement)
   const toast = new Toast(toastElement, { delay: 5000, animation: true })
   toast.show()
+  // if (isMobile) {
+  // toastConainerElement.style.display = 'flex'
+  // toastConainerElement.style.flexDirection = 'column-reverse'
+  // toastConainerElement.style.position = 'fixed'
+  // toastConainerElement.style.top = '0'
+  // toastConainerElement.style.height = 'var(--full-height)'
+
+  // toastElement.style.position = 'fixed'
+  // toastElement.style.left = `calc(50% - ${toastElement.clientWidth / 2}px)`
+  // toastElement.style.margin = '0 auto 8px'
+  // }
 
   toastElement.addEventListener('hidden.bs.toast', () => {
     toastElement.remove()

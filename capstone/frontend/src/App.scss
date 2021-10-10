@@ -12,7 +12,8 @@ html, body, #app {
 }
 
 .toast {
-  margin: auto;
+  margin: 0 auto;
+  display: flex;
   border: none !important;
   width: fit-content !important;
   .toast-header{

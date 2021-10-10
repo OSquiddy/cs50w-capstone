@@ -52,6 +52,7 @@ export default {
         const headerHeight = document.querySelector('.header').clientHeight
         const newHeight = window.innerHeight - headerHeight
         document.documentElement.style.setProperty('--height', `${newHeight}px`)
+        document.documentElement.style.setProperty('--full-height', `${window.innerHeight}px`)
       }, 50)
     }
   },
@@ -60,6 +61,7 @@ export default {
       const headerHeight = document.querySelector('.header').clientHeight
       const newHeight = window.innerHeight - headerHeight
       document.documentElement.style.setProperty('--height', `${newHeight}px`)
+      document.documentElement.style.setProperty('--full-height', `${window.innerHeight}px`)
     }, 50)
   }
 }
@@ -83,8 +85,12 @@ export default {
   position: relative;
   .toast-container {
     width: 100%;
-    position: absolute;
-    bottom: 15px;
+    position: fixed;
+    display: flex;
+    height: var(--full-height);
+    flex-direction: column;
+    justify-content: flex-end;
+    top: 0;
   }
   .wrapper {
     min-height: 100%;
