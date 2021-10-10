@@ -103,7 +103,7 @@ export default {
           .attr('height', d => height - y(0)) // always equal to 0
           .attr('y', d => y(0))
           .on('mouseover', function (event, d) {
-            d3.select(this).attr('fill', 'var(--primary-accent-light)')
+            d3.select(this).attr('fill', 'var(--error)')
             vueComponent.tooltipFun(event, d, 'in')
           })
           .on('mousemove', (event, d) => vueComponent.tooltipFun(event, d, 'in'))
