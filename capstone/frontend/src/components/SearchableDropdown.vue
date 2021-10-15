@@ -1,7 +1,8 @@
 <template>
   <div class="dropdown">
-    <input type="text" :placeholder="placeholder" :id="id" :name="id" @keyup="filterFunction()" @focus="toggleDropdown()" v-model="user.fullname" autocomplete="off">
+    <input type="text" :placeholder="placeholder" :id="id" :name="id" @keyup="filterFunction()" @focus="toggleDropdown()" :value="user.fullname" autocomplete="off" v-click-outside="hide">
     <ul id="myDropdown" class="dropdown-content" :class="open && 'show'">
+      <!-- <li @click="clear"> Clear Selection </li> -->
       <li v-if="isPatient">
         <div class="dropdown-row-container">
           <div class="img add-patient-img-container">
@@ -27,8 +28,13 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import ClickOutside from 'vue-click-outside'
+
 export default {
   name: 'SearchableDropdown',
+  directives: {
+    ClickOutside
+  },
   props: ['placeholder', 'dataList', 'isPatient', 'id'],
   data() {
     return {
@@ -41,29 +47,21 @@ export default {
       return this.isPatient ? this.patient : this.doctor
     }
   },
-  created () {
-    window.onclick = (event) => {
-      if (event.target.id !== this.id && this.open) {
-        this.toggleDropdown()
-      }
-    }
-  },
-  beforeDestroy () {
-    window.removeEventListener('click', (event) => {
-      if (event.target.id !== this.is && this.open) {
-        this.toggleDropdown()
-      }
-    })
-  },
   mounted () {
   },
   methods: {
-    ...mapActions(['getPatientInfo', 'getDoctorInfo']),
+    ...mapActions(['getPatientInfo', 'getDoctorInfo', 'clearUserSelection']),
     toggleDropdown () {
       this.open = !this.open
     },
+    hide () {
+      this.open = false
+    },
     filterFunction () {
       const input = document.getElementById(this.id)
+      if (input.value === '') {
+        this.clear()
+      }
       const filter = input.value.toUpperCase()
       const div = document.getElementById('myDropdown')
       const li = div.getElementsByTagName('li')
@@ -83,6 +81,13 @@ export default {
     selectDoctor (id) {
       this.getDoctorInfo(id)
       this.open = !this.open
+    },
+    clear () {
+      if (this.isPatient) {
+        this.clearUserSelection('patient')
+      } else {
+        this.clearUserSelection('doctor')
+      }
     }
   }
 }
@@ -130,8 +135,11 @@ export default {
   display: none;
   position: absolute;
   background-color: #f6f6f6;
+  background-color: var(--background-primary);
   min-width: 230px;
-  border: 1px solid #ddd;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  // border: 1px solid #ddd;
+  border-radius: 5px;
   z-index: 1;
   max-height: 300px;
   overflow: auto;
@@ -143,6 +151,7 @@ export default {
 /* Links inside the dropdown */
 .dropdown-content li {
   color: black;
+  font-size: 0.875rem;
   padding: 5px 16px;
   text-decoration: none;
   display: block;
@@ -160,6 +169,9 @@ export default {
 
 .dropdown-row-container {
   display: flex;
+  .user-name, .user-id, .add-patient {
+    font-size: 0.875rem
+  }
 }
 
 .img {

@@ -23,6 +23,7 @@ const store = new Vuex.Store({
       const response = await axios.get(process.env.VUE_APP_API_URL + '/p/' + patientID)
       const value = response.data.patientInfo
       commit('GET_PATIENT_INFO', value)
+      return response
     },
     async getDoctorInfo({ commit }, doctorID) {
       const response = await axios.get(process.env.VUE_APP_API_URL + '/d/' + doctorID)
@@ -31,6 +32,9 @@ const store = new Vuex.Store({
     },
     setCurrentUser({ commit }, value) {
       commit('SET_CURRENT_USER', value)
+    },
+    clearUserSelection({ commit }, value) {
+      commit('CLEAR_USER', value)
     },
     checkToken({ commit }) {
       commit('CHECK_TOKEN')
@@ -83,6 +87,9 @@ const store = new Vuex.Store({
         localStorage.removeItem('isAuthenticated')
         state.isAuthenticated = false
       }
+    },
+    CLEAR_USER(state, payload) {
+      state[payload] = {}
     }
 
   },
