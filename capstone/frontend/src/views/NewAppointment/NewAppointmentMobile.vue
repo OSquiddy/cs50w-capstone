@@ -47,14 +47,14 @@
                   <div class="section-info-container">
                     <div class="section-input-group">
                       <label for="first-name">Date:</label>
-                      <datetime v-model="date" type="date" :format="'ccc, MMM dd, yyyy'"></datetime>
+                      <datetime v-model="date" type="date" :format="'ccc, MMM dd, yyyy'" class="theme-red"></datetime>
                     </div>
                     <div class="section-input-group">
                       <label for="last-name">Time:</label>
                       <div class="time-input-group">
-                        <datetime type="time" v-model="time1" use12-hour :format="'hh:mm a'"></datetime>
+                        <datetime type="time" v-model="time1" use12-hour :format="'hh:mm a'" class="theme-red"></datetime>
                         <img src="../../assets/right-arrow.svg" alt="right-arrow" />
-                        <datetime type="time" v-model="time2" use12-hour :format="'hh:mm a'"></datetime>
+                        <datetime type="time" v-model="time2" use12-hour :format="'hh:mm a'" class="theme-red"></datetime>
                       </div>
                     </div>
                   </div>

@@ -90,6 +90,24 @@ a {
   pointer-events: none;
 }
 
+.theme-red .vdatetime-popup__header,
+.theme-red .vdatetime-calendar__month__day--selected > span > span,
+.theme-red .vdatetime-calendar__month__day--selected:hover > span > span {
+  background: var(--primary-accent-dark);
+  color: var(--background-primary);
+}
+
+.theme-red .vdatetime-popup__year,
+.theme-red  .vdatetime-popup__date {
+  color: var(--background-primary);
+}
+
+.theme-red .vdatetime-year-picker__item--selected,
+.theme-red .vdatetime-time-picker__item--selected,
+.theme-red .vdatetime-popup__actions__button {
+  color: var(--primary-accent-dark);
+}
+
 @media (min-width: 991px) {
   * {
     scrollbar-color: rgba(127, 143, 164, 0.7) transparent;

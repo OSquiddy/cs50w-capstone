@@ -17,14 +17,14 @@
               <label for="date">
                   <!-- <img src="../../assets/clock.svg" alt="patient-icon" class="patient-icon" /> -->
                 Date :</label>
-              <datetime v-model="date" type="date" :format="'ccc, MMM dd, yyyy'"></datetime>
+              <datetime v-model="date" type="date" :format="'ccc, MMM dd, yyyy'" class="theme-red"></datetime>
             </div>
             <div class="section-input">
               <label for="patient">Time :</label>
               <div class="time-input-group">
-                <datetime type="time" v-model="time1" use12-hour :format="'hh:mm a'"></datetime>
+                <datetime type="time" v-model="time1" use12-hour :format="'hh:mm a'" class="theme-red"></datetime>
                 <!-- <img src="../../assets/right-arrow.svg" alt="right-arrow" /> -->
-                <datetime type="time" v-model="time2" use12-hour :format="'hh:mm a'"></datetime>
+                <datetime type="time" v-model="time2" use12-hour :format="'hh:mm a'" class="theme-red"></datetime>
               </div>
             </div>
             <div class="section-input">
@@ -39,7 +39,7 @@
               <label for="payment">
                   <!-- <img src="../../assets/cash.svg" svg-inline alt="cash-icon" class="cash-icon" /> -->
                 Payment :</label>
-              <input type="number" name="payment" id="payment" v-model="payment">
+              <input type="number" name="payment" id="payment" v-model="payment" min="10">
             </div>
             <div class="button-group">
               <button class="cancel-button" @click="$router.push('/')">Cancel</button>
@@ -72,7 +72,7 @@ export default {
       time2: '07:30',
       patientsList: [],
       doctorsList: [],
-      date: DateTime.now().toFormat('yyyy-MM-dd'),
+      date: null,
       payment: 0
     }
   },
@@ -80,22 +80,36 @@ export default {
     ...mapState(['patient', 'doctor'])
   },
   watch: {
-    date(newValue, oldValue) {
-      console.log(newValue, typeof (newValue))
-    }
+    // date(newValue, oldValue) {
+    // },
+    // doctorsList (newValue, oldValue) {
+    //   console.log('Doctors List', newValue)
+    // },
+    // patientsList (newValue, oldValue) {
+    //   console.log('Patients List', newValue)
+    // }
   },
   mounted () {
     this.getPatientsList()
     this.getDoctorsList()
+    this.date = DateTime.now().toFormat('yyyy-MM-dd')
   },
   methods: {
     async getPatientsList () {
-      const list = await axios.get(process.env.VUE_APP_API_URL + '/patientList/id')
-      this.patientsList = list.data.patientList
+      try {
+        const list = await axios.get(process.env.VUE_APP_API_URL + '/patientList/id')
+        this.patientsList = list.data.patientList
+      } catch (error) {
+        this.getPatientsList()
+      }
     },
     async getDoctorsList () {
-      const list = await axios.get(process.env.VUE_APP_API_URL + '/doctorList')
-      this.doctorsList = list.data.doctorList
+      try {
+        const list = await axios.get(process.env.VUE_APP_API_URL + '/doctorList')
+        this.doctorsList = list.data.doctorList
+      } catch (error) {
+        this.getDoctorsList()
+      }
     },
     async createAppointment () {
       const data = {
@@ -110,7 +124,7 @@ export default {
           Snackbar('Appointment Created!', 'var(--success)')
         }
       } catch (error) {
-        Snackbar('Creation Unsuccessful', 'var(--error')
+        Snackbar('Creation Unsuccessful', 'var(--error-text')
       }
     }
   }
