@@ -18,17 +18,6 @@
               </div>
               <div class="row tiles-container">
                 <div class="col-4">
-                  <div class="num-patients tile">
-                    <div class="num-patients-header">
-                      <img src="../../assets/patientsDesktop.svg" class="tile-small-logo" alt="patient-logo">
-                      Patients
-                    </div>
-                    <div class="num-patients-body tile-body">
-                      {{numPatients}}
-                    </div>
-                  </div>
-                </div>
-                <div class="col-4">
                   <div class="num-appts tile">
                     <div class="num-appts-header">
                       <img src="../../assets/patient.svg" class="tile-small-logo num-appts-logo" alt="patient-logo">
@@ -36,6 +25,18 @@
                     </div>
                     <div class="num-appts-body tile-body">
                       124
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="num-patients tile">
+                    <div class="num-patients-header">
+                      <img src="../../assets/patientsDesktop.svg" class="tile-small-logo" alt="patient-logo">
+                      Patients
+                    </div>
+                    <div class="num-patients-body tile-body">
+                      <!-- {{numPatients.total}} -->
+                      <DonutChart :data="donutData" />
                     </div>
                   </div>
                 </div>
@@ -59,7 +60,7 @@
               </div>
             </div>
             <div class="col-4">
-              <div class="main-page-calendar h-100">
+              <div class="main-page-calendar">
                 <div class="tile h-100">
                   <div class="upcoming-appts-section">
                     <div class="upcoming-appts-header mb-3">Upcoming Appointments</div>
@@ -82,8 +83,9 @@ import CustomCalendar from '../../components/CustomCalendar.vue'
 import EarningsChart from '../../components/EarningsLineChart.vue'
 import BarChart from '../../components/EarningsBarChart.vue'
 import { mapState } from 'vuex'
+import DonutChart from '../../components/DonutChart.vue'
 export default {
-  components: { CustomCalendar, EarningsChart, BarChart },
+  components: { CustomCalendar, EarningsChart, BarChart, DonutChart },
   name: 'MainContainer',
   data() {
     return {
@@ -92,7 +94,17 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(['currentUser']),
+    donutData () {
+      if (this.numPatients) {
+        const obj = {}
+        obj.Male = this.numPatients.male
+        obj.Female = this.numPatients.female
+        obj.Other = this.numPatients.other
+        return obj
+      }
+      return null
+    }
   },
   mounted () {
     this.getLastPatient()
@@ -126,10 +138,16 @@ export default {
 .tile {
   background: var(--background-primary);
   border-radius: 0.75rem;
-  height: inherit;
+  min-height: 200px;
   height: calc((100vh - 70px)/3.5);
   padding: 1rem;
   position: relative;
+}
+
+.main-page-calendar {
+  // position: fixed;
+  // height: 83vh;
+  height: 100%;
 }
 
 .upcoming-appts-header {
@@ -164,6 +182,12 @@ export default {
   align-items: flex-end;
   height: 90%;
   font-size: 3rem;
+}
+
+.greeting-section {
+  max-height: calc((100vh - 70px)/3.5) !important;
+  height: 167px;
+  min-height: 167px;
 }
 
 .greetings-img {
