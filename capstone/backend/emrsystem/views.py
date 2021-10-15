@@ -326,9 +326,22 @@ def createPatient(request):
 
         # email, is_active, first_name, last_name, is_staff, date_joined, Phone_Number, address, date_of_birth, isDoctor, isPatient, sex, age, fathers_name, mothers_name, occupation, blood_type, last_visit, patient_type
 
-@api_view(['GET'])
-def getHistory(request, id):
+@api_view(['GET', 'POST'])
+def pastHistory(request, id):
     history = PastHistory.objects.get(patient=id)
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        history.t2dm = data.get('t2dm')
+        history.chronic_kidney_disease = data.get('kidney_disease')
+        history.cardiovascular_disease = data.get('cardiovascular_disease')
+        history.heart_disease = data.get('heart_disease')
+        history.hypothyroidism = data.get('hypothyroidism')
+        history.general = data.get('general')
+        history.surgeries = data.get('surgeries')
+        history.allergies = data.get('allergies')
+        history.drugs = data.get('drugs')
+        history.family = data.get('family')
+        history.save()
     serializer = PastHistorySerializer(history)
     return Response({ "history": serializer.data })
 

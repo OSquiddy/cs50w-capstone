@@ -227,11 +227,11 @@ class PastHistory(models.Model):
     general = models.TextField(null=True, blank=True)
     drugs = models.TextField(null=True, blank=True)
     family = models.TextField(null=True, blank=True)
-    t2dm = models.BooleanField(default=False)
-    heart_disease = models.BooleanField(default=False)
-    hypothyroidism = models.BooleanField(default=False)
-    chronic_kidney_disease = models.BooleanField(default=False)
-    cardiovascular_disease = models.BooleanField(default=False)
+    t2dm = models.BooleanField(default=False, null=True)
+    heart_disease = models.BooleanField(default=False, null=True)
+    hypothyroidism = models.BooleanField(default=False, null=True)
+    chronic_kidney_disease = models.BooleanField(default=False, null=True)
+    cardiovascular_disease = models.BooleanField(default=False, null=True)
 
     class Meta:
         verbose_name="Past History"

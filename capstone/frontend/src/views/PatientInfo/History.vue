@@ -1,68 +1,196 @@
 <template>
   <div class="history-main">
-    <form action="" method="post">
-      <section class="past-history">
-        <h2 class="section-header">Past History</h2>
-        <h5 class="minor-heading">Allergies</h5>
-        <div class="allergies-group section-input-group" v-if="edit">
-          <div class="allergy-input">
-            <label for="allergy1">Allergies: </label>
-            <textarea name="allergy" id="allergy"></textarea>
+    <form action="" method="post" @submit.prevent="submitForm">
+      <h5 class="section-header">
+        Past History
+        <img src="../../assets/edit.svg" alt="edit-icon" class="edit-icon" @click="toggleGeneralEdit" />
+      </h5>
+      <section class="past-history container-fluid">
+        <div class="row">
+          <div class="col-2 history-type">General :</div>
+          <div class="col-10">
+            <div class="row section-info-row">
+              <div class="col-4">
+                <div class="common-illnesses">
+                  <input type="checkbox" name="t2dm" id="t2dm" v-if="generalEdit" :checked="history.t2dm" />
+                  <label for="t2dm">
+                    T2DM
+                    <span class="icon" v-if="!generalEdit">
+                      :
+                      <template v-if="history.t2dm">&#x2714;</template>
+                      <template v-else>&#x2716;</template>
+                    </span>
+                  </label>
+                </div>
+                <div class="common-illnesses">
+                  <input type="checkbox" name="heart_disease" id="heart_disease" v-if="generalEdit" :checked="history.heart_disease" />
+                  <label for="heart_disease">
+                    Heart Disease
+                    <span class="icon" v-if="!generalEdit">
+                      :
+                      <template v-if="history.heart_disease">&#x2714;</template>
+                      <template v-else>&#x2716;</template>
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="common-illnesses">
+                  <input type="checkbox" name="hypothyroidism" id="hypothyroidism" v-if="generalEdit" :checked="history.hypothyroidism" />
+                  <label for="hypothyroidism">
+                    Hypothyroidism
+                    <span class="icon" v-if="!generalEdit">
+                      :
+                      <template v-if="history.hypothyroidism">&#x2714;</template>
+                      <template v-else>&#x2716;</template>
+                    </span>
+                  </label>
+                </div>
+                <div class="common-illnesses">
+                  <input type="checkbox" name="kidney_disease" id="kidney_disease" v-if="generalEdit" :checked="history.kidney_disease" />
+                  <label for="kidney_disease">
+                    Chronic Kidney Disease
+                    <span class="icon" v-if="!generalEdit">
+                      :
+                      <template v-if="history.kidney_disease">&#x2714;</template>
+                      <template v-else>&#x2716;</template>
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="common-illnesses">
+                  <input type="checkbox" name="cardiovascular_disease" id="cardiovascular_disease" v-if="generalEdit" :checked="history.cardiovascular_disease" />
+                  <label for="cardiovascular_disease">
+                    Cardiovascular Disease
+                    <span class="icon" v-if="!generalEdit">
+                      :
+                      <template v-if="history.cardiovascular_disease">&#x2714;</template>
+                      <template v-else>&#x2716;</template>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <ul class="allergies" v-else>
-          <li class="allergy" v-for="allergy in allergies" :key="allergy">
-            {{allergy}}
-          </li>
-        </ul>
-          <h5 class="minor-heading" for="general">General</h5>
-        <div class="section-input-group" v-if="edit">
-          <textarea name="general" id="general" cols="90" rows="4"></textarea>
+        <div class="row">
+          <div class="col-2 history-type">Allergies :</div>
+          <div class="col-10">
+            <div class="row section-info-row" v-if="generalEdit">
+              <div class="col">
+                <textarea name="allergies" id="allergies" class="section-input-group" v-model="history.allergies"></textarea>
+              </div>
+            </div>
+            <div class="row" v-else>
+              <div class="col">
+                <ul class="allergies">
+                  <li class="allergy" v-for="allergy in allergies" :key="allergy">
+                    {{ allergy }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="common-illnesses">
-          <input type="checkbox" name="t2dm" id="t2dm" :disabled="!edit" :checked="history.t2dm">
-          <label for="t2dm">T2DM</label>
+        <div class="row">
+          <div class="col-2 history-type">Surgical History :</div>
+          <div class="col-10">
+            <div class="row section-info-row" v-if="generalEdit">
+              <div class="col">
+                <textarea name="surgeries" id="surgeries" class="section-input-group" v-model="history.surgeries"></textarea>
+              </div>
+            </div>
+            <div class="row" v-else>
+              <div class="col">
+                <ul class="surgeries">
+                  <li class="surgery" v-for="surgery in surgicalHistory" :key="surgery">
+                    {{ surgery }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="common-illnesses">
-          <input type="checkbox" name="heart_disease" id="heart_disease" :disabled="!edit" :checked="history.heart_disease">
-          <label for="heart_disease">Heart Disease</label>
+        <div class="row">
+          <div class="col-2 history-type">Drug History :</div>
+          <div class="col-10">
+            <div class="row section-info-row" v-if="generalEdit">
+              <div class="col">
+                <textarea name="drugHistory" id="drugHistory" class="section-input-group" v-model="history.drugs"></textarea>
+              </div>
+            </div>
+            <div class="row" v-else>
+              <div class="col">
+                <ul class="drug-history">
+                  <li class="drug" v-for="drug in drugHistory" :key="drug">
+                    {{ drug }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="common-illnesses">
-          <input type="checkbox" name="hypothyroidism" id="hypothyroidism" :disabled="!edit" :checked="history.hypothyroidism">
-          <label for="hypothyroidism">Hypothyroidism</label>
+        <div class="row">
+          <div class="col-2 history-type">Other :</div>
+          <div class="col-10">
+            <div class="row section-info-row" v-if="generalEdit">
+              <div class="col">
+                <textarea name="general" id="general" class="section-input-group" v-model="history.general"></textarea>
+              </div>
+            </div>
+            <div class="row" v-else>
+              <div class="col">
+                <ul class="general-history">
+                  <li class="general-item" v-for="item in generalHistory" :key="item">
+                    {{ item }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="common-illnesses">
-          <input type="checkbox" name="kidney_disease" id="kidney_disease" :disabled="!edit" :checked="history.kidney_disease">
-          <label for="kidney_disease">Chronic Kidney Disease</label>
-        </div>
-        <div class="common-illnesses">
-          <input type="checkbox" name="cardiovascular_disease" id="cardiovascular_disease" :disabled="!edit" :checked="history.cardiovascular_disease">
-          <label for="cardiovascular_disease">Cardiovascular Disease</label>
-        </div>
-        <div class="general" v-if="!edit">
-          {{history.general}} There was no general info
-        </div>
-        <div class="section-input-group" v-if="edit">
-          <h5 for="surgical" class="minor-heading">Surgical History</h5>
-          <textarea name="surgical" id="surgical" cols="90" rows="4"></textarea>
-        </div>
-        <div class="surgeries" v-if="!edit && history.surgeries">
-          {{history.surgeries}} are not present
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col d-flex">
+              <input type="button" value="Cancel" @click="toggleGeneralEdit" class="cancel-button" v-if="generalEdit" />
+              <input type="submit" value="Save" class="save-button" v-if="generalEdit" />
+            </div>
+          </div>
         </div>
       </section>
-      <section class="family-history">
-        <h2 class="section-header">Family History</h2>
-        <div class="famIllness-group section-input-group" v-if="edit">
-          <div class="famIllness-input">
-            <label for="famIllness">Illnesses: </label>
-            <textarea name="famIllness" id="famIllness"></textarea>
+      <h5 class="section-header">
+        Family History
+        <img src="../../assets/edit.svg" alt="edit-icon" class="edit-icon" @click="toggleFamilyEdit" />
+      </h5>
+      <section class="family-history container-fluid">
+        <div class="row">
+          <div class="col-2 history-type">Familial Tendencies :</div>
+          <div class="col-10">
+            <div class="row section-info-row" v-if="familyEdit">
+              <div class="col">
+                <textarea name="famIllness" id="famIllness" class="section-input-group" v-model="history.family"></textarea>
+              </div>
+            </div>
+            <div class="row" v-else>
+              <div class="col">
+                <ul class="allergies">
+                  <li class="famIllness" v-for="famIllness in familyHistory" :key="famIllness">
+                    {{ famIllness }}
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
-        <ul class="allergies" v-else>
-          <li class="allergy" v-for="allergy in allergies" :key="allergy">
-            {{allergy}}
-          </li>
-        </ul>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col d-flex">
+              <input type="button" value="Cancel" @click="toggleFamilyEdit" class="cancel-button" v-if="familyEdit" />
+              <input type="submit" value="Save" class="save-button" v-if="familyEdit" />
+            </div>
+          </div>
+        </div>
       </section>
     </form>
   </div>
@@ -71,17 +199,26 @@
 <script>
 import axios from 'axios'
 import { mapState } from 'vuex'
+import { Snackbar } from '../../util/util'
+
 export default {
   name: 'History',
   data() {
     return {
       history: {
         general: null,
-        surgeries: null
+        surgeries: null,
+        allergies: null,
+        drugs: null,
+        family: null
       },
       allergies: [],
-      familyIllnesses: [],
-      edit: false
+      familyHistory: [],
+      surgicalHistory: [],
+      drugHistory: [],
+      generalHistory: [],
+      generalEdit: false,
+      familyEdit: false
     }
   },
   computed: {
@@ -92,9 +229,70 @@ export default {
   },
   methods: {
     async getPatientHistory() {
-      const response = await axios.get(process.env.VUE_APP_API_URL + '/history/' + this.patient.id)
-      this.history = response.data.history
-      this.history.allergies.split(/\r?\n/).map((line) => { this.allergies.push(line) })
+      try {
+        const response = await axios.get(process.env.VUE_APP_API_URL + '/history/' + this.patient.id)
+        this.history = response.data.history
+        this.generateListFromText()
+      } catch (error) {
+        this.getPatientHistory()
+      }
+    },
+    generateListFromText () {
+      this.allergies = []
+      this.surgicalHistory = []
+      this.drugHistory = []
+      this.familyHistory = []
+      this.generalHistory = []
+
+      this.history.allergies.split(/\r?\n/).map((line) => {
+        this.allergies.push(line)
+      })
+      this.history.surgeries.split(/\r?\n/).map((line) => {
+        this.surgicalHistory.push(line)
+      })
+      this.history.general.split(/\r?\n/).map((line) => {
+        this.generalHistory.push(line)
+      })
+      this.history.drugs.split(/\r?\n/).map((line) => {
+        this.drugHistory.push(line)
+      })
+      this.history.family.split(/\r?\n/).map((line) => {
+        this.familyHistory.push(line)
+      })
+    },
+    toggleGeneralEdit() {
+      this.generalEdit = !this.generalEdit
+    },
+    toggleFamilyEdit() {
+      this.familyEdit = !this.familyEdit
+    },
+    async submitForm() {
+      const formData = {
+        t2dm: this.history.t2dm,
+        kidney_disease: this.history.kidney_disease,
+        cardiovascular_disease: this.history.cardiovascular_disease,
+        heart_disease: this.history.heart_disease,
+        hypothyroidism: this.history.hypothyroidism,
+        general: this.history.general,
+        surgeries: this.history.surgeries,
+        allergies: this.history.allergies,
+        drugs: this.history.drugs,
+        family: this.history.family
+      }
+      // console.log(formData)
+      try {
+        const response = await axios.post(process.env.VUE_APP_API_URL + '/history/' + this.patient.id, formData)
+        if (response.status === 200) {
+          Snackbar('Settings Updated', 'var(--success)')
+          this.history = response.data.history
+          this.generateListFromText()
+          this.generalEdit = false
+          this.familyEdit = false
+        }
+      } catch (error) {
+        console.log(error)
+        Snackbar('Update Unsuccessful', 'var(--error-text')
+      }
     }
   }
 }
@@ -102,19 +300,25 @@ export default {
 
 <style lang="scss" scoped>
 .history-main {
-  background-color: var(--background-primary);
-  padding: 1rem;
+}
+
+.section-header {
+  font-size: 1rem;
+  text-transform: uppercase;
+  font-weight: 400;
+  display: flex;
   margin-top: 30px;
-  border-radius: 0.75rem;
-  border: 1px transparent;
+  opacity: 0.8;
+  // border: 1px solid purple;
 }
 
 section {
   margin-bottom: 25px;
-  .section-header {
-    font-size: 1.25rem;
-    font-weight: 400;
-  }
+  background-color: var(--background-primary);
+  padding: 1rem;
+  // margin-top: 30px;
+  border-radius: 0.75rem;
+  border: 1px transparent;
   .minor-heading {
     font-size: 1.125rem;
     font-weight: 400;
@@ -141,21 +345,19 @@ section {
   //     }
   //   }
   // }
-  .section-input-group {
-    input,
-    textarea {
-      border-radius: 0.625rem;
-      padding: 5px 10px;
-      border: 1px solid var(--input-border-color);
-      font-size: 0.875rem;
-    }
-    textarea {
-      width: 100%;
-      height: 120px;
-    }
-    label {
-      font-size: 0.875rem;
-    }
+  input,
+  textarea {
+    border-radius: 0.625rem;
+    padding: 5px 10px;
+    border: 1px solid var(--input-border-color);
+    font-size: 0.875rem;
+  }
+  textarea {
+    width: 100%;
+    height: 120px;
+  }
+  label {
+    font-size: 0.875rem;
   }
 }
 
@@ -176,5 +378,51 @@ section {
       }
     }
   }
+}
+
+.section-info-row {
+  margin-bottom: 15px;
+  .common-illnesses {
+    margin-bottom: 10px;
+    label {
+      margin-left: 5px;
+    }
+  }
+}
+
+.history-type {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.edit-icon {
+  cursor: pointer;
+  display: flex;
+  margin-left: auto;
+}
+
+.save-button,
+.cancel-button {
+  padding: 0.325rem 0.625rem;
+  display: flex;
+  justify-content: center;
+  border: none;
+  outline: none;
+  width: 100px;
+  font-size: 0.75rem;
+  border-radius: 5px;
+  background: var(--button-blue);
+  color: white;
+  // position: sticky;
+  // top: 20px;
+  // right: 0;
+}
+
+.cancel-button {
+  margin-left: auto;
+  margin-right: 0.625rem;
+  background-color: var(--light-gray);
+  color: var(--primary);
+  border: 1px solid #ccc;
 }
 </style>
