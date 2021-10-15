@@ -21,6 +21,7 @@ class ExaminationAdmin(admin.ModelAdmin):
 class CustomUserAdmin(admin.ModelAdmin):
     model = MyBaseUser
     readonly_fields = ['fullname']
+    list_display = ['id', 'first_name', 'last_name', 'username', 'email' ]
     ordering = ['first_name']
 
 class PatientAdmin(admin.ModelAdmin):

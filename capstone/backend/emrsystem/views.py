@@ -7,23 +7,15 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db.models import Q, functions
 from datetime import date, datetime, timedelta
 from django.utils import timezone
 from django.utils.dateparse import parse_date
+from django.utils.translation import gettext as _
 import json
 
 from django.shortcuts import render, redirect
-import calendar
-from calendar import HTMLCalendar
-from django.http import HttpResponseRedirect, HttpResponse, FileResponse
-
-import io
-from reportlab.pdfgen import canvas
-from reportlab.lib.utils import ImageReader
-from reportlab.lib.units import inch, cm
-from reportlab.lib.pagesizes import letter, A4
 
 from .models import *
 from .serializers import *
@@ -78,7 +70,16 @@ def doctorInfo(request, id):
 @api_view(['GET'])
 def numPatients(request):
     patients = Patient.objects.all()
-    return Response({ "numPatients": len(patients) })
+    malePatients = patients.filter(sex='M')
+    femalePatients = patients.filter(sex='F')
+    otherPatients = patients.filter(sex='O')
+    numPatients = {
+        'male': len(malePatients),
+        'female': len(femalePatients),
+        'other': len(otherPatients),
+        'total': len(patients)
+    }
+    return Response({ "numPatients": numPatients })
 
 @api_view(['GET'])
 def getEarnings(request):
@@ -150,20 +151,24 @@ def lastPatient(request):
 @api_view(['GET'])
 def getReport(request, id, visitNumber):
     patient = Patient.objects.get(id=id)
-    print(patient)
+    print(patient, 'is a weirdo')
     try:
+        print('Trying examination')
         examination = Examination.objects.get(visit__patient=id, visit__visit_number=visitNumber)
         examinationSerializer = ExaminationSerializer(examination)
         examination = examinationSerializer.data
-    except ObjectDoesNotExist:
+    except Exception:
+        print('Failed examination')
         examinationSerializer = {}
         examination = examinationSerializer
     
     try:
+        print('Trying pHistory')
         pastHistory = PastHistory.objects.get(visit__patient=id, visit__visit_number=visitNumber)
         pastHistorySerializer = PastHistorySerializer(pastHistory)
         pastHistory = pastHistorySerializer.data
-    except ObjectDoesNotExist:
+    except Exception:
+        print('Failed pHistory')
         pastHistorySerializer = {}
         pastHistory = pastHistorySerializer
 
@@ -172,7 +177,7 @@ def getReport(request, id, visitNumber):
             gynecHistory = GynecHistory.objects.get(visit__patient=id, visit__visit_number=visitNumber)
             gynecHistorySerializer = GynecHistorySerializer(gynecHistory)
             gynecHistory = gynecHistorySerializer.data
-        except ObjectDoesNotExist:
+        except Exception:
             gynecHistorySerializer = {}
             gynecHistory = gynecHistorySerializer
     else:
@@ -302,44 +307,22 @@ def appointment(request, patientID, doctorID):
 @api_view(['POST', 'GET'])
 def uploadImage(request):
     user = request.user
-    # form = ImageUploadForm()
     if request.method == 'POST':
         user.profilePic = request.FILES.get('image')
         user.save()
-        # form = ImageUploadForm(request.POST, request.FILES, instance=user)
-        # if form.is_valid():
-        #     print('Form is valid')
-        #     form.save()
-        # else:
-        #     print(request.POST, request.FILES, form)
-        #     print('Form is invalid')
     return Response({ "user": UserSerializer(user).data })
 
 @api_view(['POST'])
 def createPatient(request):
-    data = json.loads(request.body)
-    print(data)
-    fName = data['fathers_name']
-    mName = data['mothers_name']
-    firstName = data['first_name']
-    lastName = data['last_name']
-    email = data['email']
-    occupation = data['occupation']
-    sex = data['sex']
-    address = data['address'] + '\n' + data['city'] + '\n' + data['state'] + '\n' + data['zipcode'] + '\n' + data['country']
-    dob = data['dob']
-    age = data['age']
-    pType = data['patient_type']
-    blood_type = data['blood_type']
-    mob = data['mobile']
     patient = []
     serializer = None
-    try:
-        patient = Patient.objects.create(email=email, first_name=firstName, last_name=lastName, Phone_Number=mob,address=address, date_of_birth=dob, isDoctor=False, isPatient=True, sex=sex, age=age, fathers_name=fName, mothers_name=mName, occupation=occupation)
-        serializer = PatientSerializer(patient)
-    except Exception as e:
-        print(e)
-    return Response({ "patient": serializer.data })
+    data = json.loads(request.body)
+    response = validateNewPatient(data)
+    if isinstance(response, Exception):
+        return Response({}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return response
+    # return Response({ "patient": serializer.data })
 
         # email, is_active, first_name, last_name, is_staff, date_joined, Phone_Number, address, date_of_birth, isDoctor, isPatient, sex, age, fathers_name, mothers_name, occupation, blood_type, last_visit, patient_type
 
@@ -348,3 +331,40 @@ def getHistory(request, id):
     history = PastHistory.objects.get(patient=id)
     serializer = PastHistorySerializer(history)
     return Response({ "history": serializer.data })
+
+@api_view(['GET', 'POST'])
+def updateUser(request):
+    print(request.user, request.method)
+    user = []
+    user = Doctor.objects.get(id=request.user.id)
+    serializer = None
+    serializer = DoctorSerializer(user)
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        print(data)
+        email = data['email']
+        sex = data['sex']
+        # address = data['address'] + '\n' 
+        # + data['city'] if data['city'] else '' + '\n' 
+        # + data['state'] if data['state'] else '' + '\n' 
+        # + data['zipcode'] if data['zipcode'] else '' + '\n' 
+        # + data['country'] if data['country'] else ''
+        address = f"{data['address']}\n{data['city'] if data['city'] else ' '}\n{data['state'] if data['state'] else ' '}\n{data['zipcode'] if data['zipcode'] else ' '}\n{data['country'] if data['country'] else ' '}"
+        print(address)
+        dob = data['dob']
+        mob = data['mobile']
+        username = data['username']
+        try:
+            user = Doctor.objects.get(id=request.user.id)
+            user.email = email
+            user.sex = sex
+            user.address = address
+            user.date_of_birth = dob
+            user.Phone_Number = mob
+            user.username = username
+            user.save()
+            serializer = DoctorSerializer(user)
+        except Exception as e:
+            print(e)
+            return Response({ "errors": e })
+    return Response({ "user": serializer.data })

@@ -25,25 +25,6 @@
       </div>
     </aside>
     <section class="settings-main">
-      <!-- <div class="container-fluid new-section">
-        <div class="row">
-          <div class="col image-section">
-            <div class="row">
-              <div class="col-6 section-info">
-                <div class="section-info-container">
-                  <div class="image-container">
-            <img src="../../assets/camera.svg" alt="camera-icon">
-          </div>
-                  <div class="image-button-group">
-                    <button class="image-button upload">Upload</button>
-                    <button class="image-button discard">Discard</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> -->
       <div class="container-fluid new-section" v-if="!edit">
         <div class="row">
           <div class="col-6">
@@ -60,9 +41,21 @@
             <div class="row">
               <div class="col-3 section-info">
                 <div class="section-info-container">
+                  <div class="section-title">Name:</div>
+                  <div class="section-data">{{currentUser.fullname}}</div>
+                </div>
+              </div>
+              <div class="col-3 section-info">
+                <div class="section-info-container">
+                  <div class="section-title">ID Number:</div>
+                  <div class="section-data">{{currentUser.id}}</div>
+                </div>
+              </div>
+              <!-- <div class="col-3 section-info">
+                <div class="section-info-container">
                   <div class="section-input-group">
                     <label for="first-name">First Name:</label>
-                    <input type="text" name="first-name" id="first-name" autocomplete="off" v-if="edit" :value="currentUser.first_name"/>
+                    <input type="text" name="first-name" id="first-name" autocomplete="off" v-if="edit" :value="currentUser.first_name" readonly/>
                   </div>
                 </div>
               </div>
@@ -70,8 +63,22 @@
                 <div class="section-info-container">
                   <div class="section-input-group">
                     <label for="last-name">Last Name:</label>
-                    <input type="text" name="last-name" id="last-name" autocomplete="off" :value="currentUser.last_name" v-if="edit"/>
+                    <input type="text" name="last-name" id="last-name" autocomplete="off" :value="currentUser.last_name" v-if="edit" readonly/>
                   </div>
+                </div>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid new-section" v-if="!edit">
+        <div class="row">
+          <div class="col id-section">
+            <div class="row">
+              <div class="col-6 section-info">
+                <div class="section-info-container">
+                  <div class="section-title">ID Number:</div>
+                  <div class="section-data">{{currentUser.id}}</div>
                 </div>
               </div>
             </div>
@@ -80,12 +87,15 @@
       </div>
       <div class="container-fluid new-section">
         <div class="row">
-          <div class="col occupation-section">
+          <div class="col id-section">
             <div class="row">
               <div class="col-6 section-info">
                 <div class="section-info-container">
-                  <div class="section-title">ID Number:</div>
-                  <div class="section-data">{{currentUser.id}}</div>
+                  <div class="section-input-group">
+                    <label for="username">Username:</label>
+                    <input type="text" name="username" id="username" autocomplete="off" v-if="edit" v-model="username" />
+                  </div>
+                    <div class="section-data" v-if="!edit">{{currentUser.username}}</div>
                 </div>
               </div>
             </div>
@@ -100,7 +110,7 @@
                 <div class="section-info-container">
                   <div class="section-input-group">
                     <label for="last-name">Email:</label>
-                    <input type="email" name="email" id="email" :value="currentUser.email" autocomplete="off" v-if="edit"/>
+                    <input type="email" name="email" id="email" autocomplete="off" v-if="edit" v-model="email"/>
                   </div>
                   <div class="section-data" v-if="!edit">{{currentUser.email}}</div>
                 </div>
@@ -116,7 +126,7 @@
               <div class="col-6 section-info">
                 <div class="section-info-container">
                   <div class="section-title">Mobile:</div>
-                  <vue-tel-input :autoDefaultCountry="true" :dropdownOptions="{ showDialCodeInSelection: true, showDialCodeInList: true, showFlags: true }" v-if="edit">
+                  <vue-tel-input :autoDefaultCountry="true" :dropdownOptions="{ showDialCodeInSelection: true, showDialCodeInList: true, showFlags: true }" v-if="edit" v-model="mobile">
                     <template v-slot:arrow-icon>
                       <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left: 3px;" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -140,8 +150,8 @@
               <div class="col-6 section-info">
                 <div class="section-info-container">
                   <div class="section-input-group">
-                    <label for="last-name">Date of Birth:</label>
-                    <input type="date" name="dob" id="dob" autocomplete="off" v-if="edit" :value="currentUser.date_of_birth"/>
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" name="dob" id="dob" autocomplete="off" v-if="edit" v-model="dob"/>
                   </div>
                   <div class="section-data" v-if="!edit">{{currentUser.date_of_birth}}</div>
                 </div>
@@ -158,7 +168,7 @@
                 <div class="section-info-container">
                   <div class="section-input-group">
                     <label for="last-name">Address:</label>
-                    <input type="text" name="address" id="address" autocomplete="off" />
+                    <input type="text" name="address" id="address" autocomplete="off" v-model="address" />
                   </div>
                 </div>
               </div>
@@ -168,7 +178,7 @@
                 <div class="section-info-container">
                   <div class="section-input-group">
                     <label for="last-name">City:</label>
-                    <input type="text" name="city" id="city" autocomplete="off" />
+                    <input type="text" name="city" id="city" autocomplete="off" v-model="city" />
                   </div>
                 </div>
               </div>
@@ -176,7 +186,7 @@
                 <div class="section-info-container">
                   <div class="section-input-group">
                     <label for="last-name">State:</label>
-                    <input type="text" name="state" id="state" autocomplete="off" />
+                    <input type="text" name="state" id="state" autocomplete="off" v-model="state" />
                   </div>
                 </div>
               </div>
@@ -186,7 +196,7 @@
                 <div class="section-info-container">
                   <div class="section-input-group">
                     <label for="last-name">Zipcode:</label>
-                    <input type="text" name="zipcode" id="zipcode" autocomplete="off" />
+                    <input type="text" name="zipcode" id="zipcode" autocomplete="off" v-model="zipcode" />
                   </div>
                 </div>
               </div>
@@ -194,7 +204,7 @@
                 <div class="section-info-container">
                   <div class="section-input-group">
                     <label for="last-name">Country:</label>
-                    <input type="text" name="Country" id="Country" autocomplete="off" />
+                    <input type="text" name="Country" id="Country" autocomplete="off" v-model="country" />
                   </div>
                 </div>
               </div>
@@ -219,33 +229,17 @@
                   <div class="section-title">Gender:</div>
                   <div class="section-data gender-options-container">
                     <div class="gender-option">
-                      <input type="radio" name="gender-option" id="male" :checked="currentUser.sex === 'Male'" />
+                      <input type="radio" name="sex" id="male" :disabled="!edit" v-model="sex" value="M" />
                       <label for="male">M</label>
                     </div>
                     <div class="gender-option">
-                      <input type="radio" name="gender-option" id="female" :checked="currentUser.sex === 'Female'" />
+                      <input type="radio" name="sex" id="female" :disabled="!edit" v-model="sex" value="F" />
                       <label for="female">F</label>
                     </div>
                     <div class="gender-option">
-                      <input type="radio" name="gender-option" id="other" :checked="currentUser.sex === 'Other'" />
+                      <input type="radio" name="sex" id="other" :disabled="!edit" v-model="sex" value="O" />
                       <label for="other">O</label>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="container-fluid new-section" v-if="edit">
-        <div class="row">
-          <div class="col father-section">
-            <div class="row">
-              <div class="col-6 section-info">
-                <div class="section-info-container">
-                  <div class="section-input-group">
-                    <label for="father">Father's Name:</label>
-                    <input type="text" name="father" id="father" autocomplete="off" />
                   </div>
                 </div>
               </div>
@@ -268,8 +262,11 @@
 
 <script>
 import { VueTelInput } from 'vue-tel-input'
-import { mapState } from 'vuex'
+// import { DateTime } from 'luxon'
+import { mapActions, mapState } from 'vuex'
 import axios from 'axios'
+import { Snackbar } from '../../util/util'
+
 export default {
   name: 'Settings',
   components: {
@@ -280,7 +277,17 @@ export default {
       edit: false,
       imageURL: null,
       image: null,
-      showImage: false
+      showImage: false,
+      sex: null,
+      country: '',
+      address: '',
+      city: '',
+      zipcode: '',
+      state: '',
+      dob: '',
+      email: '',
+      mobile: null,
+      username: ''
     }
   },
   computed: {
@@ -289,15 +296,17 @@ export default {
       return this.currentUser.profilePic
     }
   },
-  // watch: {
-  //   'currentUser.profilePic'(newValue, oldValue) {
-  //     this.$refs.profilePic.src = newValue
-  //   }
-  // },
+  watch: {
+    'currentUser.profilePic'(newValue, oldValue) {
+      this.$refs.profilePic.src = newValue
+    }
+  },
   mounted () {
     // console.log(this.currentUser.profilePic)
+    this.populateForm()
   },
   methods: {
+    ...mapActions(['setCurrentUser']),
     toggleEdit () {
       this.edit = !this.edit
     },
@@ -314,12 +323,48 @@ export default {
       this.showImage = false
     },
     async upload () {
-      const formData = new FormData()
-      formData.append('imageURL', this.imageURL)
-      formData.append('image', this.image)
-      const response = await axios.post(process.env.VUE_APP_API_URL + '/uploadImage', formData)
-      console.log('Response', response)
-      this.setCurrentUser(response.data)
+      const imgData = new FormData()
+      const formData = {
+        email: this.email,
+        sex: this.sex,
+        address: this.address,
+        city: this.city,
+        state: this.state,
+        zipcode: this.zipcode,
+        country: this.country,
+        dob: this.dob,
+        mobile: this.mobile,
+        username: this.username
+      }
+      imgData.append('imageURL', this.imageURL)
+      imgData.append('image', this.image)
+
+      try {
+        const resp1 = await axios.post(process.env.VUE_APP_API_URL + '/uploadImage', imgData)
+        const resp2 = await axios.post(process.env.VUE_APP_API_URL + '/updateUser', formData)
+        if (resp1.status === 200 && resp2.status === 200) {
+          Snackbar('Settings Updated', 'var(--success)')
+          this.setCurrentUser(resp2.data.user)
+          this.edit = false
+        }
+      } catch (error) {
+        console.log(error)
+        Snackbar('Update Unsuccessful', 'var(--error-text')
+      }
+    },
+    populateForm () {
+      this.sex = this.currentUser.sex
+      this.dob = this.currentUser.date_of_birth
+      this.email = this.currentUser.email
+      this.mobile = this.currentUser.Phone_Number
+      this.username = this.currentUser.username
+
+      const addressArray = this.currentUser.address.split(/\r?\n/)
+      this.address = addressArray[0]
+      this.city = addressArray[1]
+      this.state = addressArray[2]
+      this.zipcode = addressArray[3]
+      this.country = addressArray[4]
     }
   }
 }
@@ -430,7 +475,7 @@ export default {
     color: var(--section-data-color);
   }
   .section-input-group {
-    margin-bottom: 12px;
+    margin-bottom: 5px;
     label {
       width: 100%;
       font-size: 0.875rem;
@@ -444,18 +489,21 @@ export default {
       color: var(--input-text-color);
       border-radius: 5px;
       margin-top: 5px;
-      &:focus {
+      &:not(:read-only):focus {
         border-bottom: 1px solid var(--focus-blue);
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
+      }
+      &:read-only {
+        background: var(--lightest-gray);
       }
     }
   }
 }
 
-.section-info-container > .section-input-group:last-child {
-  margin-bottom: 0;
-}
+// .section-info-container > .section-input-group:last-child {
+//   margin-bottom: 0;
+// }
 
 .gender-options-container {
   display: flex;
@@ -476,7 +524,7 @@ export default {
       justify-content: center;
       align-items: center;
     }
-    input[name='gender-option'] {
+    input[name='sex'] {
       width: 40px;
       height: 40px;
       position: relative;
@@ -484,7 +532,7 @@ export default {
       background: var(--light-gray);
       border-radius: 50%;
       appearance: none;
-      & ~ label {
+      &:not(:disabled) ~ label {
         cursor: pointer;
       }
       &:checked {

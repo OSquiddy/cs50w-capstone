@@ -28,7 +28,7 @@
             <div class="col-3 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="first_name">First Name:</label>
+                  <label for="first_name">First Name<span class="required">*</span> :</label>
                   <input type="text" name="first_name" id="first_name" autocomplete="off" v-model="first_name" />
                 </div>
               </div>
@@ -36,7 +36,7 @@
             <div class="col-3 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="last_name">Last Name:</label>
+                  <label for="last_name">Last Name<span class="required">*</span> :</label>
                   <input type="text" name="last_name" id="last_name" autocomplete="off" v-model="last_name" />
                 </div>
               </div>
@@ -45,6 +45,22 @@
         </div>
       </div>
     </div>
+    <!-- <div class="container-fluid new-section">
+      <div class="row">
+        <div class="col username-section">
+          <div class="row">
+            <div class="col-6 section-info">
+              <div class="section-info-container">
+                <div class="section-input-group">
+                  <label for="username">Username<span class="required">*</span> :</label>
+                  <input type="username" name="username" id="username" autocomplete="off" v-model="username" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
     <div class="container-fluid new-section">
       <div class="row">
         <div class="col email-section">
@@ -52,8 +68,8 @@
             <div class="col-6 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="email">Email:</label>
-                  <input type="email" name="email" id="email" value="severus.snape@hogwarts.com" autocomplete="off" v-model="email" />
+                  <label for="email">Email<span class="required">*</span> :</label>
+                  <input type="email" name="email" id="email" autocomplete="off" v-model="email" />
                 </div>
               </div>
             </div>
@@ -67,7 +83,7 @@
           <div class="row mobile-section justify-content-between">
             <div class="col-6 section-info">
               <div class="section-info-container">
-                <div class="section-title">Mobile:</div>
+                <div class="section-title">Mobile<span class="required">*</span> :</div>
                 <vue-tel-input :autoDefaultCountry="true" :dropdownOptions="{ showDialCodeInSelection: true, showDialCodeInList: true, showFlags: true }" v-model="mobile">
                   <template v-slot:arrow-icon>
                     <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left: 3px;" xmlns="http://www.w3.org/2000/svg">
@@ -91,8 +107,9 @@
             <div class="col-6 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="dob">Date of Birth:</label>
-                  <input type="date" name="dob" id="dob" autocomplete="off" v-model="dob" />
+                  <label for="dob">Date of Birth:<span class="required">*</span></label>
+                  <datetime v-model="dob" type="date" name="dob" id="dob" :format="'MMMM dd, yyyy'" class="theme-red"></datetime>
+                  <!-- <input type="date" name="dob" id="dob" autocomplete="off" v-model="dob" /> -->
                 </div>
               </div>
             </div>
@@ -107,7 +124,7 @@
             <div class="col-6 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="address">Address:</label>
+                  <label for="address">Address:<span class="required">*</span></label>
                   <input type="text" name="address" id="address" autocomplete="off" v-model="address" />
                 </div>
               </div>
@@ -143,7 +160,7 @@
             <div class="col-3 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="country">Country:</label>
+                  <label for="country">Country<span class="required">*</span> :</label>
                   <input type="text" name="Country" id="Country" autocomplete="off" v-model="country"/>
                 </div>
               </div>
@@ -158,18 +175,18 @@
           <div class="row">
             <div class="col-6 section-info">
               <div class="section-info-container">
-                <div class="section-title">Gender:</div>
+                <div class="section-title">Gender<span class="required">*</span> :</div>
                 <div class="section-data gender-options-container">
                   <div class="gender-option">
-                    <input type="radio" name="sex" id="male" v-model="sex" value="m" />
+                    <input type="radio" name="sex" id="male" v-model="sex" value="M" />
                     <label for="male">M</label>
                   </div>
                   <div class="gender-option">
-                    <input type="radio" name="sex" id="female"  v-model="sex" value="f" />
+                    <input type="radio" name="sex" id="female"  v-model="sex" value="F" />
                     <label for="female">F</label>
                   </div>
                   <div class="gender-option">
-                    <input type="radio" name="sex" id="other" v-model="sex" value="o" />
+                    <input type="radio" name="sex" id="other" v-model="sex" value="O" />
                     <label for="other">O</label>
                   </div>
                 </div>
@@ -181,29 +198,13 @@
     </div>
     <div class="container-fluid new-section">
       <div class="row">
-        <div class="col father-section">
+        <div class="col age-section">
           <div class="row">
             <div class="col-6 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="fathers_name">Father's Name:</label>
-                  <input type="text" name="fathers_name" id="fathers_name" autocomplete="off" v-model="fathers_name"/>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container-fluid new-section">
-      <div class="row">
-        <div class="col mother-section">
-          <div class="row">
-            <div class="col-6 section-info">
-              <div class="section-info-container">
-                <div class="section-input-group">
-                  <label for="mothers_name">Mother's Name:</label>
-                  <input type="text" name="mothers_name" id="mothers_name" autocomplete="off" v-model="mothers_name" />
+                  <label for="age">Age<span class="required">*</span> :</label>
+                  <input type="number" name="age" id="age" autocomplete="off" v-model="age"/>
                 </div>
               </div>
             </div>
@@ -218,7 +219,7 @@
             <div class="col-3 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="blood_type">Blood Type:</label>
+                  <label for="blood_type">Blood Type :</label>
                   <input list="blood_type_list" type="text" name="blood_type" id="blood_type" autocomplete="off" v-model="blood_type"/>
                   <datalist id="blood_type_list">
                     <option value="A+" />
@@ -236,7 +237,7 @@
             <div class="col-3 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="patient_type">Patient Type:</label>
+                  <label for="patient_type">Patient Type :</label>
                   <input type="text" name="patient_type" id="patient_type" autocomplete="off" v-model="patient_type" list="patient_type_list"/>
                   <datalist id="patient_type_list">
                     <option value="In-Patient Department (IPD)" />
@@ -251,13 +252,29 @@
     </div>
     <div class="container-fluid new-section">
       <div class="row">
-        <div class="col age-section">
+        <div class="col father-section">
           <div class="row">
             <div class="col-6 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="age">Age:</label>
-                  <input type="text" name="age" id="age" autocomplete="off" v-model="age"/>
+                  <label for="fathers_name">Father's Name :</label>
+                  <input type="text" name="fathers_name" id="fathers_name" autocomplete="off" v-model="fathers_name"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid new-section">
+      <div class="row">
+        <div class="col mother-section">
+          <div class="row">
+            <div class="col-6 section-info">
+              <div class="section-info-container">
+                <div class="section-input-group">
+                  <label for="mothers_name">Mother's Name :</label>
+                  <input type="text" name="mothers_name" id="mothers_name" autocomplete="off" v-model="mothers_name" />
                 </div>
               </div>
             </div>
@@ -272,7 +289,7 @@
             <div class="col-6 section-info">
               <div class="section-info-container">
                 <div class="section-input-group">
-                  <label for="occupation">Occupation:</label>
+                  <label for="occupation">Occupation :</label>
                   <input type="text" name="occupation" id="occupation" autocomplete="off" v-model="occupation"/>
                 </div>
               </div>
@@ -288,14 +305,19 @@
 <script>
 import { VueTelInput } from 'vue-tel-input'
 import axios from 'axios'
+import { DateTime } from 'luxon'
+import { Datetime } from 'vue-datetime'
+import { Snackbar } from '../../util/util'
 
 export default {
   name: 'NewPatient',
   components: {
-    VueTelInput
+    VueTelInput,
+    Datetime
   },
   data () {
     return {
+      username: '',
       first_name: '',
       last_name: '',
       sex: null,
@@ -315,14 +337,26 @@ export default {
       age: null
     }
   },
+  watch: {
+    dob(newValue, oldValue) {
+      console.log(this.dob)
+      console.log(DateTime.fromISO(this.dob).toFormat('yyyy-MM-dd'))
+    }
+  },
+  mounted () {
+    this.dob = DateTime.now().toFormat('yyyy-MM-dd')
+    // console.log(this.dob)
+    // In-Patient Department (IPD)
+  },
   methods: {
     async submitForm () {
       const formData = {
+        // username: this.username,
         first_name: this.first_name,
         last_name: this.last_name,
         email: this.email,
         mobile: this.mobile,
-        dob: this.dob,
+        dob: DateTime.fromISO(this.dob).toFormat('yyyy-MM-dd'),
         address: this.address,
         city: this.city,
         state: this.state,
@@ -336,10 +370,17 @@ export default {
         sex: this.sex,
         age: this.age
       }
-      const response = await axios.post(process.env.VUE_APP_API_URL + '/create/p', formData)
-      console.log(response)
-      if (response.status === 200) {
-        this.$router.push('/')
+      try {
+        const response = await axios.post(process.env.VUE_APP_API_URL + '/create/p', formData)
+        console.log(response)
+        if (response.status === 200) {
+          this.$router.push('/')
+          if (response.status === 200) {
+            Snackbar('Patient Created!', 'var(--success)')
+          }
+        }
+      } catch (error) {
+        Snackbar('Creation Unsuccessful', 'var(--error-text)')
       }
     }
   }
@@ -351,7 +392,7 @@ export default {
 .add-patient-main {
   background-color: var(--background-primary);
   padding: 1rem;
-  margin-top: 30px;
+  padding-top: calc(30px + 1rem);
   border-radius: 0.75rem;
   border: 1px transparent;
 }
@@ -402,7 +443,7 @@ export default {
   }
 }
 
-.section-info-container {
+::v-deep .section-info-container {
   .section-title {
     margin-bottom: 5px;
     font-size: 0.875rem;
@@ -522,5 +563,9 @@ export default {
   position: sticky;
   top: 20px;
   right: 0;
+}
+
+.required {
+  color: var(--primary-accent-light);
 }
 </style>

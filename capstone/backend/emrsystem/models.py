@@ -30,6 +30,8 @@ def new_filename(instance, filename):
 
 # Create your models here.
 class MyBaseUser(AbstractUser):
+    first_name = models.CharField(max_length=64, blank=False, null=False)
+    last_name = models.CharField(max_length=64, blank=False, null=False)
     Phone_Number = models.CharField(null=True, max_length=15)
     address = models.TextField(null=True)
     date_of_birth = models.DateField(null=True)
@@ -223,6 +225,8 @@ class PastHistory(models.Model):
     surgeries = models.TextField(null=True, blank=True)
     allergies = models.TextField(null=True, blank=True)
     general = models.TextField(null=True, blank=True)
+    drugs = models.TextField(null=True, blank=True)
+    family = models.TextField(null=True, blank=True)
     t2dm = models.BooleanField(default=False)
     heart_disease = models.BooleanField(default=False)
     hypothyroidism = models.BooleanField(default=False)

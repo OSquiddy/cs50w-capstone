@@ -2,10 +2,11 @@ from rest_framework import serializers
 from .models import *
 
 class UserSerializer(serializers.ModelSerializer):
-    sex = serializers.SerializerMethodField()
+    sex_full = serializers.SerializerMethodField()
+    sex = serializers.CharField()
     fullname = serializers.CharField()
 
-    def get_sex(self, obj):
+    def get_sex_full(self, obj):
         return obj.get_sex_display()
 
     class Meta:
@@ -13,10 +14,11 @@ class UserSerializer(serializers.ModelSerializer):
         exclude = ['password', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'groups', 'user_permissions']
         
 class DoctorSerializer(serializers.ModelSerializer):
-    sex = serializers.SerializerMethodField()
+    sex_full = serializers.SerializerMethodField()
+    sex = serializers.CharField()
     fullname = serializers.CharField()
 
-    def get_sex(self, obj):
+    def get_sex_full(self, obj):
         return obj.get_sex_display()
 
     class Meta:
@@ -24,10 +26,11 @@ class DoctorSerializer(serializers.ModelSerializer):
         exclude = ['password', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'groups', 'user_permissions']
         
 class PatientSerializer(serializers.ModelSerializer):
-    sex = serializers.SerializerMethodField()
+    sex_full = serializers.SerializerMethodField()
+    sex = serializers.CharField()
     fullname = serializers.CharField()
 
-    def get_sex(self, obj):
+    def get_sex_full(self, obj):
         return obj.get_sex_display()
         
     class Meta:

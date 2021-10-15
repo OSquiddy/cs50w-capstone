@@ -28,6 +28,7 @@ urlpatterns = [
     path("uploadImage", views.uploadImage, name="uploadImage"),
     path('create/p', views.createPatient, name="createPatient"),
     path('history/<int:id>', views.getHistory, name="getHistory"),
+    path('updateUser', views.updateUser, name="updateUser"),
     # path('', include(vue_urls)),
     
     # api urls

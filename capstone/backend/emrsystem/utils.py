@@ -1,12 +1,15 @@
 from .models import *
+from .serializers import *
 from datetime import date, timedelta
 from django.db.models import Q
+from rest_framework.response import Response
 from django.http import FileResponse, HttpResponse
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.utils.translation import gettext as _
 import time
 
 import io, os
 from django.conf import settings
-# reportlab.rl_config.TTFSearchPath.append(str(settings.BASE_DIR) + '/app/lib/reportlabs/fonts')
 from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER, TA_LEFT, TA_RIGHT
 from reportlab.lib.pagesizes import A4, letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle, Flowable, HRFlowable
@@ -17,18 +20,6 @@ from reportlab.lib.units import inch, cm
 from reportlab.lib import colors
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-
-# pdfmetrics.registerFont(TTFont('Roboto-Medium', 'Roboto-Medium.ttf'))
-# pdfmetrics.registerFont(TTFont('Roboto-Italic', 'Roboto-Italic.ttf'))
-# pdfmetrics.registerFont(TTFont('Roboto-MediumItalic', 'Roboto-MediumItalic.ttf'))
-# pdfmetrics.registerFont(TTFont('Roboto-BoldItalic', 'Roboto-BoldItalic.ttf'))
-# pdfmetrics.registerFont(TTFont('Roboto-Bold', 'Roboto-Bold.ttf'))
-# pdfmetrics.registerFont(TTFont('Roboto-ThinItalic', 'Roboto-ThinItalic.ttf'))
-# pdfmetrics.registerFont(TTFont('Roboto-Thin', 'Roboto-Thin.ttf'))
-# pdfmetrics.registerFont(TTFont('Roboto-Light', 'Roboto-Light.ttf'))
-# pdfmetrics.registerFont(TTFont('Roboto-LightItalic', 'Roboto-LightItalic.ttf'))
-# pdfmetrics.registerFont(TTFont('Roboto', 'Roboto-Regular.ttf'))
-# pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
 
 def getAppointmentsList(appointments):
     today = date.today()
@@ -86,6 +77,58 @@ def getAppointmentsByDate(query):
     appointments = Visit.objects.filter(date=query).order_by('time_from')
     appointmentsList = getAppointmentsList(appointments)
     return appointmentsList
+
+def validateNewPatient(data):
+    try:
+        fName = data.get('fathers_name')
+        mName = data.get('mothers_name')
+        firstName = data.get('first_name')
+        if firstName is None or firstName == '':
+            raise ValidationError(_("Invalid value: first_name cannot be blank/null"), code='invalid', params={
+                'value': firstName
+            })
+        lastName = data.get('last_name')
+        print(lastName)
+        if lastName is None or lastName == '':
+            raise ValidationError(_("Invalid value: last_name cannot be blank/null"), code='invalid', params={
+                'value': lastName
+            })
+        username = data.get('username') if data.get('username') else f"{data.get('first_name').lower()}{data.get('last_name').capitalize()}"
+        email = data.get('email')
+        occupation = data.get('occupation')
+        sex = data.get('sex')
+        if sex is None or sex == '':
+            raise ValidationError(_("Invalid value: sex cannot be blank/null"), code='invalid', params={
+                'value': sex
+            })
+        if data.get('address') is None or data.get('address') == '':
+            raise ValidationError(_("Invalid value: address cannot be blank/null"), code='invalid', params={
+                'value': sex
+            })
+        if data.get('country') is None or data.get('country') == '':
+            raise ValidationError(_("Invalid value: country cannot be blank/null"), code='invalid', params={
+                'value': data.get('country')
+            })
+        address = data.get('address') + '\n' + data.get('city') + '\n' + data.get('state') + '\n' + data.get('zipcode') + '\n' + data.get('country')
+        dob = data.get('dob')
+        age = data.get('age')
+        if age is None or age == '':
+            raise ValidationError(_("Invalid value: age cannot be blank/null"), code='invalid', params={
+                'value': age
+            })
+        pType = data.get('patient_type')
+        blood_type = data.get('blood_type')
+        mob = data.get('mobile')
+        if mob is None or mob == '':
+            raise ValidationError(_("Invalid value: Phone_Number cannot be blank/null"), code='invalid', params={
+                'value': mob
+            })
+        patient = Patient.objects.create(email=email, first_name=firstName, last_name=lastName, username=username, Phone_Number=mob,address=address, date_of_birth=dob, isDoctor=False, isPatient=True, sex=sex, age=age, fathers_name=fName, mothers_name=mName, occupation=occupation)
+        serializer = PatientSerializer(patient)
+    except Exception as e:
+        print(e)
+        return e
+    return Response({ "patient": serializer.data })
 
 def generatePDFReport(visit, examination):
     # examination = Examination.objects.get(id=1)

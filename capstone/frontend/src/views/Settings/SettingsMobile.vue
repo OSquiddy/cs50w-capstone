@@ -65,190 +65,30 @@
           </div>
         </div>
         <div class="account-settings settings-page">
-          <div class="container new-section">
-            <div class="row">
-              <div class="col">
-                <div class="user-title-section">
-                  <div class="user-title">Dr. Severus Snape</div>
-                  <img src="../../assets/edit.svg" alt="edit-icon" class="edit-icon" />
+          <form action="" method="post" enctype="multipart/form-data" class="settings-form" @submit.prevent="upload">
+            <div class="container new-section">
+              <div class="row">
+                <div class="col">
+                  <div class="user-title-section">
+                    <div class="user-title">Dr. {{currentUser.fullname}}</div>
+                    <img src="../../assets/edit.svg" alt="edit-icon" class="edit-icon" @click="toggleEdit" v-if="!edit"/>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="container new-section">
-            <div class="row">
-              <div class="col">
-                <div class="row image-section justify-content-between">
-                  <div class="col-1 section-icon">
-                    <img src="../../assets/camera.svg" alt="camera-icon" class="camera-icon" />
-                  </div>
-                  <div class="col-10 section-info">
-                    <div class="section-info-container">
-                      <div class="photo"></div>
-                      <div class="image-button-group">
-                        <button class="image-button upload">Upload</button>
-                        <button class="image-button discard">Discard</button>
-                      </div>
+            <div class="container new-section">
+              <div class="row">
+                <div class="col">
+                  <div class="row image-section justify-content-between">
+                    <div class="col-1 section-icon">
+                      <img src="../../assets/camera.svg" alt="camera-icon" class="camera-icon" />
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <hr class="section-divider" />
-          <div class="container new-section">
-            <div class="row">
-              <div class="col">
-                <div class="row name-section justify-content-between">
-                  <div class="col-1 section-icon">
-                    <img src="../../assets/doctor.svg" alt="doctor-icon" class="doctor-icon" />
-                  </div>
-                  <div class="col-10 section-info">
-                    <div class="section-info-container">
-                      <div class="section-input-group">
-                        <label for="first-name">First Name:</label>
-                        <input type="text" name="first-name" id="first-name" autocomplete="off" />
-                      </div>
-                      <div class="section-input-group">
-                        <label for="last-name">Last Name:</label>
-                        <input type="text" name="last-name" id="last-name" autocomplete="off" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <hr class="section-divider" />
-          <div class="container new-section">
-            <div class="row">
-              <div class="col">
-                <div class="row name-section justify-content-between">
-                  <div class="col-1 section-icon">
-                    <img src="../../assets/id-card.svg" alt="id-icon" class="id-icon" />
-                  </div>
-                  <div class="col-10 section-info">
-                    <div class="section-info-container">
-                      <div class="section-title">ID Number:</div>
-                      <div class="section-data">21510</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <hr class="section-divider" />
-          <div class="container new-section">
-            <div class="row">
-              <div class="col">
-                <div class="row email-section justify-content-between">
-                  <div class="col-1 section-icon">
-                    <img src="../../assets/email.svg" alt="email-icon" class="email-icon" />
-                  </div>
-                  <div class="col-10 section-info">
-                    <div class="section-info-container">
-                      <div class="section-title">Email:</div>
-                      <div class="section-data">severus.snape@hogwarts.com</div>
-                      <div class="section-input-group">
-                        <label for="last-name">Email:</label>
-                        <input type="email" name="email" id="email" value="severus.snape@hogwarts.com" autocomplete="off" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <hr class="section-divider" />
-          <div class="container new-section">
-            <div class="row">
-              <div class="col">
-                <div class="row mobile-section justify-content-between">
-                  <div class="col-1 section-icon">
-                    <img src="../../assets/mobile.svg" alt="mobile-icon" class="mobile-icon" />
-                  </div>
-                  <div class="col-10 section-info">
-                    <div class="section-info-container">
-                      <div class="section-title">Mobile:</div>
-                      <!-- <div class="section-data">+91 9022054573</div> -->
-                      <!-- <div class="section-input-group">
-                        <label for="last-name">Mobile:</label>
-                        <select name="country-codes" id="country-codes">
-                          <option value="1">USA (+1)</option>
-                          <option value="2">United Arab Emirates (+971)</option>
-                          <option value="3">India (+91)</option>
-                        </select>
-                        <input type="tel" name="mobile" id="mobile" value="" autocomplete="off" />
-                      </div> -->
-                      <vue-tel-input :autoDefaultCountry="true" :dropdownOptions="{ showDialCodeInSelection: true, showDialCodeInList: true, showFlags: true }">
-                        <template v-slot:arrow-icon>
-                          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left: 3px;" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                              d="M4.99998 5.51227C4.82076 5.51227 4.64156 5.44609 4.50493 5.31403L0.205142 1.15603C-0.0683806 0.89153 -0.0683806 0.462688 0.205142 0.198295C0.478554 -0.0660983 0.921935 -0.0660983 1.19548 0.198295L4.99998 3.87752L8.80451 0.198423C9.07803 -0.0659698 9.52137 -0.0659698 9.79476 0.198423C10.0684 0.462817 10.0684 0.891658 9.79476 1.15616L5.49504 5.31416C5.35834 5.44625 5.17914 5.51227 4.99998 5.51227Z"
-                              fill="#666666"
-                            />
-                          </svg>
-                        </template>
-                      </vue-tel-input>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <hr class="section-divider" />
-          <div class="container new-section">
-            <div class="row">
-              <div class="col">
-                <div class="row password-section justify-content-between">
-                  <div class="col-1 section-icon">
-                    <img src="../../assets/lock.svg" alt="password-icon" class="password-icon" />
-                  </div>
-                  <div class="col-10 section-info">
-                    <div class="section-info-container">
-                      <div class="section-title">Password:</div>
-                      <div class="section-data">●●●●●●●●●●●●●●●●</div>
-                      <div class="section-input-group">
-                        <label for="last-name">Current Password:</label>
-                        <input type="password" name="curr-pass" id="curr-pass" value="12345" autocomplete="off" />
-                      </div>
-                      <div class="section-input-group">
-                        <label for="last-name">Confirm Password:</label>
-                        <input type="password" name="cnfm-pass" id="cnfm-pass" value="12345" autocomplete="off" />
-                      </div>
-                      <div class="section-input-group">
-                        <label for="last-name">New Password:</label>
-                        <input type="password" name="new-pass" id="new-pass" value="12345" autocomplete="off" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <hr class="section-divider" />
-          <div class="container new-section">
-            <div class="row">
-              <div class="col">
-                <div class="row gender-section justify-content-between">
-                  <div class="col-1 section-icon">
-                    <img src="../../assets/gender.svg" alt="gender-icon" class="gender-icon" />
-                  </div>
-                  <div class="col-10 section-info">
-                    <div class="section-info-container">
-                      <div class="section-title">Gender:</div>
-                      <div class="section-data gender-options-container">
-                        <div class="gender-option">
-                          <input type="radio" name="gender-option" id="male" />
-                          <label for="male">M</label>
-                        </div>
-                        <div class="gender-option">
-                          <input type="radio" name="gender-option" id="female" />
-                          <label for="female">F</label>
-                        </div>
-                        <div class="gender-option">
-                          <input type="radio" name="gender-option" id="other" />
-                          <label for="other">O</label>
+                    <div class="col-10 section-info">
+                      <div class="section-info-container">
+                        <div class="photo"></div>
+                        <div class="image-button-group">
+                          <button class="image-button upload">Upload</button>
+                          <button class="image-button discard">Discard</button>
                         </div>
                       </div>
                     </div>
@@ -256,48 +96,243 @@
                 </div>
               </div>
             </div>
-          </div>
-          <hr class="section-divider" />
-          <div class="container new-section">
-            <div class="row">
-              <div class="col">
-                <div class="row age-section justify-content-between">
-                  <div class="col-1 section-icon">
-                    <img src="../../assets/age.svg" alt="age-icon" class="age-icon" />
-                  </div>
-                  <div class="col-10 section-info">
-                    <div class="section-info-container">
-                      <div class="section-title">Age:</div>
-                      <div class="section-data">47</div>
-                      <div class="section-input-group">
-                        <label for="age">Age:</label>
-                        <input type="number" name="age" id="age" value="47" autocomplete="off" />
+            <hr class="section-divider" />
+            <div class="container new-section">
+              <div class="row">
+                <div class="col">
+                  <div class="row name-section justify-content-between">
+                    <div class="col-1 section-icon">
+                      <img src="../../assets/doctor.svg" alt="doctor-icon" class="doctor-icon" />
+                    </div>
+                    <div class="col-10 section-info">
+                      <div class="section-info-container">
+                        <div class="section-input-group">
+                          <label for="username">Username:</label>
+                          <input type="text" name="username" id="username" autocomplete="off" v-if="edit" v-model="username" />
+                          <div class="section-data" v-if="!edit">{{currentUser.username}}</div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <hr class="section-divider" />
-          <div class="container new-section">
-            <div class="row">
-              <div class="col">
-                <div class="row doj-section justify-content-between">
-                  <div class="col-1 section-icon">
-                    <img src="../../assets/clock.svg" alt="clock-icon" class="clock-icon" />
-                  </div>
-                  <div class="col-10 section-info">
-                    <div class="section-info-container">
-                      <div class="section-title">Date of Joining:</div>
-                      <div class="section-data">Sat, Jul 14, 2020</div>
+            <hr class="section-divider" />
+            <div class="container new-section">
+              <div class="row">
+                <div class="col">
+                  <div class="row name-section justify-content-between">
+                    <div class="col-1 section-icon">
+                      <img src="../../assets/id-card.svg" alt="id-icon" class="id-icon" />
+                    </div>
+                    <div class="col-10 section-info">
+                      <div class="section-info-container">
+                        <div class="section-title">ID Number:</div>
+                        <div class="section-data">{{currentUser.id}}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <hr class="section-divider" />
+            <hr class="section-divider" />
+            <div class="container new-section">
+              <div class="row">
+                <div class="col">
+                  <div class="row email-section justify-content-between">
+                    <div class="col-1 section-icon">
+                      <img src="../../assets/email.svg" alt="email-icon" class="email-icon" />
+                    </div>
+                    <div class="col-10 section-info">
+                      <div class="section-info-container">
+                        <div class="section-input-group">
+                          <label for="last-name">Email:</label>
+                          <input type="email" name="email" id="email" autocomplete="off" v-if="edit" v-model="email"/>
+                          <div class="section-data" v-if="!edit">{{currentUser.email}}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="section-divider" />
+            <div class="container new-section">
+              <div class="row">
+                <div class="col">
+                  <div class="row mobile-section justify-content-between">
+                    <div class="col-1 section-icon">
+                      <img src="../../assets/mobile.svg" alt="mobile-icon" class="mobile-icon" />
+                    </div>
+                    <div class="col-10 section-info">
+                      <div class="section-info-container">
+                        <div class="section-title">Mobile:</div>
+                        <vue-tel-input :autoDefaultCountry="true" :dropdownOptions="{ showDialCodeInSelection: true, showDialCodeInList: true, showFlags: true }">
+                          <template v-slot:arrow-icon>
+                            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left: 3px;" xmlns="http://www.w3.org/2000/svg">
+                              <path
+                                d="M4.99998 5.51227C4.82076 5.51227 4.64156 5.44609 4.50493 5.31403L0.205142 1.15603C-0.0683806 0.89153 -0.0683806 0.462688 0.205142 0.198295C0.478554 -0.0660983 0.921935 -0.0660983 1.19548 0.198295L4.99998 3.87752L8.80451 0.198423C9.07803 -0.0659698 9.52137 -0.0659698 9.79476 0.198423C10.0684 0.462817 10.0684 0.891658 9.79476 1.15616L5.49504 5.31416C5.35834 5.44625 5.17914 5.51227 4.99998 5.51227Z"
+                                fill="#666666"
+                              />
+                            </svg>
+                          </template>
+                        </vue-tel-input>
+                        <div class="section-data" v-if="!edit">{{currentUser.Phone_Number}}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="section-divider" />
+            <div class="container new-section">
+              <div class="row">
+                <div class="col">
+                  <div class="row password-section justify-content-between">
+                    <div class="col-1 section-icon">
+                      <img src="../../assets/lock.svg" alt="password-icon" class="password-icon" />
+                    </div>
+                    <div class="col-10 section-info">
+                      <div class="section-info-container">
+                        <div class="section-title">Password:</div>
+                        <div class="section-input-group">
+                          <label for="last-name">Current Password:</label>
+                          <input type="password" name="curr-pass" id="curr-pass" value="12345" autocomplete="off" />
+                        </div>
+                        <div class="section-input-group">
+                          <label for="last-name">Confirm Password:</label>
+                          <input type="password" name="cnfm-pass" id="cnfm-pass" value="12345" autocomplete="off" />
+                        </div>
+                        <div class="section-input-group">
+                          <label for="last-name">New Password:</label>
+                          <input type="password" name="new-pass" id="new-pass" value="12345" autocomplete="off" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="section-divider" />
+            <div class="container new-section">
+              <div class="row">
+                <div class="col">
+                  <div class="row password-section justify-content-between">
+                    <div class="col-1 section-icon">
+                      <img src="../../assets/lock.svg" alt="password-icon" class="password-icon" />
+                    </div>
+                    <div class="col-10 section-info">
+                      <div class="section-info-container" v-if="edit">
+                        <div class="section-input-group">
+                          <label for="last-name">Address:</label>
+                          <input type="text" name="address" id="address" autocomplete="off" v-model="address" />
+                        </div>
+                        <div class="section-input-group">
+                          <label for="last-name">City:</label>
+                          <input type="text" name="city" id="city" autocomplete="off" v-model="city" />
+                        </div>
+                        <div class="section-input-group">
+                          <label for="last-name">State:</label>
+                          <input type="text" name="state" id="state" autocomplete="off" v-model="state" />
+                        </div>
+                        <div class="section-input-group">
+                          <label for="last-name">Zipcode:</label>
+                          <input type="text" name="zipcode" id="zipcode" autocomplete="off" v-model="zipcode" />
+                        </div>
+                        <div class="section-input-group">
+                          <label for="last-name">Country:</label>
+                          <input type="text" name="Country" id="Country" autocomplete="off" v-model="country" />
+                        </div>
+                      </div>
+                      <div class="section-info-container" v-if="!edit">
+                        <div class="section-title">Address:</div>
+                        <div class="section-data" >{{currentUser.address}}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="section-divider" />
+            <div class="container new-section">
+              <div class="row">
+                <div class="col">
+                  <div class="row gender-section justify-content-between">
+                    <div class="col-1 section-icon">
+                      <img src="../../assets/gender.svg" alt="gender-icon" class="gender-icon" />
+                    </div>
+                    <div class="col-10 section-info">
+                      <div class="section-info-container">
+                        <div class="section-title">Gender:</div>
+                        <div class="section-data gender-options-container">
+                          <div class="gender-option">
+                            <input type="radio" name="sex" id="male" :disabled="!edit" v-model="sex" value="M" />
+                            <label for="male">M</label>
+                          </div>
+                          <div class="gender-option">
+                            <input type="radio" name="sex" id="female" :disabled="!edit" v-model="sex" value="F" />
+                            <label for="female">F</label>
+                          </div>
+                          <div class="gender-option">
+                            <input type="radio" name="sex" id="other" :disabled="!edit" v-model="sex" value="O" />
+                            <label for="other">O</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="section-divider" />
+            <div class="container new-section">
+              <div class="row">
+                <div class="col">
+                  <div class="row age-section justify-content-between">
+                    <div class="col-1 section-icon">
+                      <img src="../../assets/age.svg" alt="age-icon" class="age-icon" />
+                    </div>
+                    <div class="col-10 section-info">
+                      <div class="section-info-container">
+                        <div class="section-title">Age:</div>
+                        <div class="section-input-group" v-if="edit">
+                          <input type="number" name="age" id="age" value="47" autocomplete="off" />
+                        </div>
+                        <div class="section-data" v-if="!edit">47</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="section-divider" />
+            <div class="container new-section">
+              <div class="row">
+                <div class="col">
+                  <div class="row dob-section justify-content-between">
+                    <div class="col-1 section-icon">
+                      <img src="../../assets/clock.svg" alt="clock-icon" class="clock-icon" />
+                    </div>
+                    <div class="col-10 section-info">
+                      <div class="section-info-container">
+                        <div class="section-title">Date of Birth:</div>
+                        <div class="section-data">{{currentUser.date_of_birth}}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="section-divider" />
+            <div class="container-fluid mb-4 mt-5">
+              <div class="row">
+                <div class="col d-flex">
+                  <input type="button" value="Cancel" @click="toggleEdit" class="cancel-button" v-if="edit">
+                  <input type="submit" value="Save" class="save-button" v-if="edit">
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
       <div id="mask"></div>
@@ -307,6 +342,10 @@
 
 <script>
 import { VueTelInput } from 'vue-tel-input'
+// import { DateTime } from 'luxon'
+import { mapActions, mapState } from 'vuex'
+import axios from 'axios'
+import { Snackbar } from '../../util/util'
 
 export default {
   name: 'SettingsMobile',
@@ -315,10 +354,39 @@ export default {
   },
   data() {
     return {
-      phone: null
+      edit: false,
+      imageURL: null,
+      image: null,
+      showImage: false,
+      sex: null,
+      country: '',
+      address: '',
+      city: '',
+      zipcode: '',
+      state: '',
+      dob: '',
+      email: '',
+      mobile: null,
+      username: ''
     }
   },
+  computed: {
+    ...mapState(['currentUser']),
+    profile() {
+      return this.currentUser.profilePic
+    }
+  },
+  watch: {
+    'currentUser.profilePic'(newValue, oldValue) {
+      this.$refs.profilePic.src = newValue
+    }
+  },
+  mounted() {
+    // console.log(this.currentUser.profilePic)
+    this.populateForm()
+  },
   methods: {
+    ...mapActions(['setCurrentUser']),
     toggleActive(event) {
       // console.log(event.target)
       const elem = document.querySelector('.settings-outer-container')
@@ -342,6 +410,65 @@ export default {
       const leftPercent = (left / width) * 50
       const slider = document.querySelector('.slider')
       slider.style.left = `${leftPercent}%`
+    },
+    toggleEdit() {
+      this.edit = !this.edit
+    },
+    showPreview(event) {
+      this.showImage = true
+      const img = document.querySelector('#image')
+      this.image = event.target.files[0]
+      img.src = URL.createObjectURL(event.target.files[0])
+      this.imageURL = img.src
+    },
+    removePic() {
+      // const img = document.querySelector('#image')
+      // img.src = 'img/camera.34ea8771.svg'
+      this.showImage = false
+    },
+    async upload() {
+      const imgData = new FormData()
+      const formData = {
+        email: this.email,
+        sex: this.sex,
+        address: this.address,
+        city: this.city,
+        state: this.state,
+        zipcode: this.zipcode,
+        country: this.country,
+        dob: this.dob,
+        mobile: this.mobile,
+        username: this.username
+      }
+      imgData.append('imageURL', this.imageURL)
+      imgData.append('image', this.image)
+
+      try {
+        const resp1 = await axios.post(process.env.VUE_APP_API_URL + '/uploadImage', imgData)
+        const resp2 = await axios.post(process.env.VUE_APP_API_URL + '/updateUser', formData)
+        if (resp1.status === 200 && resp2.status === 200) {
+          Snackbar('Settings Updated', 'var(--success)')
+          this.setCurrentUser(resp2.data.user)
+          this.edit = false
+        }
+      } catch (error) {
+        console.log(error)
+        Snackbar('Update Unsuccessful', 'var(--error-text')
+      }
+    },
+    populateForm() {
+      this.sex = this.currentUser.sex
+      this.dob = this.currentUser.date_of_birth
+      this.email = this.currentUser.email
+      this.mobile = this.currentUser.Phone_Number
+      this.username = this.currentUser.username
+
+      const addressArray = this.currentUser.address.split(/\r?\n/)
+      this.address = addressArray[0]
+      this.city = addressArray[1]
+      this.state = addressArray[2]
+      this.zipcode = addressArray[3]
+      this.country = addressArray[4]
     }
   }
 }
@@ -569,7 +696,7 @@ export default {
       justify-content: center;
       align-items: center;
     }
-    input[name='gender-option'] {
+    input[name='sex'] {
       width: 40px;
       height: 40px;
       position: relative;
@@ -577,24 +704,15 @@ export default {
       background: var(--light-gray);
       border-radius: 50%;
       appearance: none;
+      &:not(:disabled) ~ label {
+        cursor: pointer;
+      }
       &:checked {
         background: var(--primary-accent-dark);
         & ~ label {
           color: white;
         }
       }
-      // &::after {
-      //   // content: ' ';
-      //   position: absolute;
-      //   width: 40px;
-      //   height: 40px;
-      //   border-radius: 50%;
-      //   border: none;
-      //   background: var(--light-gray);
-      //   // background: var(--primary-accent-dark);
-      //   top: 0;
-      //   left: 0;
-      // }
     }
   }
 }
@@ -620,7 +738,7 @@ export default {
 ::v-deep .vue-tel-input {
   border: none;
   box-shadow: none;
-   .vti__dropdown {
+  .vti__dropdown {
     background: var(--light-gray);
     border-radius: 5px;
     padding: 5px;
@@ -633,5 +751,29 @@ export default {
     border-radius: 5px;
     background: var(--light-gray);
   }
+}
+
+.save-button, .cancel-button {
+  padding: 0.325rem 0.625rem;
+  display: flex;
+  justify-content: center;
+  border: none;
+  outline: none;
+  width: 100px;
+  font-size: 0.75rem;
+  border-radius: 5px;
+  background: var(--button-blue);
+  color: white;
+  // position: sticky;
+  // top: 20px;
+  // right: 0;
+}
+
+.cancel-button {
+  margin-left: auto;
+  margin-right: 0.625rem;
+  background-color: var(--light-gray);
+  color: var(--primary);
+  border: 1px solid #ccc;
 }
 </style>
