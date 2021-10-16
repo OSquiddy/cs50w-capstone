@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="overview-main height">
     <div class="grid-container" v-if="menu">
       <div class="grid-item" @click="toggleMenu">
         <div class="grid-item-img">
@@ -68,6 +68,9 @@ export default {
       menu: true
     }
   },
+  mounted () {
+
+  },
   methods: {
     ...mapActions(['removeToken']),
     toggleMenu () {
@@ -90,6 +93,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.overview-main {
+  background: var(--lightest-gray);
+  border: 1px solid transparent;
+  height: 100%;
+}
+
+.height {
+  height: var(--height);
+}
+
 .grid-container {
   margin-top: 30px;
   display: grid;
