@@ -34,7 +34,7 @@ export default {
       this.$store.commit('GET_PATIENT_INFO', patient)
     }
   },
-  mounted () {
+  beforeMount () {
     const token = this.token
     if (token) {
       axios.defaults.headers.common['Authorization'] = 'Token ' + token
