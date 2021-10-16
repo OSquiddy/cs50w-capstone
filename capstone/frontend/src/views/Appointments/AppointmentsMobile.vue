@@ -20,7 +20,7 @@
                     <div class="patient-appt-time">{{ patient.time }}</div>
                   </div>
                   <button class="patient-appt-join" v-if="!patient.visitCompleted">Join</button>
-                  <img class="completed-appt" src="../../assets/completed.svg" alt="completed-logo" v-else>
+                  <img class="completed-appt" svg-inline src="../../assets/completed.svg" alt="completed-logo" v-if="patient.visitCompleted">
                 </div>
               </router-link>
             </div>
@@ -96,7 +96,8 @@ export default {
 
 <style lang="scss" scoped>
 .appointment-list {
-  height: calc(100vh - 197px);
+  // height: calc(100vh - 197px);
+  height: calc(100vh - 165px);
   overflow-y: scroll;
   padding-bottom: 55px;
   background: #fff;
@@ -156,8 +157,10 @@ export default {
   margin-left: auto;
   width: 30px;
   height: 30px;
-  filter: brightness(0) invert(24%) sepia(0%) saturate(1180%) hue-rotate(135deg) brightness(96%) contrast(86%);;
   align-self: center;
+  * {
+    fill: var(--dark-gray);
+  }
 }
 
 .appointment-main {
