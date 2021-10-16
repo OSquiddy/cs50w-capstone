@@ -16,7 +16,7 @@ class ExaminationAdmin(admin.ModelAdmin):
     model = Examination
     list_display = ['id', 'visit']
     ordering = ['visit__patient__first_name', 'visit__visit_number']
-    fieldsets = ((None, { 'fields': ('visit', 'complaints', 'blood_pressure', 'SpO2', 'temperature', 'pulse_rate', 'respiratory', 'cardiovascular', 'cereberovascular')}),('General', { 'fields': (('pallor', 'clubbing', 'lymphadenopathy'), ('icterus', 'koilonychia'), 'others')}),('Diagnosis', { 'fields': ('diagnosis',)}) )
+    fieldsets = ((None, { 'fields': ('visit', 'complaints', 'blood_pressure', 'SpO2', 'temperature', 'pulse_rate', 'respiratory', 'cardiovascular', 'cereberovascular', 'per_abdominal', 'local_examination')}),('General', { 'fields': (('pallor', 'clubbing', 'lymphadenopathy'), ('icterus', 'koilonychia'), 'others')}),('Diagnosis', { 'fields': ('diagnosis',)}) )
 
 class CustomUserAdmin(admin.ModelAdmin):
     model = MyBaseUser

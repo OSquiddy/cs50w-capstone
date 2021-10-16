@@ -174,7 +174,8 @@ def generatePDFReport(visit, examination):
                         topMargin=cm,bottomMargin=18)
     doc.title = f"{visit.patient} - Report {visit.visit_number}"
     Story=[]
-    logo = "C:/Users/siddi/Documents/HarvardCS50W/finalProject-DRF/capstone/frontend/src/assets/avicennaLogo.png"
+    currentDir = os.getcwd()
+    logo = os.path.join(currentDir, '..', 'frontend', 'src', 'assets', 'avicennaLogo.png')
     magName = "Pythonista"
     issueNum = 12
     subPrice = "99.00"

@@ -3,7 +3,7 @@
     <div class="page-title">Appointment</div>
     <div class="add-appointment-main">
       <div class="container-fluid">
-        <form action="" method="post" @submit.prevent="submitForm">
+        <form action="" method="post" @submit.prevent="submitForm" id="appt-entry-form">
         <div class="row new-section">
           <div class="col">
             <div class="section-header">Chief Complaints</div>
@@ -125,7 +125,7 @@
             </div>
           </div>
         </div>
-        <input type="submit" value="Save" class="save-button" >
+        <input type="submit" value="Save" class="save-button" form="appt-entry-form" >
         </form>
       </div>
     </div>
@@ -134,6 +134,8 @@
 
 <script>
 import axios from 'axios'
+import { Snackbar } from '../../util/util'
+
 export default {
   name: 'AppointmentEntry',
   data () {
@@ -186,27 +188,10 @@ export default {
       const response = await axios.post(process.env.VUE_APP_API_URL + '/createReport/' + patientID + '/visit/' + visitNumber, data)
       console.log('Response status is', response.status)
       if (response.status === 200) {
-        // this.respiratory = null
-        // this.cardio = null
-        // this.cerebero = null
-        // this.per_abdominal = null
-        // this.localExam = null
-        // this.pallor = false
-        // this.icterus = false
-        // this.lymphadenopathy = false
-        // this.koilonychia = false
-        // this.oedema = false
-        // this.others = null
-        // this.clubbing = false
-        // this.bloodPressure = null
-        // this.temp = null
-        // this.spo2 = null
-        // this.complaints = null
-        // this.diagnosis = null
-        // this.pulse = null
         this.$router.push({ name: 'patient-main', params: { id: patientID } })
+        Snackbar('Report Generated!', 'var(--success)')
       } else {
-        alert('Form was not submitted successfully')
+        Snackbar('Report Generation Unsuccessful', 'var(--error-text)')
       }
     }
   }
