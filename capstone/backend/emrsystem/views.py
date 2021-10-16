@@ -258,7 +258,7 @@ def createReport(request, patient_id, visitNumber):
         try:
             examination = Examination.objects.get(visit=visit)
             examination.cardiovascular = cardio
-            examintaion.cereberovascular = cerebero
+            examination.cereberovascular = cerebero
             examination.respiratory = respiratory
             examination.local_examination = local_examination
             examination.per_abdominal = per_abdominal
@@ -275,11 +275,11 @@ def createReport(request, patient_id, visitNumber):
             examination.oedema = data['oedema']
             examination.icterus = data['icterus']
             examination.complaints = data['complaints']
+            examination.save()
         except ObjectDoesNotExist:
-            pass
-        examination = Examination.objects.create(
-        visit=visit, blood_pressure=data['bloodPressure'], SpO2=data['spo2'], temperature=data['temp'], respiratory=respiratory, cardiovascular=cardio, cereberovascular=cerebero, others=data['others'], pallor=data['pallor'], pulse_rate=data['pulse'], koilonychia=data['koilonychia'], oedema=data['oedema'], icterus=data['icterus'], lymphadenopathy=data['lymphadenopathy'], clubbing=data['clubbing'], diagnosis=data['diagnosis'], per_abdominal=per_abdominal, local_examination=local_examination, complaints=data['complaints']
-        )
+            examination = Examination.objects.create(
+            visit=visit, blood_pressure=data['bloodPressure'], SpO2=data['spo2'], temperature=data['temp'], respiratory=respiratory, cardiovascular=cardio, cereberovascular=cerebero, others=data['others'], pallor=data['pallor'], pulse_rate=data['pulse'], koilonychia=data['koilonychia'], oedema=data['oedema'], icterus=data['icterus'], lymphadenopathy=data['lymphadenopathy'], clubbing=data['clubbing'], diagnosis=data['diagnosis'], per_abdominal=per_abdominal, local_examination=local_examination, complaints=data['complaints']
+            )
         report = generatePDFReport(visit, examination)
         return Response()
     examination = Examination.objects.get(visit=visit)
@@ -328,22 +328,33 @@ def createPatient(request):
 
 @api_view(['GET', 'POST'])
 def pastHistory(request, id):
-    history = PastHistory.objects.get(patient=id)
     if request.method == 'POST':
         data = json.loads(request.body)
-        history.t2dm = data.get('t2dm')
-        history.chronic_kidney_disease = data.get('kidney_disease')
-        history.cardiovascular_disease = data.get('cardiovascular_disease')
-        history.heart_disease = data.get('heart_disease')
-        history.hypothyroidism = data.get('hypothyroidism')
-        history.general = data.get('general')
-        history.surgeries = data.get('surgeries')
-        history.allergies = data.get('allergies')
-        history.drugs = data.get('drugs')
-        history.family = data.get('family')
-        history.save()
-    serializer = PastHistorySerializer(history)
-    return Response({ "history": serializer.data })
+        try:
+            history = PastHistory.objects.get(patient=id)
+            history.t2dm = data.get('t2dm')
+            history.chronic_kidney_disease = data.get('kidney_disease')
+            history.cardiovascular_disease = data.get('cardiovascular_disease')
+            history.heart_disease = data.get('heart_disease')
+            history.hypothyroidism = data.get('hypothyroidism')
+            history.general = data.get('general')
+            history.surgeries = data.get('surgeries')
+            history.allergies = data.get('allergies')
+            history.drugs = data.get('drugs')
+            history.family = data.get('family')
+            history.save()
+        except ObjectDoesNotExist:
+            patient = Patient.objects.get(id=id)
+            history = PastHistory.objects.create(patient=patient, surgeries=data.get('surgeries'), allergies=data.get('allergies'), general=data.get('general'), drugs=data.get('drugs'), family=data.get('family'), t2dm=data.get('t2dm'), heart_disease=data.get('heart_disease'), hypothyroidism=data.get('hypothyroidism'), cardiovascular_disease=data.get('cardiovascular_disease'), chronic_kidney_disease=data.get('kidney_disease'))
+        serializer = PastHistorySerializer(history)
+        return Response({ "history": serializer.data })
+    else:
+        try:
+            history = PastHistory.objects.get(patient=id)
+            serializer = PastHistorySerializer(history)
+            return Response({ "history": serializer.data })
+        except ObjectDoesNotExist:
+            return Response()
 
 @api_view(['GET', 'POST'])
 def updateUser(request):

@@ -12,7 +12,7 @@
             <div class="row section-info-row">
               <div class="col-4">
                 <div class="common-illnesses">
-                  <input type="checkbox" name="t2dm" id="t2dm" v-if="generalEdit" :checked="history.t2dm" />
+                  <input type="checkbox" name="t2dm" id="t2dm" v-if="generalEdit" v-model="history.t2dm" />
                   <label for="t2dm">
                     T2DM
                     <span class="icon" v-if="!generalEdit">
@@ -23,7 +23,7 @@
                   </label>
                 </div>
                 <div class="common-illnesses">
-                  <input type="checkbox" name="heart_disease" id="heart_disease" v-if="generalEdit" :checked="history.heart_disease" />
+                  <input type="checkbox" name="heart_disease" id="heart_disease" v-if="generalEdit" v-model="history.heart_disease" />
                   <label for="heart_disease">
                     Heart Disease
                     <span class="icon" v-if="!generalEdit">
@@ -36,7 +36,7 @@
               </div>
               <div class="col-4">
                 <div class="common-illnesses">
-                  <input type="checkbox" name="hypothyroidism" id="hypothyroidism" v-if="generalEdit" :checked="history.hypothyroidism" />
+                  <input type="checkbox" name="hypothyroidism" id="hypothyroidism" v-if="generalEdit" v-model="history.hypothyroidism" />
                   <label for="hypothyroidism">
                     Hypothyroidism
                     <span class="icon" v-if="!generalEdit">
@@ -47,12 +47,12 @@
                   </label>
                 </div>
                 <div class="common-illnesses">
-                  <input type="checkbox" name="kidney_disease" id="kidney_disease" v-if="generalEdit" :checked="history.kidney_disease" />
+                  <input type="checkbox" name="kidney_disease" id="kidney_disease" v-if="generalEdit" v-model="history.chronic_kidney_disease" />
                   <label for="kidney_disease">
                     Chronic Kidney Disease
                     <span class="icon" v-if="!generalEdit">
                       :
-                      <template v-if="history.kidney_disease">&#x2714;</template>
+                      <template v-if="history.chronic_kidney_disease">&#x2714;</template>
                       <template v-else>&#x2716;</template>
                     </span>
                   </label>
@@ -60,7 +60,7 @@
               </div>
               <div class="col-4">
                 <div class="common-illnesses">
-                  <input type="checkbox" name="cardiovascular_disease" id="cardiovascular_disease" v-if="generalEdit" :checked="history.cardiovascular_disease" />
+                  <input type="checkbox" name="cardiovascular_disease" id="cardiovascular_disease" v-if="generalEdit" v-model="history.cardiovascular_disease" />
                   <label for="cardiovascular_disease">
                     Cardiovascular Disease
                     <span class="icon" v-if="!generalEdit">
@@ -197,6 +197,7 @@
 </template>
 
 <script>
+/* eslint-disable dot-notation */
 import axios from 'axios'
 import { mapState } from 'vuex'
 import { Snackbar } from '../../util/util'
@@ -210,7 +211,12 @@ export default {
         surgeries: null,
         allergies: null,
         drugs: null,
-        family: null
+        family: null,
+        t2dm: false,
+        chronic_kidney_disease: false,
+        cardiovascular_disease: false,
+        heart_disease: false,
+        hypothyroidism: false
       },
       allergies: [],
       familyHistory: [],
@@ -230,11 +236,17 @@ export default {
   methods: {
     async getPatientHistory() {
       try {
+        console.log(axios.defaults.headers.common['Authorization'])
         const response = await axios.get(process.env.VUE_APP_API_URL + '/history/' + this.patient.id)
         this.history = response.data.history
-        this.generateListFromText()
+        try {
+          this.generateListFromText()
+        } catch (error) {
+          console.log('Inner Error')
+        }
       } catch (error) {
-        this.getPatientHistory()
+        console.log('Error')
+        // this.getPatientHistory()
       }
     },
     generateListFromText () {
@@ -244,21 +256,31 @@ export default {
       this.familyHistory = []
       this.generalHistory = []
 
-      this.history.allergies.split(/\r?\n/).map((line) => {
-        this.allergies.push(line)
-      })
-      this.history.surgeries.split(/\r?\n/).map((line) => {
-        this.surgicalHistory.push(line)
-      })
-      this.history.general.split(/\r?\n/).map((line) => {
-        this.generalHistory.push(line)
-      })
-      this.history.drugs.split(/\r?\n/).map((line) => {
-        this.drugHistory.push(line)
-      })
-      this.history.family.split(/\r?\n/).map((line) => {
-        this.familyHistory.push(line)
-      })
+      if (this.history.allergies) {
+        this.history.allergies.split(/\r?\n/).map((line) => {
+          this.allergies.push(line)
+        })
+      }
+      if (this.history.surgeries) {
+        this.history.surgeries.split(/\r?\n/).map((line) => {
+          this.surgicalHistory.push(line)
+        })
+      }
+      if (this.history.general) {
+        this.history.general.split(/\r?\n/).map((line) => {
+          this.generalHistory.push(line)
+        })
+      }
+      if (this.history.family) {
+        this.history.family.split(/\r?\n/).map((line) => {
+          this.familyHistory.push(line)
+        })
+      }
+      if (this.history.drugs) {
+        this.history.drugs.split(/\r?\n/).map((line) => {
+          this.drugHistory.push(line)
+        })
+      }
     },
     toggleGeneralEdit() {
       this.generalEdit = !this.generalEdit
@@ -269,7 +291,7 @@ export default {
     async submitForm() {
       const formData = {
         t2dm: this.history.t2dm,
-        kidney_disease: this.history.kidney_disease,
+        kidney_disease: this.history.chronic_kidney_disease,
         cardiovascular_disease: this.history.cardiovascular_disease,
         heart_disease: this.history.heart_disease,
         hypothyroidism: this.history.hypothyroidism,

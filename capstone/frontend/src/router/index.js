@@ -79,7 +79,7 @@ const routes = [
             name: 'upcoming',
             components: {
               default: Upcoming,
-              mobile: null
+              mobile: PatientMainMobile
             }
           },
           {
@@ -87,7 +87,7 @@ const routes = [
             name: 'history',
             components: {
               default: History,
-              mobile: null
+              mobile: PatientMainMobile
             }
           },
           {
