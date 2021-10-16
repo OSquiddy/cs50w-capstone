@@ -76,8 +76,10 @@ export default {
 
 <style lang="scss" scoped>
 .patient-directory-main {
+  background: var(--lightest-gray);
   padding: 20px 20px 55px;
-  height: calc(100vh - 197px);
+  // height: calc(100vh - 197px);
+  height: calc(100vh - 165px);
   overflow-y: scroll;
   .patients-list {
     .patient-small-container {
