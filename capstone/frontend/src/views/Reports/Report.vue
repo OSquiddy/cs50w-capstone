@@ -5,7 +5,7 @@
         <!-- <div class="report-preview"></div> -->
         <!-- <embed width="100%" height="100%" src="../../assets/Omar CV.pdf" type="application/pdf" /> -->
         <object width="100%" height="100%" type="application/pdf" :data="`../../assets/pdf/${patientID}/Generated/${patient.fullname} - Report ${visitNumber ? visitNumber : numVisits}.pdf#zoom=43%`">
-          <p>The PDF link is corrupted</p>
+          <p class="d-flex pdf-error">The PDF link is corrupted</p>
         </object>
       </div>
       <div class="col-4 report-sidepanel">
@@ -109,6 +109,15 @@ export default {
   object, embed {
     border-top-left-radius: 0.75rem;
     border-bottom-left-radius: 0.75rem;
+    .pdf-error {
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      margin: auto;
+      color: white;
+      font-size: 1.25rem;
+      font-family: 'Roboto', sans-serif;
+    }
   }
 }
 
