@@ -13,7 +13,8 @@ const store = new Vuex.Store({
     isCollapsed: false,
     patient: {},
     doctor: {},
-    currentUser: {}
+    currentUser: {},
+    overviewMenu: true
   },
   actions: {
     toggleCollapse({ commit }) {
@@ -47,6 +48,9 @@ const store = new Vuex.Store({
     },
     setMobileView({ commit }, value) {
       commit('SET_MOBILE_VIEW', value)
+    },
+    toggleOverviewMenu({ commit }) {
+      commit('TOGGLE_OVERVIEW_MENU')
     }
   },
   mutations: {
@@ -90,6 +94,9 @@ const store = new Vuex.Store({
     },
     CLEAR_USER(state, payload) {
       state[payload] = {}
+    },
+    TOGGLE_OVERVIEW_MENU(state) {
+      state.overviewMenu = !state.overviewMenu
     }
 
   },

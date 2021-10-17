@@ -34,7 +34,7 @@
                       <img src="../../assets/patientsDesktop.svg" class="tile-small-logo" alt="patient-logo">
                       Patients
                     </div>
-                    <div class="num-patients-body tile-body">
+                    <div class="tile-body">
                       <!-- {{numPatients.total}} -->
                       <DonutChart :data="donutData" />
                     </div>
@@ -46,7 +46,9 @@
                       <img src="../../assets/income.svg" alt="income-icon">
                       Earnings
                     </div>
-                    <BarChart />
+                    <div class="tile-body">
+                      <BarChart />
+                    </div>
                   </div>
                 </div>
               </div>

@@ -39,7 +39,7 @@ export default {
           this.renderChart(this.data)
         }
       })
-      this.observer.observe(document.querySelector('.total-earnings'))
+      this.observer.observe(document.querySelector('.barchart-container'))
     },
     tooltipFun (event, d, type) {
       let data = {}
@@ -75,18 +75,33 @@ export default {
           .domain(data.map(d => d3.timeFormat('%b %y')(d3.timeParse('%Y-%m-%d')(d.date))))
           .padding(0.2)
         svg.append('g')
+          .attr('class', 'x-axis')
           .attr('transform', `translate(0,${height})`)
           .call(d3.axisBottom(x))
           .selectAll('text')
           // .attr('transform', 'translate(-10,0)rotate(-45)')
           .style('text-anchor', 'middle')
 
+        svg.select('.x-axis').select('.domain').remove()
+
+        svg.select('.x-axis')
+          .selectAll('line')
+          .attr('stroke', '#ccc')
+
         // Add Y axis
         const y = d3.scaleLinear()
           .domain([0, d3.max(data, function (d) { return d.value })])
           .range([height, 0])
         svg.append('g')
+          .attr('class', 'y-axis')
           .call(d3.axisLeft(y).ticks(4))
+
+        svg.select('.y-axis')
+          .selectAll('line')
+          .attr('x2', width)
+          .attr('stroke', '#ccc')
+
+        svg.select('.y-axis').select('.domain').remove()
 
         svg.selectAll('text')
           .style('font-size', '0.5rem')
@@ -130,6 +145,6 @@ export default {
 <style lang="scss" scoped>
 .barchart-container {
   width: 100%;
-  height: 80%;
+  height: 100%;
 }
 </style>

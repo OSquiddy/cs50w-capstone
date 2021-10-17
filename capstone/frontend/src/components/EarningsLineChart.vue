@@ -1,5 +1,5 @@
 <template>
-  <div class="earnings-chart-container"></div>
+  <div class="line-chart-container"></div>
 </template>
 
 <script>
@@ -7,6 +7,7 @@ import axios from 'axios'
 import * as d3 from 'd3'
 import tooltip from '../util/tooltip'
 import { DateTime } from 'luxon'
+import { mapState } from 'vuex'
 
 export default {
   name: 'EarningsLineChart',
@@ -16,6 +17,9 @@ export default {
       totalEarnings: null,
       observer: null
     }
+  },
+  computed: {
+    ...mapState(['isMobile'])
   },
   watch: {
     data () {
@@ -40,7 +44,7 @@ export default {
           this.renderChart(this.data)
         }
       })
-      this.observer.observe(document.querySelector('.earnings'))
+      this.observer.observe(document.querySelector('.line-chart-container'))
     },
     tooltipFun (event, d, type) {
       let data = {}
@@ -56,14 +60,14 @@ export default {
     },
     renderChart (data) {
       // set the dimensions and margins of the graph
-      d3.select('.earnings-chart-container > *').remove()
-      const container = document.querySelector('.earnings-chart-container')
-      const margin = { top: 10, right: 30, bottom: 30, left: 50 }
+      d3.select('.line-chart-container > *').remove()
+      const container = document.querySelector('.line-chart-container')
+      const margin = { top: 10, right: 30, bottom: 40, left: 50 }
       const width = container.clientWidth - margin.left - margin.right
       const height = container.clientHeight - margin.top - margin.bottom
 
       // append the svg object to the body of the page
-      const svg = d3.select('.earnings-chart-container')
+      const svg = d3.select('.line-chart-container')
         .append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
@@ -132,11 +136,27 @@ export default {
           .style('fill', 'url(#area-gradient)')
 
         svg.append('g')
+          .attr('class', 'x-axis')
           .attr('transform', `translate(0, ${height})`).call(d3.axisBottom(x).tickFormat(d3.timeFormat('%b %d')))
 
+        svg.select('.x-axis')
+          .select('.domain')
+          .attr('stroke', '#ccc')
+        svg.select('.x-axis')
+          .selectAll('line')
+          .attr('stroke', '#ccc')
+
         svg.append('g')
+          .attr('class', 'y-axis')
           .data(data)
           .call(d3.axisLeft(y).ticks(4).tickFormat(function (d) { return `$${d}` }))
+
+        svg.select('.y-axis')
+          .select('.domain')
+          .attr('stroke', '#ccc')
+        svg.select('.y-axis')
+          .selectAll('line')
+          .attr('stroke', '#ccc')
 
         svg.selectAll('.tick text')
           .style('font-size', '0.625rem')
@@ -178,7 +198,12 @@ export default {
 
         svg.append('rect')
           .attr('class', 'curtain')
-          .style('fill', 'white')
+          .attr('fill', function () {
+            if (this.isMobile) {
+              return 'var(--lightest-gray)'
+            }
+            return 'white'
+          })
           .style('float', 'right')
           .attr('width', width + 6)
           .attr('height', height + 5)
@@ -233,7 +258,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.earnings-chart-container {
+.line-chart-container {
   width: 100%;
   height: 100%;
 }

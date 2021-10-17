@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="header" :class="[searchURL ? 'sticky-top container-shadow': '']" v-if="displayHeader">
-      <div class="logo">
+      <div class="logo" v-on="overviewMenu && { click: toggleOverviewMenu }">
         <router-link to="/">
           <img src="../../src/assets/avicennaLogo.svg" alt="Logo" />
           <span class="logo-text">Avicenna Hospital</span>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 import SearchContainer from './SearchContainer.vue'
 
 export default {
@@ -30,6 +31,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['overviewMenu']),
     searchURL () {
       if (this.$route.name === 'appointments') {
         const search = this.$route.name
@@ -63,6 +65,9 @@ export default {
       document.documentElement.style.setProperty('--height', `${newHeight}px`)
       document.documentElement.style.setProperty('--full-height', `${window.innerHeight}px`)
     }, 50)
+  },
+  methods: {
+    ...mapActions(['toggleOverviewMenu'])
   }
 }
 </script>
