@@ -1,6 +1,6 @@
 capstone/frontend/.DS_Store
 capstone/frontend/node_modules
-frontent/dist
+capstone/frontend/dist
 
 # .myenv folder
 .myenv
