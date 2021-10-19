@@ -125,9 +125,9 @@ class Doctor(MyBaseUser):
     
 class Patient(MyBaseUser):
     age = models.IntegerField(null=True)
-    fathers_name = models.CharField("Father's Name", null=True, max_length=50)
-    mothers_name = models.CharField("Mother's Name", null=True, max_length=50)
-    occupation = models.CharField(null=True, max_length=55)
+    fathers_name = models.CharField("Father's Name", null=True, blank=True, max_length=50)
+    mothers_name = models.CharField("Mother's Name", null=True, blank=True, max_length=50)
+    occupation = models.CharField(null=True, blank=True, max_length=55)
     blood_type = models.CharField(max_length=5, null=True, blank=True)
     last_visit = models.DateField(null=True, blank=True)
     

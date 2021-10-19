@@ -23,7 +23,7 @@ html, body, #app {
     font-size: 0.875rem !important;
     .close-btn {
       font-size: 0.875rem !important;
-      margin-left: 5px;
+      margin-left: 8px;
     }
   }
 }
@@ -36,6 +36,21 @@ button {
 a {
   text-decoration: none !important;
   color: var(--primary-text-color);
+}
+
+.modal-delete {
+  background: var(--primary-accent-light) !important;
+  color: white !important;
+  &:hover {
+    background: var(--primary-accent-dark) !important;
+  }
+}
+
+.snackbar-close {
+  border-radius: 3px;
+  &:hover {
+    background-color: #3A3A3A;
+  }
 }
   
 #nav {

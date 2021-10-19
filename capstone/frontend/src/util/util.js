@@ -56,7 +56,7 @@ export function Snackbar (body, color) {
   const html = `<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true">
     <div class="toast-header">
       ${body}
-      <button type="button" class="close-btn" data-bs-dismiss="toast" aria-label="Close" style="color: ${color}">OK</button>
+      <button type="button" class="close-btn snackbar-close" data-bs-dismiss="toast" aria-label="Close" style="color: ${color}">OK</button>
     </div>
   </div>`
 

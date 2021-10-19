@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.db import IntegrityError
 from django.db.models import Q, functions
 from datetime import date, datetime, timedelta
 from django.utils import timezone
@@ -151,14 +152,16 @@ def lastPatient(request):
 @api_view(['GET'])
 def getReport(request, id, visitNumber):
     patient = Patient.objects.get(id=id)
+    visit = Visit.objects.get(patient=id, visit_number=visitNumber)
     print(patient, 'is a weirdo')
     try:
         print('Trying examination')
         examination = Examination.objects.get(visit__patient=id, visit__visit_number=visitNumber)
         examinationSerializer = ExaminationSerializer(examination)
         examination = examinationSerializer.data
-    except Exception:
+    except Exception as e:
         print('Failed examination')
+        print(e)
         examinationSerializer = {}
         examination = examinationSerializer
     
@@ -172,12 +175,14 @@ def getReport(request, id, visitNumber):
         pastHistorySerializer = {}
         pastHistory = pastHistorySerializer
 
-    if patient.sex == 'f':
+    if patient.sex == 'F':
         try:
+            print('Trying gynecHistory')
             gynecHistory = GynecHistory.objects.get(visit__patient=id, visit__visit_number=visitNumber)
             gynecHistorySerializer = GynecHistorySerializer(gynecHistory)
             gynecHistory = gynecHistorySerializer.data
         except Exception:
+            print('Failed gynecHistory')
             gynecHistorySerializer = {}
             gynecHistory = gynecHistorySerializer
     else:
@@ -187,7 +192,8 @@ def getReport(request, id, visitNumber):
     return Response({ 
         "examination": examination,
         "pastHistory": pastHistory,
-        "gynecHistory": gynecHistory
+        "gynecHistory": gynecHistory,
+        "visit_completed": visit.visit_completed
     })
     
 @api_view(['GET'])
@@ -250,6 +256,7 @@ def createReport(request, patient_id, visitNumber):
     visit = Visit.objects.get(patient=patient_id, visit_number=visitNumber)
     if request.method == "POST":
         data = json.loads(request.body)
+        print(data)
         cardio = data['cardio'] if data['cardio'] is not None else 'NAD'
         cerebero = data['cerebero'] if data['cerebero'] is not None else 'NAD'
         respiratory = data['respiratory'] if data['respiratory'] is not None else 'NAD'
@@ -277,10 +284,16 @@ def createReport(request, patient_id, visitNumber):
             examination.complaints = data['complaints']
             examination.save()
         except ObjectDoesNotExist:
+            print('Object does not exist. Creating new examination')
             examination = Examination.objects.create(
             visit=visit, blood_pressure=data['bloodPressure'], SpO2=data['spo2'], temperature=data['temp'], respiratory=respiratory, cardiovascular=cardio, cereberovascular=cerebero, others=data['others'], pallor=data['pallor'], pulse_rate=data['pulse'], koilonychia=data['koilonychia'], oedema=data['oedema'], icterus=data['icterus'], lymphadenopathy=data['lymphadenopathy'], clubbing=data['clubbing'], diagnosis=data['diagnosis'], per_abdominal=per_abdominal, local_examination=local_examination, complaints=data['complaints']
             )
-        report = generatePDFReport(visit, examination)
+        except IntegrityError:
+            return Response({}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        try:
+            report = generatePDFReport(visit, examination)
+        except Exception as e:
+            print(e)
         return Response()
     examination = Examination.objects.get(visit=visit)
     report = generatePDFReport(visit, examination)
@@ -392,3 +405,10 @@ def updateUser(request):
             print(e)
             return Response({ "errors": e })
     return Response({ "user": serializer.data })
+
+@api_view(['POST'])
+def deleteUser(request, id):
+    patient = Patient.objects.get(id=id)
+    serializer = PatientSerializer(patient)
+    patient.delete()
+    return Response({"patient": serializer.data})
