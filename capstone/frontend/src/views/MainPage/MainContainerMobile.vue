@@ -48,7 +48,7 @@
           <li class="overview-menu-item" :class="chart === 0 && 'active'" @click="setChart(0)">Monthly</li>
           <li class="overview-menu-item" :class="chart === 1 && 'active'" @click="setChart(1)">Total</li>
           <li class="overview-menu-item" :class="chart === 2 && 'active'" @click="setChart(2)">Patients</li>
-          <li class="overview-menu-item" :class="chart === 3 && 'active'" @click="setChart(3)">Appointments</li>
+          <!-- <li class="overview-menu-item" :class="chart === 3 && 'active'" @click="setChart(3)">Appointments</li> -->
         </ul>
         <div class="tile" v-if="chart === 0">
           <div class="barchart chart-container">
@@ -64,13 +64,20 @@
           <div class="container-fluid h-100">
             <div class="row h-100">
               <div class="col-12 p-0 h-100">
-                <div class="patient-breakdown-chart chart-container">
-                  <DonutChart :data="donutData" />
+                <div class="chart-container">
+                  <div class="patient-breakdown-chart">
+                    <DonutChart :data="donutData" />
+                  </div>
+                  <div class="row">
+                    <div class="col-7 text-end">Female Patients:</div>
+                    <div class="col-5 text-center">{{donutData.Female}}</div>
+                    <div class="col-7 text-end">Male Patients:</div>
+                    <div class="col-5 text-center">{{donutData.Male}}</div>
+                    <div class="col-7 text-end">Other Patients:</div>
+                    <div class="col-5 text-center">{{donutData.Other}}</div>
+                  </div>
                 </div>
               </div>
-              <div class="col-12">dsfkldsfj</div>
-              <div class="col-12">dsfkldsfj</div>
-              <div class="col-12">dsfkldsfj</div>
             </div>
           </div>
         </div>
@@ -211,10 +218,10 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
-  // border: 1px solid red;
+  // box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+  border: 1px solid #ccc;
   padding: 20px;
-  margin: 0 3px 25px;
+  margin: -2px 3px 25px;
   overflow-x: auto;
 }
 
@@ -227,7 +234,7 @@ export default {
 
 .patient-breakdown-chart {
   width: 100%;
-  height: 100%;
+  height: 75%;
 }
 
 .chart-container {
@@ -253,7 +260,11 @@ export default {
   .active {
     background: var(--background-primary);
     color: var(--primary-accent-dark);
-    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+    font-weight: 500;
+    border: 1px solid #ccc;
+    // border-top: 2px solid var(--primary-accent-dark);
+    border-bottom: 2px solid white;
+    // box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.2);
   }
 }
 

@@ -36,7 +36,7 @@
                     </div>
                     <div class="tile-body">
                       <!-- {{numPatients.total}} -->
-                      <DonutChart :data="donutData" />
+                      <DonutChart />
                     </div>
                   </div>
                 </div>
@@ -91,35 +91,19 @@ export default {
   name: 'MainContainer',
   data() {
     return {
-      numPatients: null,
-      lastPatient: null
+      numPatients: null
     }
   },
   computed: {
-    ...mapState(['currentUser']),
-    donutData () {
-      if (this.numPatients) {
-        const obj = {}
-        obj.Male = this.numPatients.male
-        obj.Female = this.numPatients.female
-        obj.Other = this.numPatients.other
-        return obj
-      }
-      return null
-    }
+    ...mapState(['currentUser'])
   },
   mounted () {
-    this.getLastPatient()
     this.getTotalPatients()
   },
   methods: {
     async getTotalPatients () {
       const list = await axios.get(process.env.VUE_APP_API_URL + '/numPatients')
       this.numPatients = list.data.numPatients
-    },
-    async getLastPatient () {
-      const patient = await axios.get(process.env.VUE_APP_API_URL + '/lastPatient')
-      this.lastPatient = patient.data.lastPatient
     }
   }
 }
