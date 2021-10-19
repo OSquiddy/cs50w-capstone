@@ -185,14 +185,18 @@ export default {
         diagnosis: this.diagnosis,
         pulse: this.pulse
       }
-      const response = await axios.post(process.env.VUE_APP_API_URL + '/createReport/' + patientID + '/visit/' + visitNumber, data)
-      console.log('Response status is', response.status)
-      if (response.status === 200) {
-        this.$router.push({ name: 'patient-main', params: { id: patientID } })
-        Snackbar('Report Generated!', 'var(--success)')
-      } else {
-        Snackbar('Report Generation Unsuccessful', 'var(--error-text)')
-      }
+      axios.post(process.env.VUE_APP_API_URL + '/createReport/' + patientID + '/visit/' + visitNumber, data)
+        .then((response) => {
+          if (response.status === 200) {
+            this.$router.push({ name: 'patient-main', params: { id: patientID } })
+            Snackbar('Report Generated!', 'var(--success)')
+          } else {
+            Snackbar('Report Generation Unsuccessful', 'var(--error-text)')
+          }
+        })
+        .catch(() => {
+          Snackbar('Report Generation Unsuccessful', 'var(--error-text)')
+        })
     }
   }
 }
