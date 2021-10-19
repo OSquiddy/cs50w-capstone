@@ -4,10 +4,10 @@
         <h3 class="patient-name">{{name}}</h3>
     </div>
     <div class="row patient-info-container">
-    <div class="col-3">
+    <div class="col-3 col-md-2">
       <div class="patient-photo"></div>
     </div>
-    <div class="col-9 patient-info">
+    <div class="col-9 col-md-10 patient-info">
       <div class="row patient-details-row">
         <div class="col patient-details">ID: {{id}}</div>
         <div class="col patient-details">Age: {{age}}yrs</div>
@@ -92,6 +92,22 @@ export default {
       }
     }
   }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .patient-info {
+    // padding-bottom: 20px;
+    // padding-left: 1rem;
+    .patient-details-row {
+      margin-bottom: 3px;
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+      .patient-details {
+        font-size: 0.8rem !important;
+      }
+    }
   }
 }
 </style>
