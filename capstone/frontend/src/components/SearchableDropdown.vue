@@ -1,7 +1,7 @@
 <template>
-  <div class="dropdown">
-    <input type="text" :placeholder="placeholder" :id="id" :name="id" @keyup="filterFunction()" @focus="toggleDropdown()" :value="user.fullname" autocomplete="off" v-click-outside="hide">
-    <ul id="myDropdown" class="dropdown-content" :class="open && 'show'">
+  <div class="dropdown" v-click-outside="hide">
+    <input type="text" :placeholder="placeholder" :id="id" :name="id" @keyup="filterFunction()" @focus="toggleDropdown()" :value="user.fullname" autocomplete="off">
+    <ul :id="id + '-dropdown'" class="dropdown-content" :class="open && 'show'">
       <!-- <li @click="clear"> Clear Selection </li> -->
       <li v-if="isPatient">
         <div class="dropdown-row-container">
@@ -63,7 +63,7 @@ export default {
         this.clear()
       }
       const filter = input.value.toUpperCase()
-      const div = document.getElementById('myDropdown')
+      const div = document.getElementById(this.id + '-dropdown')
       const li = div.getElementsByTagName('li')
       for (let i = 0; i < li.length; i++) {
         const txtValue = li[i].textContent || li[i].innerText
