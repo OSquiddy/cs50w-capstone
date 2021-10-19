@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import * as d3 from 'd3'
 import tooltip from '../util/tooltip'
 import { mapState } from 'vuex'
@@ -10,17 +11,26 @@ export default {
   name: 'DonutChart',
   data() {
     return {
-      observer: null
+      observer: null,
+      numPatients: null
     }
   },
-  props: {
-    data: Object
-  },
   computed: {
-    ...mapState(['isMobile', 'isCollapsed'])
+    ...mapState(['isMobile', 'isCollapsed']),
+    data () {
+      if (this.numPatients) {
+        const obj = {}
+        obj.Male = this.numPatients.male
+        obj.Female = this.numPatients.female
+        obj.Other = this.numPatients.other
+        return obj
+      }
+      return null
+    }
   },
   mounted () {
     this.resizeWindow()
+    this.getTotalPatients()
   },
   beforeDestroy () {
     if (this.observer) this.observer.disconnect()
@@ -33,7 +43,6 @@ export default {
   methods: {
     resizeWindow () {
       this.observer = new ResizeObserver(() => {
-        console.log('Rerendering')
         this.renderChart()
       })
       this.observer.observe(document.querySelector('.donutchart-container'))
@@ -49,6 +58,10 @@ export default {
           break
       }
       tooltip(event, data, type)
+    },
+    async getTotalPatients () {
+      const list = await axios.get(process.env.VUE_APP_API_URL + '/numPatients')
+      this.numPatients = list.data.numPatients
     },
     renderChart() {
       // set the dimensions and margins of the graph
