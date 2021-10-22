@@ -24,7 +24,7 @@
                       Appointments
                     </div>
                     <div class="num-appts-body tile-body">
-                      124
+                      {{numAppointments}}
                     </div>
                   </div>
                 </div>
@@ -79,7 +79,6 @@
 </template>
 
 <script>
-// import { mapState, mapActions } from 'vuex'
 import axios from 'axios'
 import CustomCalendar from '../../components/CustomCalendar.vue'
 import EarningsChart from '../../components/EarningsLineChart.vue'
@@ -91,19 +90,32 @@ export default {
   name: 'MainContainer',
   data() {
     return {
-      numPatients: null
+      numPatients: null,
+      appointmentsData: null
     }
   },
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(['currentUser']),
+    numAppointments () {
+      if (this.appointmentsData) {
+        return this.appointmentsData.Males.length + this.appointmentsData.Females.length + this.appointmentsData.Others.length
+      } else {
+        return null
+      }
+    }
   },
-  mounted () {
+  created () {
     this.getTotalPatients()
+    this.getAppointmentData()
   },
   methods: {
     async getTotalPatients () {
       const list = await axios.get(process.env.VUE_APP_API_URL + '/numPatients')
       this.numPatients = list.data.numPatients
+    },
+    async getAppointmentData () {
+      const list = await axios.get(process.env.VUE_APP_API_URL + '/getAppointments')
+      this.appointmentsData = list.data.appointments
     }
   }
 }
