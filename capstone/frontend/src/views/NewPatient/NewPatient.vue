@@ -390,6 +390,7 @@ export default {
 
 <style lang="scss" scoped>
 .add-patient-main {
+  margin-top: 30px;
   background-color: var(--background-primary);
   padding: 1rem;
   padding-top: calc(30px + 1rem);
