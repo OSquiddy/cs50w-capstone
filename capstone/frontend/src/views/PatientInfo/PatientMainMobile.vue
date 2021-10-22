@@ -12,7 +12,9 @@
           <div class="container patient-card-details-box">
             <div class="row">
               <div class="col-4 col-md-4">
-                <div class="patient-card-photo"></div>
+                <div class="patient-card-photo">
+                  <img :src="patient.profilePic ? patient.profilePic : getDefaultPic(patient)" alt="" />
+                </div>
               </div>
               <div class="col-8 col-md-4 patient-card-details">
                 <div class="patient-card-item">ID: {{patient.id}}</div>
@@ -76,6 +78,7 @@
 <script>
 import axios from 'axios'
 import { mapActions, mapState } from 'vuex'
+import { defaultPic } from '../../util/util'
 import NoDataContainer from '../../components/NoDataContainer.vue'
 
 export default {
@@ -116,6 +119,9 @@ export default {
     async getReports () {
       const response = await axios.get(process.env.VUE_APP_API_URL + '/getNumReports/' + this.patient.id)
       this.visitList = response.data.completedVisits
+    },
+    getDefaultPic (user) {
+      return defaultPic(user)
     }
   }
 }
@@ -155,6 +161,9 @@ export default {
       max-height: 120px;
       aspect-ratio: 1;
       align-self: flex-start;
+      img {
+        width: 100%;
+      }
     }
     .patient-card-details {
       padding-left: 20px;
