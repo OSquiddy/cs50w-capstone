@@ -16,7 +16,10 @@ html, body, #app {
   display: flex;
   border: none !important;
   width: fit-content !important;
+  min-width: 220px;
+  max-width: 300px !important;
   .toast-header{
+    width: 100%;
     background-color: var(--dark-gray) !important;
     color: var(--background-primary);
     border-radius: 5px;
@@ -24,6 +27,7 @@ html, body, #app {
     .close-btn {
       font-size: 0.875rem !important;
       margin-left: 8px;
+      display: flex;
     }
   }
 }
