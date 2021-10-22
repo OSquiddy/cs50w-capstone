@@ -9,8 +9,7 @@
               <div class="col section-info">
                 <div class="section-info-container">
                   <div class="image-container">
-                    <img :src="currentUser.profilePic" class="profilePic" id="image" v-show="showImage">
-                    <img src="../../assets/camera.svg" class="camera-icon" svg-inline alt="camera-icon" id="image" v-show="!showImage">
+                    <img :src="'assets' + currentUser.profilePic" class="profilePic" id="image">
                   </div>
                   <div class="image-button-group" v-if="edit">
                     <input type="file" name="profilePic" id="id_profilePic" accept="image/*" @change="showPreview($event)" class="d-none">
@@ -277,7 +276,6 @@ export default {
       edit: false,
       imageURL: null,
       image: null,
-      showImage: false,
       sex: null,
       country: '',
       address: '',
@@ -291,36 +289,28 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentUser']),
-    profile () {
-      return this.currentUser.profilePic
-    }
+    ...mapState(['currentUser'])
   },
-  watch: {
-    'currentUser.profilePic'(newValue, oldValue) {
-      this.$refs.profilePic.src = newValue
-    }
-  },
-  mounted () {
-    // console.log(this.currentUser.profilePic)
+  created () {
     this.populateForm()
   },
   methods: {
     ...mapActions(['setCurrentUser']),
     toggleEdit () {
       this.edit = !this.edit
+      if (this.edit === false) {
+        this.populateForm()
+      }
     },
     showPreview (event) {
-      this.showImage = true
       const img = document.querySelector('#image')
       this.image = event.target.files[0]
       img.src = URL.createObjectURL(event.target.files[0])
       this.imageURL = img.src
     },
     removePic () {
-      // const img = document.querySelector('#image')
-      // img.src = 'img/camera.34ea8771.svg'
-      this.showImage = false
+      const img = document.querySelector('#image')
+      img.src = ''
     },
     async upload () {
       const imgData = new FormData()
@@ -341,14 +331,22 @@ export default {
 
       try {
         const resp1 = await axios.post(process.env.VUE_APP_API_URL + '/uploadImage', imgData)
+        if (resp1.status === 200) {
+          Snackbar('Profile Picture Updated', 'var(--success)')
+          this.setCurrentUser(resp1.data.user)
+          this.edit = false
+        }
+      } catch (error) {
+        Snackbar('Profile pic not updated', 'var(--error-text')
+      }
+      try {
         const resp2 = await axios.post(process.env.VUE_APP_API_URL + '/updateUser', formData)
-        if (resp1.status === 200 && resp2.status === 200) {
+        if (resp2.status === 200) {
           Snackbar('Settings Updated', 'var(--success)')
           this.setCurrentUser(resp2.data.user)
           this.edit = false
         }
       } catch (error) {
-        console.log(error)
         Snackbar('Update Unsuccessful', 'var(--error-text')
       }
     },
@@ -358,6 +356,7 @@ export default {
       this.email = this.currentUser.email
       this.mobile = this.currentUser.Phone_Number
       this.username = this.currentUser.username
+      this.imageURL = this.currentUser.profilePic
 
       const addressArray = this.currentUser.address.split(/\r?\n/)
       this.address = addressArray[0]
@@ -405,12 +404,16 @@ export default {
   width: 135px;
   height: 135px;
   border-radius: 50%;
-  border: 1px solid var(--dark-gray);
+  // border: 1px solid var(--dark-gray);
   border: 1px solid var(--light-gray);
   // margin-left: auto;
   // margin-right: 1rem;
   overflow: hidden;
   margin: auto;
+  background-image: url('data:image/svg+xml, <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.6087 2.78261H15.5217L14.3696 1.04348C13.9348 0.391304 13.1739 0 12.3913 0H7.6087C6.82609 0 6.06522 0.391304 5.63043 1.04348L4.47826 2.78261H2.3913C1.06522 2.78261 0 3.84783 0 5.17391V13.6087C0 14.9348 1.06522 16 2.3913 16H17.6087C18.9348 16 20 14.9348 20 13.6087V5.17391C20 3.84783 18.9348 2.78261 17.6087 2.78261ZM10 14.0435C7.02174 14.0435 4.6087 11.6304 4.6087 8.65217C4.6087 5.67391 7.02174 3.28261 10 3.28261C12.9783 3.28261 15.3913 5.69565 15.3913 8.67391C15.3913 11.6304 12.9783 14.0435 10 14.0435ZM17.3043 6.15217C17.2826 6.15217 17.2609 6.15217 17.2174 6.15217H16.3478C15.9565 6.13043 15.6522 5.80435 15.6739 5.41304C15.6957 5.04348 15.9783 4.76087 16.3478 4.73913H17.2174C17.6087 4.71739 17.9348 5.02174 17.9565 5.41304C17.9783 5.80435 17.6957 6.13043 17.3043 6.15217Z" fill="white"/><path d="M9.99978 5.67397C8.34761 5.67397 6.99978 7.02179 6.99978 8.67397C6.99978 10.3261 8.34761 11.6522 9.99978 11.6522C11.6519 11.6522 12.9998 10.3044 12.9998 8.65223C12.9998 7.00005 11.6519 5.67397 9.99978 5.67397Z" fill="white"/></svg>');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 45px;
   .camera-icon {
     display: flex;
     align-self: center;

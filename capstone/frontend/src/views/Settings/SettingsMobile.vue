@@ -15,12 +15,6 @@
           <span class="logo-text">Settings</span>
         </router-link>
       </div>
-      <!-- <div class="container settings-tabs">
-        <div class="row">
-          <div class="col tab-item active" @click="toggleActive(this)">General</div>
-          <div class="col tab-item" @click="toggleActive(this)">Account</div>
-        </div>
-      </div> -->
       <nav class="tabs">
         <ul>
           <li class="tab-item active" @click="toggleActive">General</li>
@@ -85,10 +79,13 @@
                     </div>
                     <div class="col-10 section-info">
                       <div class="section-info-container">
-                        <div class="photo"></div>
-                        <div class="image-button-group">
-                          <button class="image-button upload">Upload</button>
-                          <button class="image-button discard">Discard</button>
+                        <div class="photo">
+                          <img :src="currentUser.profilePic ? 'assets' + currentUser.profilePic : getDefaultPic(currentUser)" alt="" id="image" />
+                        </div>
+                        <div class="image-button-group" v-if="edit">
+                          <input type="file" name="profilePic" id="id_profilePic" accept="image/*" @change="showPreview($event)" class="d-none">
+                          <label class="image-button upload" for="id_profilePic">Upload</label>
+                          <button class="image-button discard" @click.prevent="removePic(currentUser)">Discard</button>
                         </div>
                       </div>
                     </div>
@@ -167,7 +164,7 @@
                     <div class="col-10 section-info">
                       <div class="section-info-container">
                         <div class="section-title">Mobile:</div>
-                        <vue-tel-input :autoDefaultCountry="true" :dropdownOptions="{ showDialCodeInSelection: true, showDialCodeInList: true, showFlags: true }">
+                        <vue-tel-input :autoDefaultCountry="true" :dropdownOptions="{ showDialCodeInSelection: true, showDialCodeInList: true, showFlags: true }" v-model="mobile" v-if="edit">
                           <template v-slot:arrow-icon>
                             <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left: 3px;" xmlns="http://www.w3.org/2000/svg">
                               <path
@@ -345,7 +342,7 @@ import { VueTelInput } from 'vue-tel-input'
 // import { DateTime } from 'luxon'
 import { mapActions, mapState } from 'vuex'
 import axios from 'axios'
-import { Snackbar } from '../../util/util'
+import { Snackbar, defaultPic } from '../../util/util'
 
 export default {
   name: 'SettingsMobile',
@@ -357,7 +354,6 @@ export default {
       edit: false,
       imageURL: null,
       image: null,
-      showImage: false,
       sex: null,
       country: '',
       address: '',
@@ -376,19 +372,12 @@ export default {
       return this.currentUser.profilePic
     }
   },
-  watch: {
-    'currentUser.profilePic'(newValue, oldValue) {
-      this.$refs.profilePic.src = newValue
-    }
-  },
   mounted() {
-    // console.log(this.currentUser.profilePic)
     this.populateForm()
   },
   methods: {
     ...mapActions(['setCurrentUser']),
     toggleActive(event) {
-      // console.log(event.target)
       const elem = document.querySelector('.settings-outer-container')
       const midpoint = elem.clientWidth / 2
       document.querySelectorAll('.tab-item').forEach((tab) => {
@@ -415,16 +404,15 @@ export default {
       this.edit = !this.edit
     },
     showPreview(event) {
-      this.showImage = true
+      console.log('Show image')
       const img = document.querySelector('#image')
       this.image = event.target.files[0]
       img.src = URL.createObjectURL(event.target.files[0])
       this.imageURL = img.src
     },
     removePic() {
-      // const img = document.querySelector('#image')
-      // img.src = 'img/camera.34ea8771.svg'
-      this.showImage = false
+      const img = document.querySelector('#image')
+      img.src = defaultPic(this.currentUser)
     },
     async upload() {
       const imgData = new FormData()
@@ -445,14 +433,22 @@ export default {
 
       try {
         const resp1 = await axios.post(process.env.VUE_APP_API_URL + '/uploadImage', imgData)
+        if (resp1.status === 200) {
+          Snackbar('Profile Picture Updated', 'var(--success)')
+          this.setCurrentUser(resp1.data.user)
+          this.edit = false
+        }
+      } catch (error) {
+        Snackbar('Profile pic not updated', 'var(--error-text')
+      }
+      try {
         const resp2 = await axios.post(process.env.VUE_APP_API_URL + '/updateUser', formData)
-        if (resp1.status === 200 && resp2.status === 200) {
+        if (resp2.status === 200) {
           Snackbar('Settings Updated', 'var(--success)')
           this.setCurrentUser(resp2.data.user)
           this.edit = false
         }
       } catch (error) {
-        console.log(error)
         Snackbar('Update Unsuccessful', 'var(--error-text')
       }
     },
@@ -462,6 +458,7 @@ export default {
       this.email = this.currentUser.email
       this.mobile = this.currentUser.Phone_Number
       this.username = this.currentUser.username
+      this.imageURL = this.currentUser.profilePic
 
       const addressArray = this.currentUser.address.split(/\r?\n/)
       this.address = addressArray[0]
@@ -469,6 +466,9 @@ export default {
       this.state = addressArray[2]
       this.zipcode = addressArray[3]
       this.country = addressArray[4]
+    },
+    getDefaultPic (user) {
+      return defaultPic(user)
     }
   }
 }
@@ -601,6 +601,10 @@ export default {
     width: 25%;
     aspect-ratio: 1;
     border-radius: 50%;
+    overflow: hidden;
+    img {
+      width: 100%;
+    }
   }
   .image-button-group {
     margin-left: auto;
@@ -612,6 +616,7 @@ export default {
     }
     .upload {
       color: var(--link-blue);
+      padding: 1px 6px;
     }
   }
 }
