@@ -15,7 +15,9 @@
       </li>
       <li v-for="user in dataList" :key="user.id" @click="isPatient ? selectPatient(user.id) : selectDoctor(user.id)">
         <div class="dropdown-row-container">
-          <div class="img"></div>
+          <div class="img">
+            <img :src="user.profilePic ? 'assets' + user.profilePic : getDefaultPic(user)" alt="" />
+          </div>
           <div class="dropdown-content-text user-group">
             <div class="user-name"> {{user.fullname}} </div>
             <div class="user-id"> ID: {{user.id}} </div>
@@ -28,6 +30,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import { defaultPic } from '../util/util'
 import ClickOutside from 'vue-click-outside'
 
 export default {
@@ -47,7 +50,11 @@ export default {
       return this.isPatient ? this.patient : this.doctor
     }
   },
-  mounted () {
+  created () {
+    if (localStorage.getItem('currentUser')) {
+      const user = JSON.parse(localStorage.getItem('currentUser'))
+      this.setCurrentUser(user)
+    }
   },
   methods: {
     ...mapActions(['getPatientInfo', 'getDoctorInfo', 'clearUserSelection']),
@@ -88,6 +95,9 @@ export default {
       } else {
         this.clearUserSelection('doctor')
       }
+    },
+    getDefaultPic (user) {
+      return defaultPic(user)
     }
   }
 }
