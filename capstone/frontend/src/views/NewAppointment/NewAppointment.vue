@@ -7,7 +7,6 @@
           <form action="" method="post" @submit.prevent="createAppointment">
             <div class="section-input">
               <label for="patient">
-                  <!-- <img src="../../assets/patient.svg" alt="patient-icon" class="patient-icon" /> -->
                 Patient :</label>
               <div>
                 <SearchableDropdown :id="'patient'" :placeholder="'Patient Name'" :dataList="patientsList" :isPatient="true"/>
@@ -15,7 +14,6 @@
             </div>
             <div class="section-input">
               <label for="date">
-                  <!-- <img src="../../assets/clock.svg" alt="patient-icon" class="patient-icon" /> -->
                 Date :</label>
               <datetime v-model="date" type="date" :format="'ccc, MMM dd, yyyy'" class="theme-red"></datetime>
             </div>
@@ -23,13 +21,12 @@
               <label for="patient">Time :</label>
               <div class="time-input-group">
                 <datetime type="time" v-model="time1" use12-hour :format="'hh:mm a'" class="theme-red"></datetime>
-                <!-- <img src="../../assets/right-arrow.svg" alt="right-arrow" /> -->
+                <img src="../../assets/right-arrow.svg" alt="right-arrow" />
                 <datetime type="time" v-model="time2" use12-hour :format="'hh:mm a'" class="theme-red"></datetime>
               </div>
             </div>
             <div class="section-input">
               <label for="doctor">
-                  <!-- <img src="../../assets/doctor.svg" alt="doctor-icon" class="doctor-icon" /> -->
                 Doctor :</label>
               <div>
                 <SearchableDropdown :id="'doctor'" :placeholder="'Doctor Name'" :dataList="doctorsList"/>
@@ -37,7 +34,6 @@
             </div>
             <div class="section-input">
               <label for="payment">
-                  <!-- <img src="../../assets/cash.svg" svg-inline alt="cash-icon" class="cash-icon" /> -->
                 Payment :</label>
               <input type="number" name="payment" id="payment" v-model="payment" min="10">
             </div>
@@ -134,7 +130,7 @@ export default {
 <style lang="scss" scoped>
 .add-appt-main {
   background-color: var(--background-primary);
-  padding: 1rem;
+  padding: 1rem 1rem 200px;
   margin-top: 30px;
   border-radius: 0.75rem;
   border: 1px transparent;
