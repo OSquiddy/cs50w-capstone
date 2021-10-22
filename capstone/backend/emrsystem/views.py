@@ -44,6 +44,21 @@ def patients(request, orderBy):
     return Response({"patientList": serializer.data})
 
 @api_view(['GET'])
+def getAppointments(request):
+    appointmentsMale = Visit.objects.filter(patient__sex='M')
+    appointmentsMale = VisitSerializer(appointmentsMale, many=True)
+    appointments = {}
+    appointments["Males"] = appointmentsMale.data
+    appointmentsFemale = Visit.objects.filter(patient__sex='F')
+    appointmentsFemale = VisitSerializer(appointmentsFemale, many=True)
+    appointments["Females"] = appointmentsFemale.data
+    appointmentsOther = Visit.objects.filter(patient__sex='O')
+    appointmentsOther = VisitSerializer(appointmentsOther, many=True)
+    appointments["Others"] = appointmentsOther.data
+    return Response({ "appointments": appointments})
+    
+
+@api_view(['GET'])
 def doctors(request):
     doctorList = Doctor.objects.all().order_by('first_name')
     serializer = DoctorSerializer(doctorList, many=True)

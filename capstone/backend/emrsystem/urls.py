@@ -30,6 +30,7 @@ urlpatterns = [
     path('history/<int:id>', views.pastHistory, name="pastHistory"),
     path('updateUser', views.updateUser, name="updateUser"),
     path('delete/p/<int:id>', views.deleteUser, name="deleteUser"),
+    path('getAppointments', views.getAppointments, name="getAppointments"),
     # path('', include(vue_urls)),
     
     # api urls
