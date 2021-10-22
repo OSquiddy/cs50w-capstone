@@ -65,6 +65,9 @@ export function Snackbar (body, color) {
   toastConainerElement.appendChild(toastElement)
   const toast = new Toast(toastElement, { delay: 5000, animation: true })
   toast.show()
+  if (toastElement.querySelector('.close-btn').clientWidth < 250) {
+    toastElement.querySelector('.close-btn').style.marginLeft = 'auto'
+  }
   // if (isMobile) {
   // toastConainerElement.style.display = 'flex'
   // toastConainerElement.style.flexDirection = 'column-reverse'
@@ -86,5 +89,28 @@ export function Snackbar (body, color) {
     html = html.trim() // Never return a text node of whitespace as the result
     template.innerHTML = html
     return template.content.firstChild
+  }
+}
+
+export function defaultPic (user) {
+  const males = [
+    '/assets/undraw/undraw_male_avatar_blue.svg',
+    '/assets/undraw/undraw_male_avatar_yellow.svg',
+    '/assets/undraw/undraw_male_avatar_green.svg',
+    '/assets/undraw/undraw_male_avatar_red.svg'
+  ]
+  const females = [
+    '/assets/undraw/undraw_female_avatar_blue.svg',
+    '/assets/undraw/undraw_female_avatar_yellow.svg',
+    '/assets/undraw/undraw_female_avatar_green.svg',
+    '/assets/undraw/undraw_female_avatar_red.svg'
+  ]
+  if (user.sex === 'M') {
+    return males[user.fullname.length % males.length]
+  } else if (user.sex === 'F') {
+    return females[user.fullname.length % females.length]
+  } else {
+    const others = [...males, ...females]
+    return others[user.fullname.length % others.length]
   }
 }
