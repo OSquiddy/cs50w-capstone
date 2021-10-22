@@ -69,23 +69,102 @@
                     <DonutChart :data="donutData" />
                   </div>
                   <div class="row">
-                    <div class="col-7 text-end">Female Patients:</div>
-                    <div class="col-5 text-center">{{donutData.Female}}</div>
-                    <div class="col-7 text-end">Male Patients:</div>
-                    <div class="col-5 text-center">{{donutData.Male}}</div>
-                    <div class="col-7 text-end">Other Patients:</div>
-                    <div class="col-5 text-center">{{donutData.Other}}</div>
+                    <div class="d-contents d-md-none">
+                      <div class="col-12">
+                        <table class="patient-dist-table">
+                          <thead>
+                            <tr>
+                              <!-- <td>Patient Type</td>
+                              <td>Info</td> -->
+                              <td colspan="2"> Patient Distribution</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Males</td>
+                              <td>{{malesPercent}} %</td>
+                            </tr>
+                            <tr>
+                              <td>Females</td>
+                              <td>{{femalesPercent}} %</td>
+                            </tr>
+                            <tr>
+                              <td>Others</td>
+                              <td>{{othersPercent}} %</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="col-12">
+                        <table class="appt-dist-table">
+                            <thead>
+                              <tr>
+                                <!-- <td>Patient Type</td>
+                                <td>Info</td> -->
+                                <td colspan="2"> Appointment Distribution</td>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Males</td>
+                                <td>{{apptMalesPercent}} %</td>
+                              </tr>
+                              <tr>
+                                <td>Females</td>
+                                <td>{{apptFemalesPercent}} %</td>
+                              </tr>
+                              <tr>
+                                <td>Others</td>
+                                <td>{{apptOthersPercent}} %</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                      </div>
+                    </div>
+                    <div class="d-none d-md-contents">
+                      <div class="col-12">
+                        <table class="patient-dist-table">
+                          <thead>
+                            <tr>
+                              <!-- <td>Patient Type</td>
+                              <td>Info</td> -->
+                              <!-- <td colspan="2"> Patient Distribution</td> -->
+                              <td>Type</td>
+                              <td>Patient Distribution</td>
+                              <td>Appointment Distribution</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Males</td>
+                              <td>{{malesPercent}} %</td>
+                              <td>{{apptMalesPercent}} %</td>
+                            </tr>
+                            <tr>
+                              <td>Females</td>
+                              <td>{{femalesPercent}} %</td>
+                              <td>{{apptFemalesPercent}} %</td>
+                            </tr>
+                            <tr>
+                              <td>Others</td>
+                              <td>{{othersPercent}} %</td>
+                              <td>{{apptOthersPercent}} %</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="tile" v-if="chart === 3">
+        <!-- <div class="tile" v-if="chart === 3">
           <div>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Possimus eius vitae ipsa harum eum veritatis officiis tempora dolore illo modi quisquam labore, aperiam cumque explicabo animi! Dignissimos corporis quaerat consequuntur!</div>
           <br>
           <div>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Possimus eius vitae ipsa harum eum veritatis officiis tempora dolore illo modi quisquam labore, aperiam cumque explicabo animi! Dignissimos corporis quaerat consequuntur!</div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -102,7 +181,8 @@ export default {
   name: 'MainContainerMobile',
   data() {
     return {
-      chart: 0
+      chart: 0,
+      appointmentsData: null
     }
   },
   computed: {
@@ -116,10 +196,29 @@ export default {
         return obj
       }
       return null
+    },
+    malesPercent () {
+      return (this.numPatients.male / (this.numPatients.male + this.numPatients.female + this.numPatients.other) * 100).toFixed(2)
+    },
+    femalesPercent () {
+      return (this.numPatients.female / (this.numPatients.male + this.numPatients.female + this.numPatients.other) * 100).toFixed(2)
+    },
+    othersPercent () {
+      return (this.numPatients.other / (this.numPatients.male + this.numPatients.female + this.numPatients.other) * 100).toFixed(2)
+    },
+    apptMalesPercent () {
+      return (this.appointmentsData.Males.length / (this.appointmentsData.Males.length + this.appointmentsData.Females.length + this.appointmentsData.Others.length) * 100).toFixed(2)
+    },
+    apptFemalesPercent () {
+      return (this.appointmentsData.Females.length / (this.appointmentsData.Males.length + this.appointmentsData.Females.length + this.appointmentsData.Others.length) * 100).toFixed(2)
+    },
+    apptOthersPercent () {
+      return (this.appointmentsData.Others.length / (this.appointmentsData.Males.length + this.appointmentsData.Females.length + this.appointmentsData.Others.length) * 100).toFixed(2)
     }
   },
   created () {
     this.getTotalPatients()
+    this.getAppointmentData()
   },
   methods: {
     ...mapActions(['removeToken', 'toggleOverviewMenu']),
@@ -142,6 +241,10 @@ export default {
       const list = await axios.get(process.env.VUE_APP_API_URL + '/numPatients')
       this.numPatients = list.data.numPatients
     },
+    async getAppointmentData () {
+      const list = await axios.get(process.env.VUE_APP_API_URL + '/getAppointments')
+      this.appointmentsData = list.data.appointments
+    },
     setChart (index) {
       this.chart = index
     }
@@ -162,6 +265,32 @@ export default {
 
 .overview-heading {
   margin-top: 15px;
+}
+
+.donut-legend {
+  background-color: black;
+  width: 5px;
+  height: 5px;
+}
+
+.d-contents, .d-sm-contents, .d-md-contents, .d-lg-contents, .d-xl-contents {
+  display: contents;
+}
+
+:where(.patient-dist-table, .appt-dist-table) {
+  border: 1px solid #ccc;
+  margin: 0 auto 20px;
+  width: 100%;
+  thead tr {
+    background-color: var(--primary-accent-light);
+    td {
+      color: var(--background-primary);
+    }
+  }
+  td {
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+  }
 }
 
 .grid-container {
@@ -268,7 +397,17 @@ export default {
   }
 }
 
+@media screen and (min-width: 576px) {
+  .d-sm-contents {
+    display: contents;
+  }
+}
+
 @media screen and (min-width: 768px) {
+  .d-md-contents {
+    display: contents !important;
+  }
+
   .grid-container {
     padding: 10px 50px;
     grid-template-columns: repeat(auto-fill, 40%);
@@ -286,6 +425,18 @@ export default {
         }
       }
     }
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .d-lg-contents {
+    display: contents;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .d-xl-contents {
+    display: contents;
   }
 }
 </style>
