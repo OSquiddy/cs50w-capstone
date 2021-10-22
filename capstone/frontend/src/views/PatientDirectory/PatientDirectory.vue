@@ -20,7 +20,7 @@
                 <td>{{ patient.id }}</td>
                 <td>
                   <div class="patient-name">
-                    <div class="patient-img"><img src="" alt="" /></div>
+                    <div class="patient-img"><img :src="patient.profilePic ? patient.profilePic : getDefaultPic(patient)" alt="" /></div>
                     {{ patient.fullname }}
                   </div>
                 </td>
@@ -44,7 +44,7 @@
 import { mapState, mapActions } from 'vuex'
 import axios from 'axios'
 import { Modal } from 'bootstrap'
-import { debounce, Snackbar } from '../../util/util'
+import { debounce, Snackbar, defaultPic } from '../../util/util'
 export default {
   name: 'PatientDirectory',
   data() {
@@ -106,6 +106,9 @@ export default {
         this.deleteUser(id)
         myModal.hide()
       }
+    },
+    getDefaultPic (user) {
+      return defaultPic(user)
     }
   }
 }
@@ -174,6 +177,9 @@ export default {
       border-radius: 50%;
       margin-right: 15px;
       margin-left: 20%;
+      img {
+        width: 100%;
+      }
     }
   }
 }
