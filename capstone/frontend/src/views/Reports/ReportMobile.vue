@@ -2,7 +2,7 @@
   <div class="container report-main" :class="[editForm && 'read-only']">
     <div class="row d-flex align-items-center">
       <div class="col-12 col-md-7">
-        <PatientSmall :name="patient.first_name + ' ' + patient.last_name" :id="patient.id" :age="patient.age" :gender="patient.sex" :mobile="patient.Phone_Number" :bloodType="patient.blood_type" />
+        <PatientSmall :name="patient.first_name + ' ' + patient.last_name" :id="patient.id" :age="patient.age" :gender="patient.sex" :mobile="patient.Phone_Number" :bloodType="patient.blood_type" :photo="patient.profilePic ? patient.profilePic : getDefaultPic(patient)" />
       </div>
       <div class="col-12 col-md-4">
         <button class="download-button" v-if="editForm">
@@ -229,7 +229,7 @@
 <script>
 import PatientSmall from '../../components/PatientSmall.vue'
 import axios from 'axios'
-import { Snackbar } from '../../util/util'
+import { Snackbar, defaultPic } from '../../util/util'
 
 export default {
   name: 'ReportMobile',
@@ -249,6 +249,9 @@ export default {
     this.getReport()
   },
   methods: {
+    getDefaultPic (user) {
+      return defaultPic(user)
+    },
     async getPatientInfo() {
       const id = this.$route.params.id
       console.log(process.env.VUE_APP_API_URL + `/p/${id}`)
