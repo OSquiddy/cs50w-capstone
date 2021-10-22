@@ -1,7 +1,9 @@
 <template>
   <div class="patient-header container-fluid">
     <div class="patient-image">
-      <div class="image"></div>
+      <div class="image">
+        <img :src="patient.profilePic ? patient.profilePic : getDefaultPic(patient)" alt="" />
+      </div>
     </div>
     <div class="patient-info-container">
       <div class="patient-title">
@@ -23,6 +25,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { defaultPic } from '../util/util'
 export default {
   name: 'PatientHeader',
   data () {
@@ -30,6 +33,11 @@ export default {
   },
   computed: {
     ...mapState(['patient'])
+  },
+  methods: {
+    getDefaultPic (user) {
+      return defaultPic(user)
+    }
   }
 }
 </script>
@@ -43,6 +51,9 @@ export default {
     width: 80px;
     height: 80px;
     border-radius: 50%;
+    img {
+      width: 100%;
+    }
   }
 }
 
