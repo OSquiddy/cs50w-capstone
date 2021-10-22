@@ -6,7 +6,12 @@
           <template v-for="patient in patientsList">
             <router-link :to="'/p/' + patient.id" :key="patient.id">
             <div class="row patient-small-container">
-              <div class="col-3 col-sm-2 mx-sm-auto patient-photo"></div>
+              <!-- <button class="delete-icon" @click="showModal(patient.id)">
+                <img src="../../assets/cancel.svg" alt="delete-icon" />
+              </button> -->
+              <div class="col-3 col-sm-2 mx-sm-auto patient-photo px-0">
+                <img :src="patient.profilePic ? patient.profilePic : getDefaultPic(patient)" alt="" />
+              </div>
               <div class="col-9 col-sm-10 patient-info">
                 <h3 class="patient-name">{{patient.first_name}} {{patient.last_name}}</h3>
                 <div class="row patient-details-row">
@@ -38,6 +43,7 @@
 <script>
 import axios from 'axios'
 import { mapState } from 'vuex'
+import { defaultPic } from '../../util/util'
 
 export default {
   name: 'PatientDirectoryMobile',
@@ -69,6 +75,9 @@ export default {
     async getFilteredPatientsList () {
       const list = await axios.get(process.env.VUE_APP_API_URL + '/patientList/name/' + this.searchKeyword)
       this.patientsList = list.data.patientList
+    },
+    getDefaultPic (user) {
+      return defaultPic(user)
     }
   }
 }
@@ -89,9 +98,15 @@ export default {
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
       padding: 15px 5px;
       margin-bottom: 20px;
-      // margin: 0 20px;
-      // &:first-of-type {
-      //   margin-top: 20px;
+      // position: relative;
+      // .delete-icon {
+      //   position: absolute;
+      //   top: 0;
+      //   right: 0;
+      //   width: fit-content;
+      //   img {
+      //     width: 10px;
+      //   }
       // }
       .patient-photo {
         background-color: #c4c4c4;
@@ -101,6 +116,9 @@ export default {
         aspect-ratio: 1;
         margin-left: auto;
         align-self: flex-start;
+        img {
+          width: 100%;
+        }
       }
       .patient-info {
         // padding-bottom: 20px;
