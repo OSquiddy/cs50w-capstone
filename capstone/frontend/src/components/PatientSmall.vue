@@ -5,7 +5,9 @@
     </div>
     <div class="row patient-info-container">
     <div class="col-3 col-md-2">
-      <div class="patient-photo"></div>
+      <div class="patient-photo">
+        <img :src="photo" alt="" />
+      </div>
     </div>
     <div class="col-9 col-md-10 patient-info">
       <div class="row patient-details-row">
@@ -45,6 +47,9 @@ export default {
     },
     mobile: {
       type: String
+    },
+    photo: {
+      type: String
     }
   }
 }
@@ -78,6 +83,9 @@ export default {
     aspect-ratio: 1;
     // margin-left: auto;
     align-self: flex-start;
+    img {
+      width: 100%;
+    }
   }
   .patient-info {
     // padding-bottom: 20px;
