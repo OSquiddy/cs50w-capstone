@@ -10,7 +10,7 @@
               <img src="../assets/doubleChevron.svg" alt="toggle-collapse">
             </button>
             <span class="logo-text" :class="isCollapsed ? 'hide' : ''">Avicenna Hospital</span>
-          <button class="toggle" @click="toggleCollapse" v-if="!isCollapsed">
+          <button class="toggle" @click="toggleCollapse" :class="isCollapsed ? 'hide' : ''">
             <img src="../assets/doubleChevron.svg" alt="toggle-collapse" class="mirror">
           </button>
         </div>
@@ -63,7 +63,9 @@
           </button>
         </router-link>
         <div class="user-options">
-          <div class="header-profile-pic"></div>
+          <div class="header-profile-pic">
+            <img :src="currentUser.profilePic ? 'assets' + currentUser.profilePic : getDefaultPic(currentUser)" class="profilePic" id="smallImage">
+          </div>
           <div class="header-username">{{currentUser.fullname}}</div>
         </div>
       </header>
@@ -86,6 +88,8 @@
 import PatientHeader from './PatientHeader.vue'
 import LocalTabs from '../components/LocalTabs.vue'
 import { mapState, mapActions } from 'vuex'
+import { defaultPic } from '../util/util'
+
 import axios from 'axios'
 export default {
   name: 'Layout',
@@ -141,6 +145,9 @@ export default {
       this.removeToken()
 
       this.$router.push('/login')
+    },
+    getDefaultPic (user) {
+      return defaultPic(user)
     }
   }
 }
@@ -233,6 +240,11 @@ export default {
           background: var(--medium-gray);
           border-radius: 50%;
           margin-right: 0.625rem;
+          overflow: hidden;
+          .profilePic {
+            width: inherit;
+            object-fit: contain;
+          }
         }
       }
       .button-link {
@@ -296,7 +308,7 @@ export default {
       margin-left: 12px;
       font-size: 18px;
       color: #fff;
-      transition: 0.3s ease-out;
+      transition: 0.1s ease-out;
     }
     .hide {
       opacity: 0;
