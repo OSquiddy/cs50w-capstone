@@ -32,36 +32,36 @@
                 <div class="image-container">
                   <img src="../../assets/camera.svg" alt="camera-icon">
                 </div>
-                <button class="upload-button">Upload photo</button>
+                <button class="upload-button" @click.prevent="upload">Upload photo</button>
               </div>
               <div class="form-floating section-input-group">
                 <input type="text" class="form-control patient-info-input " id="firstName" placeholder="First Name" v-model="first_name">
-                <label for="firstName">First Name</label>
+                <label for="firstName">First Name<span class="required">*</span></label>
               </div>
               <div class="form-floating section-input-group">
                 <input type="text" class="form-control patient-info-input " id="lastName" placeholder="Last Name" v-model="last_name">
-                <label for="lastName">Last Name</label>
+                <label for="lastName">Last Name<span class="required">*</span></label>
               </div>
               <div class="form-floating section-input-group">
                 <input type="text" class="form-control patient-info-input " id="age" placeholder="Age" v-model="age">
-                <label for="age">Age</label>
+                <label for="age">Age<span class="required">*</span></label>
               </div>
               <div class="form-floating section-input-group">
                 <input type="text" class="form-control patient-info-input " id="mobile" placeholder="Mobile Number" v-model="mobile">
-                <label for="mobile">Mobile Number</label>
+                <label for="mobile">Mobile Number<span class="required">*</span></label>
               </div>
               <div class="form-floating section-input-group">
                 <datetime v-model="dob" type="date" name="dob" id="dob" :format="'MMMM dd, yyyy'" class="theme-red" :class="'form-control patient-info-input'" :input-class="'override'" :placeholder="'Date of Birth'"></datetime>
                 <!-- <input type="text" class="form-control patient-info-input " id="dob" placeholder="Date of Birth"> -->
-                <label for="dob">Date of Birth</label>
+                <label for="dob">Date of Birth<span class="required">*</span></label>
               </div>
               <div class="form-floating section-input-group">
                 <input type="text" class="form-control patient-info-input " v-model="email" id="email" placeholder="Email ">
-                <label for="email">Email  </label>
+                <label for="email">Email</label>
               </div>
               <div class="form-floating section-input-group">
                 <input type="text" class="form-control patient-info-input " id="address" v-model="address" placeholder="Address">
-                <label for="address">Address</label>
+                <label for="address">Address<span class="required">*</span></label>
               </div>
               <div class="form-floating section-input-group">
                 <input type="text" class="form-control patient-info-input " id="city" v-model="city" placeholder="City">
@@ -77,7 +77,7 @@
               </div>
               <div class="form-floating section-input-group">
                 <input type="text" class="form-control patient-info-input " id="country" v-model="country" placeholder="Country">
-                <label for="country">Country</label>
+                <label for="country">Country<span class="required">*</span></label>
               </div>
               <div class="form-floating section-input-group">
                 <!-- <input type="text" class="form-control patient-info-input " id="sex" placeholder="Sex" v-model="sex">
@@ -130,7 +130,7 @@
           </div>
         </div>
       </section>
-      <section class="mb-5">
+      <!-- <section class="mb-5">
         <div class="container">
           <div class="row mb-2">
             <div class="col medical-info-section">
@@ -169,7 +169,7 @@
             </div>
           </div>
         </div>
-      </section>
+      </section> -->
     </form>
   </div>
 </template>
@@ -254,6 +254,9 @@ export default {
       } catch (error) {
         Snackbar('Creation Unsuccessful', 'var(--error-text)')
       }
+    },
+    upload () {
+      // Do something
     }
   }
 }
