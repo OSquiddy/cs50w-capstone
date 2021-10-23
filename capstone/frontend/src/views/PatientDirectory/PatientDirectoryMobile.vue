@@ -10,7 +10,7 @@
                 <img src="../../assets/cancel.svg" alt="delete-icon" />
               </button> -->
               <div class="col-3 col-sm-2 mx-sm-auto patient-photo px-0">
-                <img :src="patient.profilePic ? patient.profilePic : getDefaultPic(patient)" alt="" />
+                <img :src="getProfilePic(patient)" alt="profile-picture" />
               </div>
               <div class="col-9 col-sm-10 patient-info">
                 <h3 class="patient-name">{{patient.first_name}} {{patient.last_name}}</h3>
@@ -76,8 +76,12 @@ export default {
       const list = await axios.get(process.env.VUE_APP_API_URL + '/patientList/name/' + this.searchKeyword)
       this.patientsList = list.data.patientList
     },
-    getDefaultPic (user) {
-      return defaultPic(user)
+    getProfilePic (user) {
+      if (!user.profilePic) {
+        return defaultPic(user)
+      } else {
+        return 'http://localhost:8080/assets' + user.profilePic
+      }
     }
   }
 }
@@ -116,6 +120,7 @@ export default {
         aspect-ratio: 1;
         margin-left: auto;
         align-self: flex-start;
+        overflow: hidden;
         img {
           width: 100%;
         }

@@ -13,7 +13,7 @@
             <div class="row">
               <div class="col-4 col-md-4">
                 <div class="patient-card-photo">
-                  <img :src="patient.profilePic ? patient.profilePic : getDefaultPic(patient)" alt="" />
+                  <img :src="getProfilePic(patient)" alt="profile-picture" />
                 </div>
               </div>
               <div class="col-8 col-md-4 patient-card-details">
@@ -120,8 +120,12 @@ export default {
       const response = await axios.get(process.env.VUE_APP_API_URL + '/getNumReports/' + this.patient.id)
       this.visitList = response.data.completedVisits
     },
-    getDefaultPic (user) {
-      return defaultPic(user)
+    getProfilePic (user) {
+      if (!user.profilePic) {
+        return defaultPic(user)
+      } else {
+        return 'http://localhost:8080/assets' + user.profilePic
+      }
     }
   }
 }
@@ -161,6 +165,7 @@ export default {
       max-height: 120px;
       aspect-ratio: 1;
       align-self: flex-start;
+      overflow: hidden;
       img {
         width: 100%;
       }

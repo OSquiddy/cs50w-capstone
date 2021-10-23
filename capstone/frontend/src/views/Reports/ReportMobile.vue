@@ -2,7 +2,7 @@
   <div class="container report-main" :class="[editForm && 'read-only']">
     <div class="row d-flex align-items-center">
       <div class="col-12 col-md-7">
-        <PatientSmall :name="patient.first_name + ' ' + patient.last_name" :id="patient.id" :age="patient.age" :gender="patient.sex" :mobile="patient.Phone_Number" :bloodType="patient.blood_type" :photo="patient.profilePic ? patient.profilePic : getDefaultPic(patient)" />
+        <PatientSmall :name="patient.first_name + ' ' + patient.last_name" :id="patient.id" :age="patient.age" :gender="patient.sex" :mobile="patient.Phone_Number" :bloodType="patient.blood_type" :photo="getProfilePic(patient)" />
       </div>
       <div class="col-12 col-md-4">
         <button class="download-button" v-if="editForm">
@@ -249,8 +249,12 @@ export default {
     this.getReport()
   },
   methods: {
-    getDefaultPic (user) {
-      return defaultPic(user)
+    getProfilePic (user) {
+      if (!user.profilePic) {
+        return defaultPic(user)
+      } else {
+        return 'http://localhost:8080/assets' + user.profilePic
+      }
     },
     async getPatientInfo() {
       const id = this.$route.params.id

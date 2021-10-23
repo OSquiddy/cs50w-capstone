@@ -80,7 +80,7 @@
                     <div class="col-10 section-info">
                       <div class="section-info-container">
                         <div class="photo">
-                          <img :src="currentUser.profilePic ? 'assets' + currentUser.profilePic : getDefaultPic(currentUser)" alt="" id="image" />
+                          <img :src="getProfilePic(currentUser)" alt="profile-picture" id="image" />
                         </div>
                         <div class="image-button-group" v-if="edit">
                           <input type="file" name="profilePic" id="id_profilePic" accept="image/*" @change="showPreview($event)" class="d-none">
@@ -467,8 +467,12 @@ export default {
       this.zipcode = addressArray[3]
       this.country = addressArray[4]
     },
-    getDefaultPic (user) {
-      return defaultPic(user)
+    getProfilePic (user) {
+      if (!user.profilePic) {
+        return defaultPic(user)
+      } else {
+        return 'http://localhost:8080/assets' + user.profilePic
+      }
     }
   }
 }

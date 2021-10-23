@@ -6,7 +6,7 @@
     <div class="row patient-info-container">
     <div class="col-3 col-md-2">
       <div class="patient-photo">
-        <img :src="photo" alt="" />
+        <img :src="photo" alt="profile-picture" />
       </div>
     </div>
     <div class="col-9 col-md-10 patient-info">
@@ -83,6 +83,7 @@ export default {
     aspect-ratio: 1;
     // margin-left: auto;
     align-self: flex-start;
+    overflow: hidden;
     img {
       width: 100%;
     }

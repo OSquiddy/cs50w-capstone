@@ -20,7 +20,7 @@
                 <td>{{ patient.id }}</td>
                 <td>
                   <div class="patient-name">
-                    <div class="patient-img"><img :src="patient.profilePic ? patient.profilePic : getDefaultPic(patient)" alt="" /></div>
+                    <div class="patient-img"><img :src="getProfilePic(patient)" alt="profile-picture" /></div>
                     {{ patient.fullname }}
                   </div>
                 </td>
@@ -107,8 +107,12 @@ export default {
         myModal.hide()
       }
     },
-    getDefaultPic (user) {
-      return defaultPic(user)
+    getProfilePic (user) {
+      if (!user.profilePic) {
+        return defaultPic(user)
+      } else {
+        return 'http://localhost:8080/assets' + user.profilePic
+      }
     }
   }
 }
@@ -177,6 +181,7 @@ export default {
       border-radius: 50%;
       margin-right: 15px;
       margin-left: 20%;
+      overflow: hidden;
       img {
         width: 100%;
       }

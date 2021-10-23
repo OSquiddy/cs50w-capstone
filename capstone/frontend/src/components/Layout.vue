@@ -64,7 +64,7 @@
         </router-link>
         <div class="user-options">
           <div class="header-profile-pic">
-            <img :src="currentUser.profilePic ? 'assets' + currentUser.profilePic : getDefaultPic(currentUser)" class="profilePic" id="smallImage">
+            <img :src="getProfilePic(currentUser)" class="profilePic" id="smallImage">
           </div>
           <div class="header-username">{{currentUser.fullname}}</div>
         </div>
@@ -146,8 +146,12 @@ export default {
 
       this.$router.push('/login')
     },
-    getDefaultPic (user) {
-      return defaultPic(user)
+    getProfilePic (user) {
+      if (!user.profilePic) {
+        return defaultPic(user)
+      } else {
+        return 'http://localhost:8080/assets' + user.profilePic
+      }
     }
   }
 }

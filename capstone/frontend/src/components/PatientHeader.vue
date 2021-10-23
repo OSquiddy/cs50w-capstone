@@ -2,7 +2,7 @@
   <div class="patient-header container-fluid">
     <div class="patient-image">
       <div class="image">
-        <img :src="patient.profilePic ? patient.profilePic : getDefaultPic(patient)" alt="" />
+        <img :src="getProfilePic(patient)" alt="profile-picture" />
       </div>
     </div>
     <div class="patient-info-container">
@@ -36,7 +36,11 @@ export default {
   },
   methods: {
     getDefaultPic (user) {
-      return defaultPic(user)
+      if (!user.profilePic) {
+        return defaultPic(user)
+      } else {
+        return 'http://localhost:8080/assets' + user.profilePic
+      }
     }
   }
 }
@@ -51,6 +55,7 @@ export default {
     width: 80px;
     height: 80px;
     border-radius: 50%;
+    overflow: hidden;
     img {
       width: 100%;
     }

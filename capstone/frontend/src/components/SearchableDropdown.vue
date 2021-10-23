@@ -16,7 +16,7 @@
       <li v-for="user in dataList" :key="user.id" @click="isPatient ? selectPatient(user.id) : selectDoctor(user.id)">
         <div class="dropdown-row-container">
           <div class="img">
-            <img :src="user.profilePic ? 'assets' + user.profilePic : getDefaultPic(user)" alt="" />
+            <img :src="getProfilePic(user)" alt="profile-picture" />
           </div>
           <div class="dropdown-content-text user-group">
             <div class="user-name"> {{user.fullname}} </div>
@@ -96,8 +96,12 @@ export default {
         this.clearUserSelection('doctor')
       }
     },
-    getDefaultPic (user) {
-      return defaultPic(user)
+    getProfilePic (user) {
+      if (!user.profilePic) {
+        return defaultPic(user)
+      } else {
+        return 'http://localhost:8080/assets' + user.profilePic
+      }
     }
   }
 }
@@ -192,6 +196,10 @@ export default {
   align-self: center;
   border-radius: 50%;
   margin-right: 20px;
+  overflow: hidden;
+  img {
+    width: 100%;
+  }
 }
 
 .add-patient-img-container {
