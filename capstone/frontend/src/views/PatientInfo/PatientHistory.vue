@@ -310,7 +310,7 @@ export default {
       try {
         const response = await axios.post(process.env.VUE_APP_API_URL + '/history/' + this.patient.id, formData)
         if (response.status === 200) {
-          Snackbar('Settings Updated', 'var(--success)')
+          Snackbar('History Updated', 'var(--success)')
           this.history = response.data.history
           this.generateListFromText()
           this.generalEdit = false
