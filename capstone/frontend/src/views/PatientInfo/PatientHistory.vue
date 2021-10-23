@@ -203,7 +203,7 @@ import { mapState } from 'vuex'
 import { Snackbar } from '../../util/util'
 
 export default {
-  name: 'History',
+  name: 'PatientHistory',
   data() {
     return {
       history: {
@@ -326,8 +326,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.history-main {
-}
 
 .section-header {
   font-size: 1rem;

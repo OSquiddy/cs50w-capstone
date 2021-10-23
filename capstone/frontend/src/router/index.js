@@ -11,8 +11,8 @@ import PatientDirectoryMobile from '../views/PatientDirectory/PatientDirectoryMo
 import Reports from '../views/Reports/Report.vue'
 import ReportMobile from '../views/Reports/ReportMobile.vue'
 import PatientMain from '../views/PatientInfo/PatientMain.vue'
-import Upcoming from '../views/PatientInfo/Upcoming.vue'
-import History from '../views/PatientInfo/History.vue'
+import PatientOverview from '../views/PatientInfo/PatientOverview.vue'
+import PatientHistory from '../views/PatientInfo/PatientHistory.vue'
 import PatientMainMobile from '../views/PatientInfo/PatientMainMobile.vue'
 import Settings from '../views/Settings/Settings.vue'
 import SettingsMobile from '../views/Settings/SettingsMobile.vue'
@@ -78,7 +78,7 @@ const routes = [
             path: 'upcoming',
             name: 'upcoming',
             components: {
-              default: Upcoming,
+              default: PatientOverview,
               mobile: PatientMainMobile
             }
           },
@@ -86,7 +86,7 @@ const routes = [
             path: 'history',
             name: 'history',
             components: {
-              default: History,
+              default: PatientHistory,
               mobile: PatientMainMobile
             }
           },
@@ -102,7 +102,7 @@ const routes = [
           //   path: 'notes',
           //   name: 'notes',
           //   components: {
-          //     default: Upcoming,
+          //     default: PatientOverview,
           //     mobile: null
           //   }
           // }

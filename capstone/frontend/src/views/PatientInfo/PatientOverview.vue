@@ -63,7 +63,7 @@
 // import { VueTelInput } from 'vue-tel-input'
 import { mapState } from 'vuex'
 export default {
-  name: 'Upcoming',
+  name: 'PatientOverview',
   components: {
     // VueTelInput
   },
@@ -99,10 +99,6 @@ export default {
 
 .new-section {
   margin-bottom: 25px;
-}
-
-.section-title {
-  // font-size: 1.125rem;
 }
 
 .settings-form {
