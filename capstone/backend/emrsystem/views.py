@@ -168,36 +168,35 @@ def lastPatient(request):
 def getReport(request, id, visitNumber):
     patient = Patient.objects.get(id=id)
     visit = Visit.objects.get(patient=id, visit_number=visitNumber)
-    print(patient, 'is a weirdo')
     try:
-        print('Trying examination')
+        # print('Trying examination')
         examination = Examination.objects.get(visit__patient=id, visit__visit_number=visitNumber)
         examinationSerializer = ExaminationSerializer(examination)
         examination = examinationSerializer.data
     except Exception as e:
-        print('Failed examination')
+        # print('Failed examination')
         print(e)
         examinationSerializer = {}
         examination = examinationSerializer
     
     try:
-        print('Trying pHistory')
+        # print('Trying pHistory')
         pastHistory = PastHistory.objects.get(visit__patient=id, visit__visit_number=visitNumber)
         pastHistorySerializer = PastHistorySerializer(pastHistory)
         pastHistory = pastHistorySerializer.data
     except Exception:
-        print('Failed pHistory')
+        # print('Failed pHistory')
         pastHistorySerializer = {}
         pastHistory = pastHistorySerializer
 
     if patient.sex == 'F':
         try:
-            print('Trying gynecHistory')
+            # print('Trying gynecHistory')
             gynecHistory = GynecHistory.objects.get(visit__patient=id, visit__visit_number=visitNumber)
             gynecHistorySerializer = GynecHistorySerializer(gynecHistory)
             gynecHistory = gynecHistorySerializer.data
         except Exception:
-            print('Failed gynecHistory')
+            # print('Failed gynecHistory')
             gynecHistorySerializer = {}
             gynecHistory = gynecHistorySerializer
     else:
@@ -271,7 +270,6 @@ def createReport(request, patient_id, visitNumber):
     visit = Visit.objects.get(patient=patient_id, visit_number=visitNumber)
     if request.method == "POST":
         data = json.loads(request.body)
-        print(data)
         cardio = data['cardio'] if data['cardio'] is not None else 'NAD'
         cerebero = data['cerebero'] if data['cerebero'] is not None else 'NAD'
         respiratory = data['respiratory'] if data['respiratory'] is not None else 'NAD'
@@ -299,7 +297,7 @@ def createReport(request, patient_id, visitNumber):
             examination.complaints = data['complaints']
             examination.save()
         except ObjectDoesNotExist:
-            print('Object does not exist. Creating new examination')
+            # print('Object does not exist. Creating new examination')
             examination = Examination.objects.create(
             visit=visit, blood_pressure=data['bloodPressure'], SpO2=data['spo2'], temperature=data['temp'], respiratory=respiratory, cardiovascular=cardio, cereberovascular=cerebero, others=data['others'], pallor=data['pallor'], pulse_rate=data['pulse'], koilonychia=data['koilonychia'], oedema=data['oedema'], icterus=data['icterus'], lymphadenopathy=data['lymphadenopathy'], clubbing=data['clubbing'], diagnosis=data['diagnosis'], per_abdominal=per_abdominal, local_examination=local_examination, complaints=data['complaints']
             )
@@ -328,7 +326,6 @@ def appointment(request, patientID, doctorID):
     doctor = Doctor.objects.get(id=doctorID)
     if request.method == 'POST':
         data = json.loads(request.body)
-        print(request.body)
         Visit.objects.create(patient=patient, assigned_doctor=doctor, date=data['date'], time_from=data['time1'], time_till=data['time2'], Unit='01', payment=data['payment'])
     return Response()
 
@@ -386,14 +383,12 @@ def pastHistory(request, id):
 
 @api_view(['GET', 'POST'])
 def updateUser(request):
-    print(request.user, request.method)
     user = []
     user = Doctor.objects.get(id=request.user.id)
     serializer = None
     serializer = DoctorSerializer(user)
     if request.method == 'POST':
         data = json.loads(request.body)
-        print(data)
         email = data['email']
         sex = data['sex']
         # address = data['address'] + '\n' 
@@ -402,7 +397,7 @@ def updateUser(request):
         # + data['zipcode'] if data['zipcode'] else '' + '\n' 
         # + data['country'] if data['country'] else ''
         address = f"{data['address']}\n{data['city'] if data['city'] else ' '}\n{data['state'] if data['state'] else ' '}\n{data['zipcode'] if data['zipcode'] else ' '}\n{data['country'] if data['country'] else ' '}"
-        print(address)
+        # print(address)
         dob = data['dob']
         mob = data['mobile']
         username = data['username']

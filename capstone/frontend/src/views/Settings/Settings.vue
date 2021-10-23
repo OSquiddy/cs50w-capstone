@@ -316,7 +316,7 @@ export default {
       const img = document.querySelector('#image')
       this.image = event.target.files[0]
       img.src = URL.createObjectURL(event.target.files[0])
-      console.log(img.src)
+      // console.log(img.src)
       this.imageURL = img.src
     },
     removePic () {

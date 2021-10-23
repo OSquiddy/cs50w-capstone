@@ -338,10 +338,10 @@ export default {
     }
   },
   watch: {
-    dob(newValue, oldValue) {
-      console.log(this.dob)
-      console.log(DateTime.fromISO(this.dob).toFormat('yyyy-MM-dd'))
-    }
+    // dob(newValue, oldValue) {
+    //   console.log(this.dob)
+    //   console.log(DateTime.fromISO(this.dob).toFormat('yyyy-MM-dd'))
+    // }
   },
   mounted () {
     this.dob = DateTime.now().toFormat('yyyy-MM-dd')

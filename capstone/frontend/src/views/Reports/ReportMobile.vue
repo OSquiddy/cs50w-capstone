@@ -7,7 +7,7 @@
       <div class="col-12 col-md-4">
         <button class="download-button" v-if="editForm">
           <img src="../../assets/download.png" class="download-icon" alt="download-icon" />
-          <a :href="`../../../assets/pdf/${patient.id}/Generated/${patient.fullname} - Report ${visitNumber}.pdf`">Download PDF Report</a>
+          <a :href="`../../../assets/pdf/${patient.id}/Generated/${patient.fullname} - Report ${visitNumber}.pdf`" target="blank">Download PDF Report</a>
         </button>
       </div>
     </div>
@@ -144,19 +144,19 @@
                   <div class="vitals-form">
                     <div class="form-group vitals-input">
                       <label for="blood-pressure" class="vitals-label">BP</label>
-                      <input type="text" name="blood-pressure" id="blood-pressure" v-model="report.examination.blood_pressure" />
+                      <input type="text" name="blood-pressure" id="blood-pressure" v-model="report.examination.blood_pressure" :readonly="editForm"/>
                     </div>
                     <div class="form-group vitals-input">
                       <label for="spo2" class="vitals-label">SpO<span>2</span></label>
-                      <input type="text" name="spo2" id="spo2" v-model="report.examination.SpO2" />
+                      <input type="text" name="spo2" id="spo2" v-model="report.examination.SpO2" :readonly="editForm"/>
                     </div>
                     <div class="form-group vitals-input">
                       <label for="pulse" class="vitals-label">Pulse</label>
-                      <input type="text" name="pulse" id="pulse" v-model="report.examination.pulse_rate" />
+                      <input type="text" name="pulse" id="pulse" v-model="report.examination.pulse_rate" :readonly="editForm"/>
                     </div>
                     <div class="form-group vitals-input">
                       <label for="temp" class="vitals-label">Temp</label>
-                      <input type="text" name="temp" id="temp" v-model="report.examination.temperature" />
+                      <input type="text" name="temp" id="temp" v-model="report.examination.temperature" :readonly="editForm"/>
                     </div>
                   </div>
                 </div>
@@ -221,7 +221,7 @@
           </div>
         </div>
       </div>
-      <button type="submit" class="save-button" form="appt-entry-form">Save</button>
+      <button type="submit" class="save-button" form="appt-entry-form" v-if="!editForm">Save</button>
     </form>
   </div>
 </template>
@@ -258,7 +258,6 @@ export default {
     },
     async getPatientInfo() {
       const id = this.$route.params.id
-      console.log(process.env.VUE_APP_API_URL + `/p/${id}`)
       const response = await axios.get(process.env.VUE_APP_API_URL + `/p/${id}`)
       this.patient = response.data.patientInfo
     },
@@ -266,11 +265,8 @@ export default {
       const id = this.$route.params.id
       const reportNum = this.$route.params.visitNumber
       this.visitNumber = reportNum
-      console.log(process.env.VUE_APP_API_URL + `/p/${id}/v/${reportNum}`)
       const response = await axios.get(process.env.VUE_APP_API_URL + `/p/${id}/v/${reportNum}`)
       this.report = response.data
-      console.log(this.report.examination)
-      console.log('Visit Status', this.report.visit_completed)
       this.editForm = this.report.visit_completed
     },
     async submitForm() {
@@ -304,7 +300,6 @@ export default {
             Snackbar('Report Generated!', 'var(--success)')
             // this.editForm = false
           } else {
-            console.log('This is weird')
             Snackbar('Report Generation Unsuccessful', 'var(--error-text)')
           }
         })

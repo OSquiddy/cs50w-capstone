@@ -376,7 +376,7 @@ export default {
           return 'http://localhost:8080/assets' + this.currentUser.profilePic
         }
       }
-      return ''
+      return defaultPic(this.currentUser)
     },
     profile() {
       return this.currentUser.profilePic
@@ -414,7 +414,6 @@ export default {
       this.edit = !this.edit
     },
     showPreview(event) {
-      console.log('Show image')
       const img = document.querySelector('#image')
       this.image = event.target.files[0]
       img.src = URL.createObjectURL(event.target.files[0])
