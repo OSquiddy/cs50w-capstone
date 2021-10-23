@@ -70,10 +70,8 @@ export default {
     },
     cancel(payload) {
       this.form = payload
-      console.log('Payload is ', payload)
     },
     async submitForm () {
-      console.log('Form was submitted')
       axios.defaults.headers.common['Authorization'] = ''
       localStorage.removeItem('token')
 
@@ -88,7 +86,6 @@ export default {
         this.setToken(token)
         axios.defaults.headers.common['Authorization'] = 'Token ' + token
         localStorage.setItem('token', token)
-        // console.log(axios.defaults.headers.common)
         localStorage.setItem('isAuthenticated', 'true')
         // console.log('Redirect to ', this.$route)
         const user = await axios.get(process.env.VUE_APP_API_URL + '/users/me')
@@ -98,7 +95,6 @@ export default {
         //   }
         // })
         if (user.data && user.data.isDoctor) {
-          // console.log(user.data)
           this.setCurrentUser(user.data)
           const toPath = this.$route.query.to || '/'
           this.$router.push(toPath)
