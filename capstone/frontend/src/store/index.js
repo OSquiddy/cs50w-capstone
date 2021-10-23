@@ -14,7 +14,7 @@ const store = new Vuex.Store({
     patient: {},
     doctor: {},
     currentUser: {},
-    overviewMenu: true
+    overviewMenu: false
   },
   actions: {
     toggleCollapse({ commit }) {
