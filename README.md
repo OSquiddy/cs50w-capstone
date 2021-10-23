@@ -50,6 +50,8 @@ This project was built using Django + Django Rest Framework (DRF) as the backend
 - To activate the virtual env on Windows, type: `.myenv\Scripts\activate`
 - To activate the virtual env on Mac/Unix: `source .myenv/bin/activate`
 
+**Note: You will need to run 2 terminals in parallel. One for the frontend, and the other for the backend**
+
 Once this repository has been cloned, you can do the following:
 
 **Backend Installation:**
