@@ -301,6 +301,7 @@ export default {
   width: 270px;
   transition: 0.3s ease-out;
   height: inherit;
+  overflow: hidden;
   .logo {
     padding: 23px 0px 12px 15px;
     min-width: 270px;
