@@ -35,7 +35,7 @@ export default {
     ...mapState(['patient'])
   },
   methods: {
-    getDefaultPic (user) {
+    getProfilePic (user) {
       if (!user.profilePic) {
         return defaultPic(user)
       } else {
