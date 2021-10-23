@@ -235,18 +235,14 @@ export default {
   },
   methods: {
     async getPatientHistory() {
-      try {
-        console.log(axios.defaults.headers.common['Authorization'])
-        const response = await axios.get(process.env.VUE_APP_API_URL + '/history/' + this.patient.id)
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/history/' + this.patient.id)
+      if (response.data) {
         this.history = response.data.history
-        try {
-          this.generateListFromText()
-        } catch (error) {
-          console.log('Inner Error')
-        }
+      }
+      try {
+        this.generateListFromText()
       } catch (error) {
-        console.log('Error')
-        // this.getPatientHistory()
+        console.log('Inner Error')
       }
     },
     generateListFromText () {
@@ -255,31 +251,40 @@ export default {
       this.drugHistory = []
       this.familyHistory = []
       this.generalHistory = []
-
       if (this.history.allergies) {
         this.history.allergies.split(/\r?\n/).map((line) => {
           this.allergies.push(line)
         })
+      } else {
+        this.allergies.push('N/A')
       }
       if (this.history.surgeries) {
         this.history.surgeries.split(/\r?\n/).map((line) => {
           this.surgicalHistory.push(line)
         })
+      } else {
+        this.surgicalHistory.push('N/A')
       }
       if (this.history.general) {
         this.history.general.split(/\r?\n/).map((line) => {
           this.generalHistory.push(line)
         })
+      } else {
+        this.generalHistory.push('N/A')
       }
       if (this.history.family) {
         this.history.family.split(/\r?\n/).map((line) => {
           this.familyHistory.push(line)
         })
+      } else {
+        this.familyHistory.push('N/A')
       }
       if (this.history.drugs) {
         this.history.drugs.split(/\r?\n/).map((line) => {
           this.drugHistory.push(line)
         })
+      } else {
+        this.drugHistory.push('N/A')
       }
     },
     toggleGeneralEdit() {
@@ -394,7 +399,7 @@ section {
       // width: fit-content;
       justify-content: space-between;
       // border: 1px solid;
-      margin-bottom: 15px;
+      // margin-bottom: 15px;
       label {
         width: 100px;
       }
@@ -415,6 +420,7 @@ section {
 .history-type {
   display: flex;
   justify-content: flex-end;
+  margin-bottom: 15px;
 }
 
 .edit-icon {
