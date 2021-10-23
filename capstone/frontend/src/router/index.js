@@ -67,7 +67,7 @@ const routes = [
       {
         path: 'p/:id',
         name: 'patient-main',
-        redirect: 'p/:id/upcoming',
+        redirect: 'p/:id/overview',
         components: {
           default: PatientMain,
           mobile: PatientMainMobile
@@ -75,8 +75,8 @@ const routes = [
         props: (route) => ({ id: parseInt(route.params.id) }),
         children: [
           {
-            path: 'upcoming',
-            name: 'upcoming',
+            path: 'overview',
+            name: 'overview',
             components: {
               default: PatientOverview,
               mobile: PatientMainMobile

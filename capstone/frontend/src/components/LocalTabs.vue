@@ -1,7 +1,7 @@
 <template>
   <div class="local-tabs-container">
     <ul class="tablist">
-      <li class="tab active" @click="selectTab(0, $event)">Upcoming</li>
+      <li class="tab active" @click="selectTab(0, $event)">Overview</li>
       <li class="tab" @click="selectTab(1, $event)">History</li>
       <li class="tab" @click="selectTab(2, $event)">Reports</li>
       <!-- <li class="tab" @click="selectTab(3, $event)">Notes</li> -->
@@ -15,7 +15,7 @@ export default {
   data () {
     return {
       selectedTab: 0,
-      tabPaths: ['upcoming', 'history', 'reports', 'notes']
+      tabPaths: ['overview', 'history', 'reports', 'notes']
     }
   },
   watch: {
