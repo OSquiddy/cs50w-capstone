@@ -46,6 +46,9 @@ This project was built using Django + Django Rest Framework (DRF) as the backend
 
 **Initial Steps:**
 - Clone the repository using the command `git clone https://github.com/OSquiddy/cs50w-capstone.git`. *This step is not needed for instructors*
+- *(Optional Step)* Create a virtual environment for the project using the command `python3 -m venv .myenv` or `python -m venv .myenv`, where **.myenv** is the name of the virtual environment. You can put any name you want.
+- To activate the virtual env on Windows, type: `.myenv\Scripts\activate.bat`
+- To activate the virtual env on Mac/Unix: `source .myenv/bin/activate`
 
 Once this repository has been cloned, you can do the following:
 
