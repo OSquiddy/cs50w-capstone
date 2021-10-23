@@ -88,7 +88,7 @@ def validateNewPatient(data):
                 'value': firstName
             })
         lastName = data.get('last_name')
-        print(lastName)
+        # print(lastName)
         if lastName is None or lastName == '':
             raise ValidationError(_("Invalid value: last_name cannot be blank/null"), code='invalid', params={
                 'value': lastName
@@ -123,7 +123,7 @@ def validateNewPatient(data):
             raise ValidationError(_("Invalid value: Phone_Number cannot be blank/null"), code='invalid', params={
                 'value': mob
             })
-        patient = Patient.objects.create(email=email, first_name=firstName, last_name=lastName, username=username, Phone_Number=mob,address=address, date_of_birth=dob, isDoctor=False, isPatient=True, sex=sex, age=age, fathers_name=fName, mothers_name=mName, occupation=occupation)
+        patient = Patient.objects.create(email=email, first_name=firstName, last_name=lastName, username=username, Phone_Number=mob,address=address, date_of_birth=dob, isDoctor=False, isPatient=True, sex=sex, age=age, fathers_name=fName, mothers_name=mName, occupation=occupation, blood_type=blood_type, patient_type=pType)
         serializer = PatientSerializer(patient)
     except Exception as e:
         print(e)
@@ -368,34 +368,6 @@ def generatePDFReport(visit, examination):
         # ('BOX', (0,3), (2,3), 1, 'black')
     ]))
     Story.append(tbl)
-    # # Create return address
-    # ptext = '%s' % full_name
-    # Story.append(Paragraph(ptext, styles["Normal"]))       
-    # for part in address_parts:
-    #     ptext = '%s' % part.strip()
-    #     Story.append(Paragraph(ptext, styles["Normal"]))   
-    # Story.append(Spacer(1, 12))
-    # ptext = 'Dear %s:' % full_name.split()[0].strip()
-    # Story.append(Paragraph(ptext, styles["Normal"]))
-    # Story.append(Spacer(1, 12))
-    # ptext = 'We would like to welcome you to our subscriber base for %s Magazine! \
-    #         You will receive %s issues at the excellent introductory price of $%s. Please respond by\
-    #         %s to start receiving your subscription and get the following free gift: %s.' % (magName, 
-    #                                                                                                 issueNum,
-    #                                                                                                 subPrice,
-    #                                                                                                 limitedDate,
-    #                                                                                                 freeGift)
-    # Story.append(Paragraph(ptext, styles["Justify"]))
-    # Story.append(Spacer(1, 12))
-    # ptext = 'Thank you very much and we look forward to serving you.'
-    # Story.append(Paragraph(ptext, styles["Justify"]))
-    # Story.append(Spacer(1, 12))
-    # ptext = 'Sincerely,'
-    # Story.append(Paragraph(ptext, styles["Normal"]))
-    # Story.append(Spacer(1, 48))
-    # ptext = 'Ima Sucker'
-    # Story.append(Paragraph(ptext, styles["Normal"]))
-    # Story.append(Spacer(1, 12))
     doc.build(Story)
 
 

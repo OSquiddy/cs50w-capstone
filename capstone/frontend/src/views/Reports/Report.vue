@@ -1,5 +1,5 @@
 <template>
-  <div class="reports-main container-fluid">
+  <div class="reports-main container-fluid" v-if="numVisits">
     <div class="row minH">
       <div class="col-8 p-0 report-preview-container">
         <!-- <div class="report-preview"></div> -->
@@ -33,19 +33,27 @@
       </div>
     </div>
   </div>
+  <div v-else>
+      <NoDataContainer :displayText="noDataMsg" />
+  </div>
 </template>
 
 <script>
 import axios from 'axios'
+import NoDataContainer from '../../components/NoDataContainer.vue'
 export default {
   name: 'Reports',
+  components: {
+    NoDataContainer
+  },
   data () {
     return {
       visitList: [],
       patient: {},
       visitNumber: null,
       generatedSelected: 0,
-      counter: 0
+      counter: 0,
+      noDataMsg: 'There are no reports for this patient at the moment.'
     }
   },
   computed: {

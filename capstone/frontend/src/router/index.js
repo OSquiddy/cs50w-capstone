@@ -178,7 +178,6 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (localStorage.getItem('isAuthenticated') !== 'true' && to.matched.some(record => record.meta.requireLogin)) {
-    console.log('To.path is', to.path)
     next('/login')
   } else {
     next()

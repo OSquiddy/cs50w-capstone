@@ -210,10 +210,10 @@ export default {
     }
   },
   watch: {
-    dob(newValue, oldValue) {
-      console.log(this.dob)
-      console.log(DateTime.fromISO(this.dob).toFormat('yyyy-MM-dd'))
-    }
+    // dob(newValue, oldValue) {
+    //   console.log(this.dob)
+    //   console.log(DateTime.fromISO(this.dob).toFormat('yyyy-MM-dd'))
+    // }
   },
   mounted () {
     this.dob = DateTime.now().toFormat('yyyy-MM-dd')
@@ -244,7 +244,6 @@ export default {
       }
       try {
         const response = await axios.post(process.env.VUE_APP_API_URL + '/create/p', formData)
-        console.log(response)
         if (response.status === 200) {
           this.$router.push('/')
           if (response.status === 200) {

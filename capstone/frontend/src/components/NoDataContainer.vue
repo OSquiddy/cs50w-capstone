@@ -30,4 +30,11 @@ export default {
     align-self: center;
   }
 }
+
+@media screen and (min-width: 1200px) {
+  .no-data-main {
+    margin-top: 30px;
+    background: var(--background-primary);
+  }
+}
 </style>

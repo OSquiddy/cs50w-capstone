@@ -242,7 +242,7 @@ export default {
       try {
         this.generateListFromText()
       } catch (error) {
-        console.log('Inner Error')
+        // console.log('Inner Error')
       }
     },
     generateListFromText () {

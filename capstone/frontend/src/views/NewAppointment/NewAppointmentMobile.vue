@@ -137,7 +137,7 @@ export default {
   },
   watch: {
     date(newValue, oldValue) {
-      console.log(newValue, typeof (newValue))
+      // console.log(newValue, typeof (newValue))
     }
   },
   mounted () {
