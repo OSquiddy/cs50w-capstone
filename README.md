@@ -44,6 +44,9 @@ This project was built using Django + Django Rest Framework (DRF) as the backend
 
 ## Installation
 
+**Initial Steps:**
+- Clone the repository using the command `git clone https://github.com/OSquiddy/cs50w-capstone.git`. *This step is not needed for instructors*
+
 Once this repository has been cloned, you can do the following:
 
 **Backend Installation:**
@@ -116,12 +119,14 @@ Another
     - **assets** - contains the static data that needs to be served on the app using the **development server**
     - **components** - contains all the reusable Vue components created for the app
       - **CustomCalendar.vue** - Code for the daily upcoming appointments viewer. The doctor can view all upcoming appointments for a certain day by clicking on it's date. This components only shows the doctor the appointments for the current month. For the rest of the appointments the doctor can visit the dedicated Appointments page.
-      - **EarningsBarChart.vue** - contains the code for the barchart found on the Overview page. The chart is generated using the **D3.js** library. It shows the month-wise earnings of the establishment.
-      - **EarningsLineChart.vue** - contains the code for the line chart found on the Overview page. The chart is generated using the **D3.js** library. It shows the total earnings of the establishment, from the first appointment. Hovering over the data will show the earnings from and data of each appointment recorded.
+      - **DonutChart.vue** - contains the code for the donut chart found on the Overview page. The chart is generated using the *D3.js* library. It shows the genderwise distribution of patients in the database.
+      - **EarningsBarChart.vue** - contains the code for the barchart found on the Overview page. The chart is generated using the *D3.js* library. It shows the month-wise earnings of the establishment.
+      - **EarningsLineChart.vue** - contains the code for the line chart found on the Overview page. The chart is generated using the *D3.js* library. It shows the total earnings of the establishment, from the first appointment. Hovering over the data will show the earnings from and data of each appointment recorded.
       - **Layout.vue** - contains the layout for the Desktop site. All other components/views are nested within this component
       - **LayoutMobile.vue** - contains the layout for the Mobile site. All other components/views are nested within this component
       - **LocalTabs.vue** - contains the code for the local navigation bar found on the patient information pages
       - **LoginPage.vue** - contains the code for the login page
+      - **NoDataContainer.vue** - contains the code for the container that shows up when there is no data to be displayed
       - **PatientHeader.vue** - contains the code for the Patient information header shown on any of the patient related pages in the Desktop view. 
       - **PatientSmall.vue** - contains the code for the miniature patient header shown on any of the patient related pages in the Mobile view.
       - **SearchableDropdown.vue** - contains the code for the searchable dropdown found on the New Appointment page
@@ -133,7 +138,7 @@ Another
       - **search.js** - contains the vuex data related to the live search functionality. This module is appended to the index.js file at compile time
     - **util** - contains some utility functions 
       - **tooltip.js** - contains the code used to render the custom tooltip for the D3 charts
-      - **util.js** - contain a utility function for the vue app. *(Debounce)*
+      - **util.js** - contain a utility function for the vue app. *(Debounce, Snackbar, defaultPic)*
     - **views**
       - **AppointmentEntry** - contains the code/view for form in which the doctor enters all appointment related data/observations
         - **AppointmentEntry.vue**
@@ -153,9 +158,10 @@ Another
         - **PatientDirectory.vue**
         - **PatientDirectoryMobile.vue**
       - **PatientInfo** - contains the code that allows you to view detailed information about a patient (History, Reports, Overview etc)
+        - **PatientHistory.vue**
         - **PatientMain.vue**
         - **PatientMainMobile.vue**
-        - **Upcoming.vue**
+        - **PatientOverview.vue**
       - **Reports** - contains the code that allows you to view/download the PDF reports of the patient
         - **Report.vue**
         - **ReportMobile.vue**
@@ -171,4 +177,5 @@ Another
 - Add in a dark mode theme
 - Finish the Patients module
 - Serve static files through a CDN instead of hosting them on the main server
+- Forms currently do not have a error messages show up per input. If the form submission fails as a whole, then a small message shows up, but there are no specific messages. Need to add that later.
 - Add some code for better patient confidentiality. Currently any doctor who signs in has full access to the entire patient database. We could write some conditions to make sure that doctors are only able to access the information of patients that they are treating, unless they're given some sort of permission.
