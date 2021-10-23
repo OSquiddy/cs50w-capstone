@@ -45,10 +45,10 @@ This project was built using Django + Django Rest Framework (DRF) as the backend
 ## Installation
 
 **Initial Steps:**
-- Clone the repository using the command `git clone https://github.com/OSquiddy/cs50w-capstone.git` and move into the **cs50w-capstone** directory using the command `cd cs50w-capstone`. *This step is not needed for instructors*
+- Clone the repository using the command `git clone https://github.com/OSquiddy/cs50w-capstone.git` and move into the **cs50w-capstone** directory using the command `cd cs50w-capstone`. *This step is not needed for instructors who will be viewing the final project.*
 - *(Optional Step)* Create a virtual environment for the project using the command `python3 -m venv .myenv` or `python -m venv .myenv`, where **.myenv** is the name of the virtual environment. You can put any name you want.
-- To activate the virtual env on Windows, type: `.myenv\Scripts\activate`
-- To activate the virtual env on Mac/Unix: `source .myenv/bin/activate`
+  - To activate the virtual env on Windows, type: `.myenv\Scripts\activate`
+  - To activate the virtual env on Mac/Unix: `source .myenv/bin/activate`
 
 **Note: You will need to run 2 terminals in parallel. One for the frontend, and the other for the backend**
 
@@ -57,7 +57,7 @@ Once this repository has been cloned, you can do the following:
 **Backend Installation:**
 - Navigate to the backend directory by running the command `cd capstone/backend`
 - Install backend dependencies by running `pip install -r requirements.txt`. The main dependencies are Django *(main backend)*, Pillow *(Allows work with images)*, ReportLab *(Used to generate the PDF reports)* and Djoser *(authentication endpoints)*
-- Make and apply migrations by running `python manage.py makemigrations` and `python manage.py migrate`
+- Make and apply migrations by running `python manage.py makemigrations` and `python manage.py migrate`. *If you get messages saying No migrations were applied, or No changes detected, that is not an issue. It means the SQLite file is present.*
 - Run the server using `python manage.py runserver 5500`
 
 **Note: It is important to run the backend server on port 5500**
@@ -80,17 +80,15 @@ Complexity for this project can be argued in a few different ways.
 
 The first complexity I'd say came from learning how to integrate Django with a frontend framework like Vue. There were a lot of different approaches available, and I was very keen on being able to implement one that would allow me to keep the Django templating engine, alongside whatever frontend framework I was using. I grew somewhat attached to the simplicity of Django's frontend management, and felt that keeping Django as just a backend would be limiting its potential.
 
-I read quite a few different articles and blogs to find out if there was a way to get the behaviour I wanted, and there *was* one person who did it... but unfortunately, their method did not work for me. I've included a link though. Maybe someone else will be able to figure out something. I will definitely be revisiting that method later.
+I read quite a few different articles and blogs to find out if there was a way to get the behaviour I wanted, and there *was* one person who did it... but unfortunately, their method did not work for me. Maybe someone else will be able to figure out something. I will definitely be revisiting that method later.
 
 What I finally settled with was the Django Rest Framework (DRF), where Django is used only for the API endpoints. The frontend is completely managed by Vue.
 
-Coming to the application itself, it has all the basic requirements of a complex web app. User authentication/authorization, CRUD functionilities etc. A few app specific areas of complexity include learning D3.js for the generation of the charts on the overwiew page, as well as ReportLab, to generate PDF reports of patient appointments.
+Coming to the application itself, it has all the basic requirements of a complex web app. User authentication/authorization, CRUD functionilities etc. A few app specific areas of complexity include learning D3.js for the realtime generation of the charts on the overwiew page, as well as ReportLab, to generate PDF reports of patient appointments. You will notice the D3 charts change as more and more patients are added, appointments are created and visits/appointments are completed.
 
 D3 was something I learned at work, and I wanted a way to improve my command over it, so I integrated it into this project. The parts where I've been able to add transitions to the charts were something I've never done anywhere else. Learned it while working on this.
 
 Similarly, I've learned the basics of the ReportLab library just for this project, and will be exploring it a lot more. It's a very useful and powerful tool to have in your belt.
-
-Another 
 
 # Detailed Summary of the Files and Directories
 
@@ -182,7 +180,8 @@ Another
 - Add in a dark mode theme
 - Finish the Patients module
 - Serve static files through a CDN instead of hosting them on the main server
-- Forms currently do not have a error messages show up per input. If the form submission fails as a whole, then a small message shows up, but there are no specific messages. Need to add that later.
+- Forms currently do not have a error messages show up per input. If the form submission fails as a whole, then a small message shows up, but there are no input specific messages. Need to add that later.
 - Add some code for better patient confidentiality. Currently any doctor who signs in has full access to the entire patient database. We could write some conditions to make sure that doctors are only able to access the information of patients that they are treating, unless they're given some sort of permission.
 - Need to show the Past History in Mobile mode.
 - Need to update the Report PDF to take in the Past History information
+- Another feature I need to add is a time-slot check for new appointments. If a period of a doctor's time is already blocked by an appointment, users should not be able to book an appointment with that particular doctor for that time slot. A new appointment could be created after this one gets over, or with another doctor.
