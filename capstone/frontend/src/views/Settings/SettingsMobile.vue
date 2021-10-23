@@ -80,7 +80,7 @@
                     <div class="col-10 section-info">
                       <div class="section-info-container">
                         <div class="photo">
-                          <img :src="getProfilePic(currentUser)" alt="profile-picture" id="image" />
+                          <img :src="photo" alt="profile-picture" id="image" />
                         </div>
                         <div class="image-button-group" v-if="edit">
                           <input type="file" name="profilePic" id="id_profilePic" accept="image/*" @change="showPreview($event)" class="d-none">
@@ -368,6 +368,16 @@ export default {
   },
   computed: {
     ...mapState(['currentUser']),
+    photo () {
+      if (this.currentUser.profilePic) {
+        if (this.currentUser.profilePic.includes('http')) {
+          return this.currentUser.profilePic
+        } else {
+          return 'http://localhost:8080/assets' + this.currentUser.profilePic
+        }
+      }
+      return ''
+    },
     profile() {
       return this.currentUser.profilePic
     }
@@ -466,13 +476,6 @@ export default {
       this.state = addressArray[2]
       this.zipcode = addressArray[3]
       this.country = addressArray[4]
-    },
-    getProfilePic (user) {
-      if (!user.profilePic) {
-        return defaultPic(user)
-      } else {
-        return 'http://localhost:8080/assets' + user.profilePic
-      }
     }
   }
 }

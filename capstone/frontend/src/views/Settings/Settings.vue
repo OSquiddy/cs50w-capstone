@@ -9,7 +9,7 @@
               <div class="col section-info">
                 <div class="section-info-container">
                   <div class="image-container">
-                    <img :src="'assets' + currentUser.profilePic" class="profilePic" id="image">
+                    <img :src="photo" class="profilePic" id="image">
                   </div>
                   <div class="image-button-group" v-if="edit">
                     <input type="file" name="profilePic" id="id_profilePic" accept="image/*" @change="showPreview($event)" class="d-none">
@@ -289,7 +289,17 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(['currentUser']),
+    photo () {
+      if (this.currentUser.profilePic) {
+        if (this.currentUser.profilePic.includes('http')) {
+          return this.currentUser.profilePic
+        } else {
+          return 'http://localhost:8080/assets' + this.currentUser.profilePic
+        }
+      }
+      return ''
+    }
   },
   created () {
     this.populateForm()
@@ -306,6 +316,7 @@ export default {
       const img = document.querySelector('#image')
       this.image = event.target.files[0]
       img.src = URL.createObjectURL(event.target.files[0])
+      console.log(img.src)
       this.imageURL = img.src
     },
     removePic () {

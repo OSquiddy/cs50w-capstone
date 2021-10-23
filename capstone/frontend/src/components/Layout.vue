@@ -150,7 +150,11 @@ export default {
       if (!user.profilePic) {
         return defaultPic(user)
       } else {
-        return 'http://localhost:8080/assets' + user.profilePic
+        if (user.profilePic.includes('http')) {
+          return user.profilePic
+        } else {
+          return 'http://localhost:8080/assets' + user.profilePic
+        }
       }
     }
   }
