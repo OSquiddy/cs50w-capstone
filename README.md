@@ -179,3 +179,5 @@ Another
 - Serve static files through a CDN instead of hosting them on the main server
 - Forms currently do not have a error messages show up per input. If the form submission fails as a whole, then a small message shows up, but there are no specific messages. Need to add that later.
 - Add some code for better patient confidentiality. Currently any doctor who signs in has full access to the entire patient database. We could write some conditions to make sure that doctors are only able to access the information of patients that they are treating, unless they're given some sort of permission.
+- Need to show the Past History in Mobile mode.
+- Need to update the Report PDF to take in the Past History information
