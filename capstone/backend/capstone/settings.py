@@ -25,7 +25,7 @@ SECRET_KEY = 'b7=8b!k4n__kmg@#*uz6(uys-$r*ys8=$w(v44bx)*=f$dyri+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['158.101.230.217', 'localhost.com', '127.0.0.1', 'avicenna.osquiddy.com']
 
 # Application definition
 
@@ -48,10 +48,16 @@ CORS_ORIGIN_ALLOWED_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
 'http://localhost:8080',
+'http://158.101.230.217',
+'http://127.0.0.1:8080',
+'http://avicenna.osquiddy.com'
  )
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8080'
+    'http://localhost:8080',
+    'http://158.101.230.217',
+    'http://127.0.0.1:8080',
+    'http://avicenna.osquiddy.com'
 ]
 
 MIDDLEWARE = [
