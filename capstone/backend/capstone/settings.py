@@ -158,6 +158,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = Path(BASE_DIR).parent / 'frontend/public/assets/media'
+STATIC_ROOT = Path(BASE_DIR).parent / 'frontend/public/assets/css'
+
+# STATICFILES_DIR = [
+
+# ]
 
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
