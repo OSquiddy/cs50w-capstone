@@ -381,6 +381,14 @@ def generatePDFReport(visit, examination):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, 'wb') as f:
         f.write(buf.getbuffer())
+    
+    destination = settings.PDF_ROOT_BACKUP / f'{visit.patient.id}' / f'Generated'
+    print(destination)
+    filename = os.path.join(destination, f'{visit.patient} - Report {visit.visit_number}.pdf')
+    # assert os.path.isfile(filename), f'{filename} is not a file'
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    with open(filename, 'wb') as f:
+        f.write(buf.getbuffer())    
 
     visit.visit_completed = True
     visit.save()

@@ -1,6 +1,7 @@
 capstone/frontend/.DS_Store
 capstone/frontend/node_modules
 capstone/frontend/dist
+capstone/frontend/.env
 
 # .myenv folder
 .myenv
@@ -12,6 +13,7 @@ capstone/frontend/dist
 .env.*.local
 capstone/*/.env.local
 capstone/*/.env.*.local
+*.env
 
 # Log files
 capstone/frontend/npm-debug.log*
@@ -33,4 +35,5 @@ capstone/frontend/pnpm-debug.log*
 capstone/backend/capstone/__pycache__
 capstone/backend/emrsystem/__pycache__
 capstone/backend/emrsystem/migrations/__pycache__
+capstone/backend/python-3.8-venv
 #capstone/backend/capstone/settings.py

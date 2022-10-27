@@ -10,7 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -157,8 +162,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = Path(BASE_DIR).parent / 'frontend/public/assets/media'
-STATIC_ROOT = Path(BASE_DIR).parent / 'frontend/public/assets/css'
+MEDIA_ROOT = Path(BASE_DIR).parent / os.getenv('STATIC_ROOT_LOCATION')
+STATIC_ROOT = Path(BASE_DIR).parent / os.getenv('MEDIA_ROOT_LOCATION')
 
 # STATICFILES_DIR = [
 
@@ -168,5 +173,6 @@ FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 ]
 
-PDF_ROOT = Path(BASE_DIR).parent / 'frontend/public/assets/pdf'
+PDF_ROOT_BACKUP = Path(BASE_DIR).parent / 'frontend/public/assets/pdf'
+PDF_ROOT = Path(BASE_DIR).parent / os.getenv('PDF_ROOT_LOCATION')
 # print(PDF_ROOT)
