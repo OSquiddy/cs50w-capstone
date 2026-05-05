@@ -53,7 +53,7 @@ services:
     # Render does not interpolate env vars inside YAML; use the real public URL of drf-backend.
     # After the first deploy, confirm https://<backend-service-name>.onrender.com — usually matches `name`.
     # Optional: use sync:false for VUE_APP_API_URL and set it in the dashboard instead.
-    buildCommand: npm ci && VUE_APP_API_URL=https://drf-backend.onrender.com/api/v1 npm run build
+    buildCommand: npm ci && VUE_APP_API_URL=https://drf-backend.onrender.com:5500/api/v1 npm run build
     staticPublishPath: ./dist
     buildFilter:
       paths:
