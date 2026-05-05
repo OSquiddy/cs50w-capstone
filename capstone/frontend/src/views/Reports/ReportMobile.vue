@@ -229,7 +229,7 @@
 <script>
 import PatientSmall from '../../components/PatientSmall.vue'
 import axios from 'axios'
-import { Snackbar, defaultPic } from '../../util/util'
+import { Snackbar, defaultPic, publicAssetUrl } from '../../util/util'
 
 export default {
   name: 'ReportMobile',
@@ -253,7 +253,10 @@ export default {
       if (!user.profilePic) {
         return defaultPic(user)
       } else {
-        return 'http://localhost:8080/assets' + user.profilePic
+        if (String(user.profilePic).includes('http')) {
+          return user.profilePic
+        }
+        return publicAssetUrl(user.profilePic)
       }
     },
     async getPatientInfo() {

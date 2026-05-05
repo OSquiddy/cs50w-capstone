@@ -61,6 +61,10 @@ export default {
   computed: {
     userType() {
       return this.user.charAt(0).toUpperCase() + this.user.slice(1) + ' ID'
+    },
+    apiOrigin() {
+      const raw = (process.env.VUE_APP_API_URL || 'http://localhost:5500/api/v1').trim()
+      return raw.replace(/\/api\/v1\/?$/i, '').replace(/\/$/, '')
     }
   },
   mounted() {
@@ -71,14 +75,14 @@ export default {
       this.$emit('cancel', false)
     },
     async getCSRFToken() {
-      const token = await axios.get('http://localhost:8000/api/csrf')
+      const token = await axios.get(`${this.apiOrigin}/api/csrf`)
       console.log('Result of axios call:', token)
       Cookies.set('csrftoken', token.data.token)
     },
     async onSubmit() {
       const csrftoken = Cookies.get('csrftoken')
       console.log(csrftoken)
-      fetch('http://localhost:8000/api/login', {
+      fetch(`${this.apiOrigin}/api/login`, {
         method: 'POST',
         headers: { 'X-CSRFToken': csrftoken },
         body: JSON.stringify({

@@ -1,0 +1,64 @@
+# Render Blueprint — defines every service + DB in one place (one Blueprint in the dashboard).
+# Place this file at the repository root (Render picks up ./render.yaml by default).
+#
+# Prerequisites before deploy:
+# - Backend: use env-based SECRET_KEY / DEBUG / ALLOWED_HOSTS; parse DATABASE_URL for Postgres
+#   (e.g. dj-database-url + psycopg2-binary), or remove the `databases:` section and keep SQLite
+#   (not recommended — ephemeral disk).
+# - Frontend: built API URL must match your backend public URL (see VUE_APP_API_URL below).
+
+databases:
+  - name: capstone-db
+    plan: free # optional: starter, basic-1gb, ...
+
+services:
+  # Django API (Python). No rootDir here so the slug includes capstone/frontend (media/PDF paths).
+  - type: web
+    name: drf-backend
+    runtime: python
+    region: oregon # optional; omit for default
+    plan: free # optional
+    buildCommand: cd capstone/backend && pip install -r requirements.txt && python manage.py migrate
+    startCommand: cd capstone/backend && gunicorn capstone.wsgi:application --bind 0.0.0.0:$PORT
+    buildFilter:
+      paths:
+        - capstone/backend/**
+        - capstone/frontend/public/**
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: capstone-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      # Match paths used in capstone/backend/.env locally
+      - key: STATIC_ROOT_LOCATION
+        value: frontend/public/assets/css
+      - key: MEDIA_ROOT_LOCATION
+        value: frontend/public/assets/media
+      - key: PDF_ROOT_LOCATION
+        value: frontend/public/assets/pdf
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://drf-frontend.onrender.com
+
+  # Vue SPA (static)
+  - type: web
+    name: drf-frontend
+    runtime: static
+    region: oregon
+    plan: free
+    rootDir: capstone/frontend
+    # Render does not interpolate env vars inside YAML; use the real public URL of drf-backend.
+    # After the first deploy, confirm https://<backend-service-name>.onrender.com — usually matches `name`.
+    # Optional: use sync:false for VUE_APP_API_URL and set it in the dashboard instead.
+    buildCommand: npm ci && VUE_APP_API_URL=https://drf-backend.onrender.com/api/v1 npm run build
+    staticPublishPath: ./dist
+    buildFilter:
+      paths:
+        - capstone/frontend/**
+      ignoredPaths:
+        - "**/*.md"

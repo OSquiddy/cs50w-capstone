@@ -264,7 +264,7 @@ import { VueTelInput } from 'vue-tel-input'
 // import { DateTime } from 'luxon'
 import { mapActions, mapState } from 'vuex'
 import axios from 'axios'
-import { Snackbar } from '../../util/util'
+import { Snackbar, publicAssetUrl } from '../../util/util'
 
 export default {
   name: 'Settings',
@@ -295,7 +295,7 @@ export default {
         if (this.currentUser.profilePic.includes('http')) {
           return this.currentUser.profilePic
         } else {
-          return 'http://localhost:8080/assets' + this.currentUser.profilePic
+          return publicAssetUrl(this.currentUser.profilePic)
         }
       }
       return ''

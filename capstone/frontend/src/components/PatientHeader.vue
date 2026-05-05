@@ -25,7 +25,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { defaultPic } from '../util/util'
+import { defaultPic, publicAssetUrl } from '../util/util'
 export default {
   name: 'PatientHeader',
   data () {
@@ -39,7 +39,10 @@ export default {
       if (!user.profilePic) {
         return defaultPic(user)
       } else {
-        return 'http://localhost:8080/assets' + user.profilePic
+        if (String(user.profilePic).includes('http')) {
+          return user.profilePic
+        }
+        return publicAssetUrl(user.profilePic)
       }
     }
   }

@@ -1,5 +1,13 @@
 const { Toast } = require('bootstrap')
 
+/** Profile/media paths stored relative to the SPA public /assets folder (Vue dev server or static host). */
+export function publicAssetUrl (profilePicPath) {
+  const origin =
+    (typeof process !== 'undefined' && process.env.VUE_APP_PUBLIC_ORIGIN && process.env.VUE_APP_PUBLIC_ORIGIN.trim()) ||
+    (typeof window !== 'undefined' ? window.location.origin : '')
+  return `${origin.replace(/\/$/, '')}/assets${profilePicPath}`
+}
+
 export function debounce (func, wait, immediate) {
   let timeout, args, context, timestamp, result
   if (wait == null) wait = 100

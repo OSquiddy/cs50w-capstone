@@ -88,7 +88,7 @@
 import PatientHeader from './PatientHeader.vue'
 import LocalTabs from '../components/LocalTabs.vue'
 import { mapState, mapActions } from 'vuex'
-import { defaultPic } from '../util/util'
+import { defaultPic, publicAssetUrl } from '../util/util'
 
 import axios from 'axios'
 export default {
@@ -153,7 +153,7 @@ export default {
         if (user.profilePic.includes('http')) {
           return user.profilePic
         } else {
-          return 'http://localhost:8080/assets' + user.profilePic
+          return publicAssetUrl(user.profilePic)
         }
       }
     }

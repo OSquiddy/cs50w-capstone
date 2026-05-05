@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 import os
 from pathlib import Path
+
+import dj_database_url
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -24,13 +26,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
+_DEBUG_ENV = os.environ.get('DEBUG', 'True').strip().lower()
+DEBUG = _DEBUG_ENV in ('1', 'true', 'yes', 'on')
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'b7=8b!k4n__kmg@#*uz6(uys-$r*ys8=$w(v44bx)*=f$dyri+'
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'b7=8b!k4n__kmg@#*uz6(uys-$r*ys8=$w(v44bx)*=f$dyri+',
+)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['158.101.230.217', 'localhost.com', '127.0.0.1', 'avicenna.osquiddy.com']
+_allowed = os.environ.get('ALLOWED_HOSTS', '').strip()
+if _allowed:
+    ALLOWED_HOSTS = [h.strip() for h in _allowed.split(',') if h.strip()]
+elif DEBUG:
+    ALLOWED_HOSTS = [
+        '158.101.230.217',
+        'localhost.com',
+        '127.0.0.1',
+        'avicenna.osquiddy.com',
+        'localhost',
+    ]
+else:
+    # Allow any *.onrender.com host when deploying to Render without explicit hosts.
+    ALLOWED_HOSTS = ['.onrender.com']
 
 # Application definition
 
@@ -49,21 +67,23 @@ INSTALLED_APPS = [
     'djoser'
 ]
 
-CORS_ORIGIN_ALLOWED_ALL = True
-
-CORS_ORIGIN_WHITELIST = (
-'http://localhost:8080',
-'http://158.101.230.217',
-'http://127.0.0.1:8080',
-'http://avicenna.osquiddy.com'
- )
-
-CORS_ALLOWED_ORIGINS = [
+_DEV_CORS = [
     'http://localhost:8080',
     'http://158.101.230.217',
     'http://127.0.0.1:8080',
-    'http://avicenna.osquiddy.com'
+    'http://avicenna.osquiddy.com',
 ]
+
+_cors_env = os.environ.get('CORS_ALLOWED_ORIGINS', '').strip()
+if _cors_env:
+    CORS_ALLOWED_ORIGINS = [x.strip() for x in _cors_env.split(',') if x.strip()]
+elif DEBUG:
+    CORS_ALLOWED_ORIGINS = list(_DEV_CORS)
+else:
+    CORS_ALLOWED_ORIGINS = []
+
+CORS_ORIGIN_ALLOWED_ALL = DEBUG and not bool(_cors_env)
+CORS_ORIGIN_WHITELIST = tuple(CORS_ALLOWED_ORIGINS)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -115,12 +135,17 @@ WSGI_APPLICATION = 'capstone.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if os.environ.get('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(conn_max_age=600),
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_USER_MODEL = 'emrsystem.MyBaseUser'
 
@@ -162,8 +187,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = Path(BASE_DIR).parent / os.getenv('STATIC_ROOT_LOCATION')
-STATIC_ROOT = Path(BASE_DIR).parent / os.getenv('MEDIA_ROOT_LOCATION')
+# Env names follow existing .env; paths map onto Django variables as in the original project.
+_capstone_root = Path(BASE_DIR).parent
+MEDIA_ROOT = _capstone_root / os.getenv('MEDIA_ROOT_LOCATION', 'frontend/public/assets/media')
+STATIC_ROOT = _capstone_root / os.getenv('STATIC_ROOT_LOCATION', 'frontend/public/assets/css')
 
 # STATICFILES_DIR = [
 
@@ -174,5 +201,5 @@ FILE_UPLOAD_HANDLERS = [
 ]
 
 PDF_ROOT_BACKUP = Path(BASE_DIR).parent / 'frontend/public/assets/pdf'
-PDF_ROOT = Path(BASE_DIR).parent / os.getenv('PDF_ROOT_LOCATION')
+PDF_ROOT = _capstone_root / os.getenv('PDF_ROOT_LOCATION', 'frontend/public/assets/pdf')
 # print(PDF_ROOT)

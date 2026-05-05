@@ -44,7 +44,7 @@
 import { mapState, mapActions } from 'vuex'
 import axios from 'axios'
 import { Modal } from 'bootstrap'
-import { debounce, Snackbar, defaultPic } from '../../util/util'
+import { debounce, Snackbar, defaultPic, publicAssetUrl } from '../../util/util'
 export default {
   name: 'PatientDirectory',
   data() {
@@ -111,7 +111,10 @@ export default {
       if (!user.profilePic) {
         return defaultPic(user)
       } else {
-        return 'http://localhost:8080/assets' + user.profilePic
+        if (String(user.profilePic).includes('http')) {
+          return user.profilePic
+        }
+        return publicAssetUrl(user.profilePic)
       }
     }
   }

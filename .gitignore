@@ -5,6 +5,7 @@ capstone/frontend/.env
 
 # .myenv folder
 .myenv
+.venv
 
 
 # local env files
