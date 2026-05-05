@@ -49,7 +49,6 @@ services:
   - type: web
     name: drf-frontend
     runtime: static
-    region: oregon
     plan: free
     rootDir: capstone/frontend
     # Render does not interpolate env vars inside YAML; use the real public URL of drf-backend.
