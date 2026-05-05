@@ -43,11 +43,11 @@ services:
       - key: PDF_ROOT_LOCATION
         value: frontend/public/assets/pdf
       - key: CORS_ALLOWED_ORIGINS
-        value: https://drf-frontend.onrender.com
+        value: https://avicenna.onrender.com
 
   # Vue SPA (static)
   - type: web
-    name: drf-frontend
+    name: avicenna
     runtime: static
     rootDir: capstone/frontend
     # Render does not interpolate env vars inside YAML; use the real public URL of drf-backend.
