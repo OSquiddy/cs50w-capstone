@@ -43,7 +43,7 @@ services:
       - key: PDF_ROOT_LOCATION
         value: frontend/public/assets/pdf
       - key: CORS_ALLOWED_ORIGINS
-        value: https://avicenna.onrender.com
+        value: https://avicenna-v1ow.onrender.com, https://avicenna.osquiddy.com, https://avicenna.omarsiddiqui.dev
 
   # Vue SPA (static)
   - type: web
