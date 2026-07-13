@@ -54,8 +54,10 @@ export default {
       tabs: ['doctor', 'patient'],
       form: false,
       user: '',
-      username: '',
-      password: '',
+      // Pre-filled with the public guest/demo account so visitors (e.g. recruiters)
+      // can sign in immediately without needing separate credentials.
+      username: 'guest',
+      password: 'guest1234',
       errors: []
     }
   },

@@ -212,45 +212,52 @@ def getReport(request, id, visitNumber):
     
 @api_view(['GET'])
 def appointmentsList(request):
-    visits = Visit.objects.all().order_by('date')
-    firstAppointment = visits.first().date
-    lastAppointment = visits.last().date
+    allVisits = Visit.objects.select_related('patient').order_by('date', 'time_from')
+    if not allVisits.exists():
+        return Response({ "appointmentsList": [] })
+
+    firstAppointment = allVisits.first().date
+    lastAppointment = allVisits.last().date
     today = date.today()
     tomorrow = date.today() + timedelta(days=1)
     numDates = lastAppointment - firstAppointment
     appointmentsList = []
     colors = ['#1976D2', '#558B2F', '#AD1457', '#7C4DFF', '#C62828', '#004D40' ]
+
+    # Group visits by date up front, so the day-by-day loop below is O(1) per
+    # day instead of issuing a fresh query for every day in the range (which
+    # gets very slow once appointments span months/years).
+    visitsByDate = {}
+    for visit in allVisits:
+        visitsByDate.setdefault(visit.date, []).append(visit)
+
     for i in range(numDates.days + 1):
         day = firstAppointment + timedelta(days=i)
-        # print('day -> ', day.strftime('%b %d, %Y \n'))
         patientsList = []
-        visits = Visit.objects.filter(date=day).order_by('time_from')
-        try:
-            for j, visit in enumerate(visits):
-                appointment = {}
-                appointment['id'] = visit.patient.id
-                appointment['name'] = f"{visit.patient.fullname()}"
-                appointment['time'] = f"{visit.time_from.strftime('%I:%M %p')} - {visit.time_till.strftime('%I:%M %p')}"
-                appointment['background'] = colors[randint(0, len(colors)-1)]
-                appointment['visitNumber'] = visit.visit_number
-                appointment['visitCompleted'] = visit.visit_completed
-                patientsList.append(appointment)
-            obj = {}
-            obj['key'] = i
-            customData = {}
-            customData['patientsList'] = patientsList
-            # obj['patientsList'] = patientsList
-            if day == today:
-                customData['meta'] = 'Today'
-            elif day == tomorrow:
-                customData['meta'] = 'Tomorrow'
-            else:
-                customData['meta'] = day.strftime('%A')
-            obj['customData'] = customData
-            obj['dates'] = day
-            appointmentsList.append(obj)
-        except AttributeError:
-            appointmentsList.append({})
+        for visit in visitsByDate.get(day, []):
+            if visit.patient is None:
+                continue
+            appointment = {}
+            appointment['id'] = visit.patient.id
+            appointment['name'] = f"{visit.patient.fullname()}"
+            appointment['time'] = f"{visit.time_from.strftime('%I:%M %p')} - {visit.time_till.strftime('%I:%M %p')}"
+            appointment['background'] = colors[randint(0, len(colors)-1)]
+            appointment['visitNumber'] = visit.visit_number
+            appointment['visitCompleted'] = visit.visit_completed
+            patientsList.append(appointment)
+        obj = {}
+        obj['key'] = i
+        customData = {}
+        customData['patientsList'] = patientsList
+        if day == today:
+            customData['meta'] = 'Today'
+        elif day == tomorrow:
+            customData['meta'] = 'Tomorrow'
+        else:
+            customData['meta'] = day.strftime('%A')
+        obj['customData'] = customData
+        obj['dates'] = day
+        appointmentsList.append(obj)
     return Response({ "appointmentsList": appointmentsList })
 
 @api_view(['GET', 'POST'])
