@@ -44,6 +44,7 @@ services:
         required: false
     volumes:
       - ./capstone/backend:/app     # live reload while developing
+      - pdf_data:/app/data/pdf
     command: 
       - sh
       - -c
@@ -56,6 +57,7 @@ services:
             --indent 2 -o data.json
         fi &&
         python manage.py migrate &&
+        python manage.py seed_pdfs &&
         python manage.py shell <<'PY'
         from django.contrib.auth import get_user_model
         from django.core.management import call_command
@@ -83,3 +85,4 @@ services:
 
 volumes:
   pgdata:
+  pdf_data:

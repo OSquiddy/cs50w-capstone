@@ -4,10 +4,13 @@ from .models import *
 class UserSerializer(serializers.ModelSerializer):
     sex_full = serializers.SerializerMethodField()
     sex = serializers.CharField()
-    fullname = serializers.CharField()
+    fullname = serializers.SerializerMethodField()
 
     def get_sex_full(self, obj):
         return obj.get_sex_display()
+
+    def get_fullname(self, obj):
+        return obj.fullname()
 
     class Meta:
         model = MyBaseUser
@@ -16,10 +19,13 @@ class UserSerializer(serializers.ModelSerializer):
 class DoctorSerializer(serializers.ModelSerializer):
     sex_full = serializers.SerializerMethodField()
     sex = serializers.CharField()
-    fullname = serializers.CharField()
+    fullname = serializers.SerializerMethodField()
 
     def get_sex_full(self, obj):
         return obj.get_sex_display()
+
+    def get_fullname(self, obj):
+        return obj.fullname()
 
     class Meta:
         model = Doctor
@@ -28,10 +34,13 @@ class DoctorSerializer(serializers.ModelSerializer):
 class PatientSerializer(serializers.ModelSerializer):
     sex_full = serializers.SerializerMethodField()
     sex = serializers.CharField()
-    fullname = serializers.CharField()
+    fullname = serializers.SerializerMethodField()
 
     def get_sex_full(self, obj):
         return obj.get_sex_display()
+
+    def get_fullname(self, obj):
+        return obj.fullname()
         
     class Meta:
         model = Patient

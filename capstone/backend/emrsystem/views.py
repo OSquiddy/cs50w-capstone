@@ -8,12 +8,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.db import IntegrityError
 from django.db.models import Q, functions
 from datetime import date, datetime, timedelta
 from django.utils import timezone
 from django.utils.dateparse import parse_date
 from django.utils.translation import gettext as _
+from django.http import FileResponse, Http404
+from django.conf import settings
 import json
 
 from django.shortcuts import render, redirect
@@ -181,7 +182,7 @@ def getReport(request, id, visitNumber):
     
     try:
         # print('Trying pHistory')
-        pastHistory = PastHistory.objects.get(visit__patient=id, visit__visit_number=visitNumber)
+        pastHistory = PastHistory.objects.get(patient=id)
         pastHistorySerializer = PastHistorySerializer(pastHistory)
         pastHistory = pastHistorySerializer.data
     except Exception:
@@ -272,52 +273,63 @@ def filteredAppointments(request, query):
         appointmentsList = getAppointmentsByName(query)
     return Response({ "appointmentsList": appointmentsList })
 
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 def createReport(request, patient_id, visitNumber):
     visit = Visit.objects.get(patient=patient_id, visit_number=visitNumber)
-    if request.method == "POST":
-        data = json.loads(request.body)
-        cardio = data['cardio'] if data['cardio'] is not None else 'NAD'
-        cerebero = data['cerebero'] if data['cerebero'] is not None else 'NAD'
-        respiratory = data['respiratory'] if data['respiratory'] is not None else 'NAD'
-        local_examination = data['localExam'] if data['localExam'] is not None else 'NAD'
-        per_abdominal = data['per_abdominal'] if data['per_abdominal'] is not None else 'NAD'
-        try:
-            examination = Examination.objects.get(visit=visit)
-            examination.cardiovascular = cardio
-            examination.cereberovascular = cerebero
-            examination.respiratory = respiratory
-            examination.local_examination = local_examination
-            examination.per_abdominal = per_abdominal
-            examination.temperature = data['temp']
-            examination.pallor = data['pallor']
-            examination.pulse_rate = data['pulse']
-            examination.blood_pressure = data['bloodPressure']
-            examination.SpO2 = data['spo2']
-            examination.others = data['others']
-            examination.koilonychia = data['koilonychia']
-            examination.lymphadenopathy = data['lymphadenopathy']
-            examination.clubbing = data['clubbing']
-            examination.diagnosis = data['diagnosis']
-            examination.oedema = data['oedema']
-            examination.icterus = data['icterus']
-            examination.complaints = data['complaints']
-            examination.save()
-        except ObjectDoesNotExist:
-            # print('Object does not exist. Creating new examination')
-            examination = Examination.objects.create(
-            visit=visit, blood_pressure=data['bloodPressure'], SpO2=data['spo2'], temperature=data['temp'], respiratory=respiratory, cardiovascular=cardio, cereberovascular=cerebero, others=data['others'], pallor=data['pallor'], pulse_rate=data['pulse'], koilonychia=data['koilonychia'], oedema=data['oedema'], icterus=data['icterus'], lymphadenopathy=data['lymphadenopathy'], clubbing=data['clubbing'], diagnosis=data['diagnosis'], per_abdominal=per_abdominal, local_examination=local_examination, complaints=data['complaints']
-            )
-        except IntegrityError:
-            return Response({}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        try:
-            report = generatePDFReport(visit, examination)
-        except Exception as e:
-            print(e)
-        return Response()
-    examination = Examination.objects.get(visit=visit)
-    report = generatePDFReport(visit, examination)
+    if not visit.assigned_doctor:
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
+    data = json.loads(request.body)
+    cardio = data['cardio'] if data['cardio'] is not None else 'NAD'
+    cerebero = data['cerebero'] if data['cerebero'] is not None else 'NAD'
+    respiratory = data['respiratory'] if data['respiratory'] is not None else 'NAD'
+    local_examination = data['localExam'] if data['localExam'] is not None else 'NAD'
+    per_abdominal = data['per_abdominal'] if data['per_abdominal'] is not None else 'NAD'
+    complaints = data.get('complaints') or ''
+    diagnosis = data.get('diagnosis') or ''
+    spo2 = data.get('spo2')
+    temp = data.get('temp')
+    examination, _ = Examination.objects.update_or_create(
+        visit=visit,
+        defaults={
+            'cardiovascular': cardio,
+            'cereberovascular': cerebero,
+            'respiratory': respiratory,
+            'local_examination': local_examination,
+            'per_abdominal': per_abdominal,
+            'temperature': temp,
+            'pallor': data['pallor'],
+            'pulse_rate': data['pulse'],
+            'blood_pressure': data['bloodPressure'],
+            'SpO2': spo2,
+            'others': data['others'],
+            'koilonychia': data['koilonychia'],
+            'lymphadenopathy': data['lymphadenopathy'],
+            'clubbing': data['clubbing'],
+            'diagnosis': diagnosis,
+            'oedema': data['oedema'],
+            'icterus': data['icterus'],
+            'complaints': complaints,
+        },
+    )
+    try:
+        generatePDFReport(visit, examination)
+    except Exception as e:
+        print(e)
+        return Response({}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     return Response()
+
+@api_view(['GET'])
+def getPDF(request, id, visitNumber):
+    patient = Patient.objects.get(id=id)
+    file_path = settings.PDF_ROOT / str(id) / "Generated" / f"{patient} - Report {visitNumber}.pdf"
+    if not file_path.is_file():
+        raise Http404
+    return FileResponse(
+        file_path.open('rb'),
+        as_attachment=False,
+        filename=file_path.name,
+        content_type='application/pdf',
+    )
 
 @api_view(['GET'])
 def getNumReports(request, patientID):

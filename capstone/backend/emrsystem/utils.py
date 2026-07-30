@@ -130,6 +130,39 @@ def validateNewPatient(data):
         return e
     return Response({ "patient": serializer.data })
 
+def _format_past_medical_history(patient):
+    try:
+        history = PastHistory.objects.get(patient=patient)
+    except ObjectDoesNotExist:
+        return 'No past medical history recorded.'
+
+    parts = []
+    conditions = []
+    if history.t2dm:
+        conditions.append('Type 2 Diabetes')
+    if history.heart_disease:
+        conditions.append('Heart Disease')
+    if history.hypothyroidism:
+        conditions.append('Hypothyroidism')
+    if history.chronic_kidney_disease:
+        conditions.append('Chronic Kidney Disease')
+    if history.cardiovascular_disease:
+        conditions.append('Cardiovascular Disease')
+    if conditions:
+        parts.append('Conditions: ' + ', '.join(conditions))
+
+    for label, value in [
+        ('Surgeries', history.surgeries),
+        ('Allergies', history.allergies),
+        ('General', history.general),
+        ('Medications', history.drugs),
+        ('Family History', history.family),
+    ]:
+        if value:
+            parts.append(f'{label}: {value}')
+
+    return '<br/>'.join(parts) if parts else 'No past medical history recorded.'
+
 def generatePDFReport(visit, examination):
     # examination = Examination.objects.get(id=1)
     # Create Bytestream buffer
@@ -174,12 +207,11 @@ def generatePDFReport(visit, examination):
                         topMargin=cm,bottomMargin=18)
     doc.title = f"{visit.patient} - Report {visit.visit_number}"
     Story=[]
-    currentDir = os.getcwd()
-    logo = os.path.join(currentDir, '..', 'frontend', 'src', 'assets', 'avicennaLogo.png')
+    logo = str(settings.BASE_DIR / 'assets' / 'avicennaLogo.png')
     magName = "Pythonista"
     issueNum = 12
     subPrice = "99.00"
-    limitedDate = "03/05/2010"
+    limitedDate = visit.date.strftime('%m/%d/%Y') if visit.date else '--'
     freeGift = "tin foil hat"
     formatted_time = time.ctime()
     full_name = visit.patient.fullname()
@@ -201,8 +233,12 @@ def generatePDFReport(visit, examination):
     koilonychia = u'\u2713' if examination.koilonychia else u'\u2715'
     clubbing = u'\u2713' if examination.clubbing else u'\u2715'
     others = examination.others
-    chiefComplaints = examination.complaints
-    diagnosis = examination.diagnosis
+    chiefComplaints = examination.complaints or ''
+    diagnosis = examination.diagnosis or ''
+    blood_pressure = examination.blood_pressure or '--'
+    spo2 = f"{examination.SpO2}%" if examination.SpO2 is not None else '--'
+    pulse = f"{examination.pulse_rate} bpm" if examination.pulse_rate else '--'
+    temperature = f"{examination.temperature} \xb0F" if examination.temperature is not None else '--'
     respiratory = 'No abnormalities detected (NAD)' if examination.respiratory == 'NAD' else examination.respiratory
     cardiovascular = 'No abnormalities detected (NAD)' if examination.cardiovascular == 'NAD' else examination.cardiovascular
     cereberovascular = 'No abnormalities detected (NAD)' if examination.cereberovascular == 'NAD' else examination.cereberovascular
@@ -289,8 +325,7 @@ def generatePDFReport(visit, examination):
     tbl_data = [['PAST MEDICAL HISTORY'],]
     tbl = Table(tbl_data, colWidths='100%', style=sectionHeaderStyle, spaceAfter= 15)
     Story.append(tbl)
-    # chiefComplaints = 'Patient came in with rash on their back, constantly talking shit about their gramma'
-    Story.append(Paragraph(chiefComplaints, styles["BodyText"]))
+    Story.append(Paragraph(_format_past_medical_history(visit.patient), styles["BodyText"]))
     Story.append(Spacer(1, 25))
 
     tbl_data = [['GENERAL'],]
@@ -329,7 +364,7 @@ def generatePDFReport(visit, examination):
     tbl = Table(tbl_data, colWidths='100%', style=sectionHeaderStyle, spaceAfter= 15)
     Story.append(tbl)
     tbl_data = [
-        [f"BP: 124/122 mmHg", f"SpO2: 95%", f"Pulse: 63 bpm", f"Temp: 99 \xb0F"]
+        [f"BP: {blood_pressure}", f"SpO2: {spo2}", f"Pulse: {pulse}", f"Temp: {temperature}"]
     ]
     tbl = Table(tbl_data, colWidths='100%', spaceAfter=25)
     Story.append(tbl)
@@ -377,18 +412,9 @@ def generatePDFReport(visit, examination):
     destination = settings.PDF_ROOT / f'{visit.patient.id}' / f'Generated'
     print(destination)
     filename = os.path.join(destination, f'{visit.patient} - Report {visit.visit_number}.pdf')
-    # assert os.path.isfile(filename), f'{filename} is not a file'
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, 'wb') as f:
         f.write(buf.getbuffer())
-    
-    destination = settings.PDF_ROOT_BACKUP / f'{visit.patient.id}' / f'Generated'
-    print(destination)
-    filename = os.path.join(destination, f'{visit.patient} - Report {visit.visit_number}.pdf')
-    # assert os.path.isfile(filename), f'{filename} is not a file'
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
-    with open(filename, 'wb') as f:
-        f.write(buf.getbuffer())    
 
     visit.visit_completed = True
     visit.save()

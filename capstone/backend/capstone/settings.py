@@ -201,6 +201,4 @@ FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 ]
 
-PDF_ROOT_BACKUP = Path(BASE_DIR).parent / 'frontend/public/assets/pdf'
-PDF_ROOT = _capstone_root / os.getenv('PDF_ROOT_LOCATION', 'frontend/public/assets/pdf')
-# print(PDF_ROOT)
+PDF_ROOT = Path(BASE_DIR) / 'data' / 'pdf'

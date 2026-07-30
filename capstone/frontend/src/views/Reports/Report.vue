@@ -2,9 +2,7 @@
   <div class="reports-main container-fluid" v-if="numVisits">
     <div class="row minH">
       <div class="col-8 p-0 report-preview-container">
-        <!-- <div class="report-preview"></div> -->
-        <!-- <embed width="100%" height="100%" src="../../assets/Omar CV.pdf" type="application/pdf" /> -->
-        <object width="100%" height="100%" type="application/pdf" :data="`../../assets/pdf/${patientID}/Generated/${patient.fullname} - Report ${visitNumber ? visitNumber : numVisits}.pdf#zoom=43%`">
+        <object width="100%" height="100%" type="application/pdf" :data="pdfObjectUrl">
           <p class="d-flex pdf-error">The PDF link is corrupted</p>
         </object>
       </div>
@@ -12,29 +10,16 @@
         <div class="generated-reports-section">
           <div class="generated-reports-header">Generated Reports</div>
           <ol>
-            <!-- <li class="generated-report report" v-for="visit, index in visitList" :key="visit.visit_number" @click="selectGenerated($event, index, visit.visit_number)">
-              Report for Visit {{visit.visit_number}} <span class="report-date">{{visit.date}}</span>
-            </li> -->
-            <li class="report" v-for="visit, index in visitList" :key="visit.visit_number" :class="index === generatedSelected  && 'active'" @click="selectGenerated($event, index, visit.visit_number)">
-              Report for Visit {{visit.visit_number}} <span class="report-date">{{visit.date}}</span>
+            <li class="report" v-for="visit, index in visitList" :key="visit.visit_number" :class="index === generatedSelected && 'active'" @click="selectGenerated($event, index, visit.visit_number)">
+              Report for Visit {{ visit.visit_number }} <span class="report-date">{{ visit.date }}</span>
             </li>
           </ol>
         </div>
-        <!-- <div class="uploaded-reports-section">
-          <div class="uploaded-reports-header">Uploaded Reports</div>
-          <ol>
-            <li class="uploaded-report report">Report for Visit 5 <span class="report-date">05-09-2021</span></li>
-            <li class="uploaded-report report">Report for Visit 4 <span class="report-date">05-09-2021</span></li>
-            <li class="uploaded-report report">Report for Visit 3 <span class="report-date">05-09-2021</span></li>
-            <li class="uploaded-report report">Report for Visit 2 <span class="report-date">05-09-2021</span></li>
-            <li class="uploaded-report report">Report for Visit 1 <span class="report-date">05-09-2021</span></li>
-          </ol>
-        </div> -->
       </div>
     </div>
   </div>
   <div v-else>
-      <NoDataContainer :displayText="noDataMsg" />
+    <NoDataContainer :displayText="noDataMsg" />
   </div>
 </template>
 
@@ -53,6 +38,8 @@ export default {
       visitNumber: null,
       generatedSelected: 0,
       counter: 0,
+      pdfObjectUrl: null,
+      pdfCache: {},
       noDataMsg: 'There are no reports for this patient at the moment.'
     }
   },
@@ -62,30 +49,51 @@ export default {
     },
     numVisits () {
       return this.visitList.length
-    }
-  },
-  watch: {
-    generatedSelected(newValue, oldValue) {
-      // document.querySelectorAll('.generated-report')[oldValue].classList.remove('active')
+    },
+    activeVisitNumber () {
+      return this.visitNumber ?? this.visitList[0]?.visit_number
     }
   },
   mounted () {
     this.getReports()
-    if (this.visitList.length) {
-      // document.querySelectorAll('.generated-report')[0].classList.add('active')
-    }
+  },
+  beforeUnmount () {
+    Object.values(this.pdfCache).forEach(url => URL.revokeObjectURL(url))
+    this.pdfCache = {}
+    this.pdfObjectUrl = null
   },
   methods: {
+    pdfDisplayUrl (blobUrl) {
+      return `${blobUrl}#zoom=FitH`
+    },
+    async loadPdf () {
+      const visitNum = this.activeVisitNumber
+      if (!visitNum) return
+      if (this.pdfCache[visitNum]) {
+        this.pdfObjectUrl = this.pdfDisplayUrl(this.pdfCache[visitNum])
+        return
+      }
+      const url = `${process.env.VUE_APP_API_URL}/p/${this.patientID}/v/${visitNum}/pdf`
+      try {
+        const response = await axios.get(url, { responseType: 'blob' })
+        const blobUrl = URL.createObjectURL(response.data)
+        this.$set(this.pdfCache, visitNum, blobUrl)
+        this.pdfObjectUrl = this.pdfDisplayUrl(blobUrl)
+      } catch (e) {
+        this.pdfObjectUrl = null
+      }
+    },
     async getReports () {
       const response = await axios.get(process.env.VUE_APP_API_URL + '/getNumReports/' + this.patientID)
       this.visitList = response.data.completedVisits
       this.patient = response.data.patient
+      await this.loadPdf()
     },
     selectGenerated (event, index, visitNumber) {
-      // console.log(event.target, index)
       this.generatedSelected = index
-      // event.target.classList.add('active')
+      if (this.visitNumber === visitNumber) return
       this.visitNumber = visitNumber
+      this.loadPdf()
     }
   }
 }
@@ -99,19 +107,16 @@ export default {
   min-height: calc(100vh - 270px);
   margin-bottom: 30px;
 }
-
 .minH {
   min-height: inherit;
   height: inherit;
 }
-
 .report-preview-container {
   background-color: #525659;
   height: inherit;
   justify-content: center;
   display: flex;
   align-items: center;
-  // padding: 2rem 0;
   border-top-left-radius: 0.75rem;
   border-bottom-left-radius: 0.75rem;
   object, embed {
@@ -128,11 +133,9 @@ export default {
     }
   }
 }
-
 .report-sidepanel {
   height: max-content;
 }
-
 .generated-reports-section, .uploaded-reports-section {
   margin-top: 10px;
   .generated-reports-header, .uploaded-reports-header {
@@ -151,9 +154,8 @@ export default {
       border-radius: 5px;
       border: 1px solid transparent;
       &:hover {
-        // transform: scale(1.03);
         transition: 0.3s ease-out;
-         &, .report-date {
+        &, .report-date {
           color: var(--button-blue);
         }
       }

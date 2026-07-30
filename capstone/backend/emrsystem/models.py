@@ -163,7 +163,7 @@ class Visit(models.Model):
     time_from = models.TimeField()
     time_till = models.TimeField()
     payment = models.DecimalField(max_digits=20, decimal_places=2)
-    assigned_doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, blank=True, null=True)
+    assigned_doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
       
     UNIT1 = '01'
     UNIT2 = '02'
@@ -192,9 +192,9 @@ class Visit(models.Model):
     
 class Examination(models.Model):
     visit = models.ForeignKey(Visit, on_delete=models.CASCADE, null=True, blank=True, related_name='examinations')
-    blood_pressure = models.CharField(max_length=10, blank=True, null=True)
-    SpO2 = models.DecimalField(max_digits=5, decimal_places=2)
-    temperature = models.DecimalField(max_digits=5, decimal_places=2)
+    blood_pressure = models.CharField(max_length=20, blank=True, null=True)
+    SpO2 = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    temperature = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     pulse_rate = models.CharField(max_length=10, blank=True, null=True)
     respiratory = models.TextField(default='NAD')
     cardiovascular = models.TextField(default='NAD')
@@ -202,8 +202,8 @@ class Examination(models.Model):
     per_abdominal = models.TextField(default='NAD')
     local_examination = models.TextField(default='NAD')
     others = models.TextField(null=True)
-    complaints = models.TextField()
-    diagnosis = models.TextField()
+    complaints = models.TextField(blank=True, null=True)
+    diagnosis = models.TextField(blank=True, null=True)
     pallor = models.BooleanField(default=False)
     clubbing = models.BooleanField(default=False)
     lymphadenopathy = models.BooleanField(default=False)

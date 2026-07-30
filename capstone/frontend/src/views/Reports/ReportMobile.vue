@@ -7,7 +7,7 @@
       <div class="col-12 col-md-4">
         <button class="download-button" v-if="editForm">
           <img src="../../assets/download.png" class="download-icon" alt="download-icon" />
-          <a :href="`../../../assets/pdf/${patient.id}/Generated/${patient.fullname} - Report ${visitNumber}.pdf`" target="blank">Download PDF Report</a>
+          <a href="#" @click.prevent="downloadPdf">Download PDF Report</a>
         </button>
       </div>
     </div>
@@ -271,6 +271,17 @@ export default {
       const response = await axios.get(process.env.VUE_APP_API_URL + `/p/${id}/v/${reportNum}`)
       this.report = response.data
       this.editForm = this.report.visit_completed
+    },
+    async downloadPdf () {
+      const id = this.$route.params.id
+      const url = `${process.env.VUE_APP_API_URL}/p/${id}/v/${this.visitNumber}/pdf`
+      const response = await axios.get(url, { responseType: 'blob' })
+      const blobUrl = URL.createObjectURL(response.data)
+      const link = document.createElement('a')
+      link.href = blobUrl
+      link.download = `${this.patient.first_name} ${this.patient.last_name} - Report ${this.visitNumber}.pdf`
+      link.click()
+      URL.revokeObjectURL(blobUrl)
     },
     async submitForm() {
       const route = this.$route.path

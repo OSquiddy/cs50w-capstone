@@ -12,14 +12,14 @@ databases:
     plan: free # optional: starter, basic-1gb, ...
 
 services:
-  # Django API (Python). No rootDir here so the slug includes capstone/frontend (media/PDF paths).
+  # Django API (Python). Repo root is the slug so capstone/frontend paths resolve for static/media.
   - type: web
     name: drf-backend
     runtime: python
     region: oregon # optional; omit for default
     plan: free # optional
     buildCommand: cd capstone/backend && pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
-    startCommand: cd capstone/backend && gunicorn capstone.wsgi:application --bind 0.0.0.0:$PORT
+    startCommand: cd capstone/backend && python manage.py seed_pdfs && gunicorn capstone.wsgi:application --bind 0.0.0.0:$PORT
     buildFilter:
       paths:
         - capstone/backend/**
@@ -35,13 +35,11 @@ services:
         generateValue: true
       - key: DEBUG
         value: "False"
-      # Match paths used in capstone/backend/.env locally
+      # Static/media paths relative to capstone/ (not used for PDFs — those live in backend/data/pdf).
       - key: STATIC_ROOT_LOCATION
         value: frontend/public/assets/css
       - key: MEDIA_ROOT_LOCATION
         value: frontend/public/assets/media
-      - key: PDF_ROOT_LOCATION
-        value: frontend/public/assets/pdf
       - key: CORS_ALLOWED_ORIGINS
         value: https://avicenna-v1ow.onrender.com, https://avicenna.osquiddy.com, https://avicenna.omarsiddiqui.dev
 
