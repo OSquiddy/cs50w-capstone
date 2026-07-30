@@ -1,0 +1,71 @@
+# repo root: docker-compose.yml
+# Local development stack. Get this green before you touch AWS.
+#   docker compose up --build
+#   frontend -> http://localhost:8080
+#   api      -> http://localhost:8000/api/
+
+services:
+  db:
+    profiles: ["postgres"]
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: capstone
+      POSTGRES_USER: capstone
+      POSTGRES_PASSWORD: localdevonly
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"          # exposed so you can inspect with psql / DBeaver
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U capstone -d capstone"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    # profiles: ["postgres", "sqlite"]
+    build:
+      context: ./capstone/backend
+    env_file:
+      - ${BACKEND_ENV_FILE}
+    environment:
+      # DATABASE_URL: postgres://capstone:localdevonly@db:5432/capstone
+      SECRET_KEY: local-dev-not-a-real-secret
+      DEBUG: "1"
+      ALLOWED_HOSTS: localhost,127.0.0.1,backend
+      CSRF_TRUSTED_ORIGINS: http://localhost:8080
+      # Leave AWS_STORAGE_BUCKET_NAME unset locally so Django falls back
+      # to local disk. Set it only when you are testing the S3 path.
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+        required: false
+    volumes:
+      - ./capstone/backend:/app     # live reload while developing
+    command: 
+      - sh
+      - -c
+      - > 
+        python manage.py migrate &&
+        gunicorn capstone.wsgi:application
+        --bind 0.0.0.0:8000 
+        --workers 2 
+        --reload
+        --access-logfile -
+        --error-logfile -
+
+  frontend:
+    # profiles: ["postgres", "sqlite"]
+    build:
+      context: ./capstone/frontend
+      args:
+        VUE_APP_API_URL: http://localhost:8000/api/v1
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

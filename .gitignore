@@ -15,6 +15,7 @@ capstone/frontend/.env
 capstone/*/.env.local
 capstone/*/.env.*.local
 *.env
+*.env.*
 
 # Log files
 capstone/frontend/npm-debug.log*
