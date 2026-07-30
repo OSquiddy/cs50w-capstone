@@ -18,8 +18,10 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
+from capstone.views import healthz
 
 urlpatterns = [
+    path('healthz/', healthz),
     path('admin/', admin.site.urls),
     path('api/v1/', include('djoser.urls')),
     path('api/v1/', include('djoser.urls.authtoken')),
