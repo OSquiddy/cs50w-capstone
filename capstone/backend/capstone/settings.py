@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-_DEBUG_ENV = os.environ.get('DEBUG', 'True').strip().lower()
+_DEBUG_ENV = os.environ.get('DEBUG', 'False').strip().lower()
 DEBUG = _DEBUG_ENV in ('1', 'true', 'yes', 'on')
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -136,6 +136,7 @@ WSGI_APPLICATION = 'capstone.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 if os.environ.get('DATABASE_URL'):
+    print('Using prod database', os.environ.get('DATABASE_URL'))
     DATABASES = {
         'default': dj_database_url.config(conn_max_age=600),
     }

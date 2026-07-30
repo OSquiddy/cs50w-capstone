@@ -1,187 +1,239 @@
-# Requirements
+# Avicenna
 
-The final project is your opportunity to design and implement a dynamic website of your own. So long as your final project draws upon this course’s lessons, the nature of your website will be entirely up to you, albeit subject to the staff’s approval.
+An Electronic Medical Record and clinic management platform. Doctors manage appointments, record patient visits, and generate PDF reports. Patients book appointments, maintain their medical history, and upload test results.
 
-In this project, you are asked to build a web application of your own. The nature of the application is up to you, subject to a few requirements:
+**[Live demo](https://avicenna.omarsiddiqui.dev)** · **[Video walkthrough](https://youtu.be/4SJu4Y8Bu18)**
 
-- Your web application must utilize at least two of Python, JavaScript, and SQL.
-- Your web application must be mobile-responsive.
-- In README.md, include a short writeup describing your project, what’s contained in each file you created or modified, and (optionally) any other additional information the staff should know about your project.
-- If you’ve added any Python packages that need to be installed in order to run your web application, be sure to add them to requirements.txt!
+Built with Django REST Framework and Vue.js. The overview dashboard uses custom D3.js charts that update as patients and appointments are added.
 
-Beyond these requirements, the design, look, and feel of the website are up to you!
+### Demo account
 
-<br>
+| | |
+|---|---|
+| Username | `severusSnape` |
+| Password | *(see note below)* |
 
-# Introduction
+The demo instance holds seeded test data only. There is no real patient information in it.
 
-My final project started off as an Electronic Medical Record (EMR) System, but then I got too ambitious and thought I'd go ahead and create a whole clinic/hospital management system. The basic idea was that I should have a platform where both doctors and patients can sign in and do some specific tasks:
-
-- *Patient:*
-  - *Sign up for the app*
-  - *View a directory of doctor profiles (including information about their qualifications, work timings etc)*
-  - *Book an appointment with a doctor of their choice*
-  - *Update their histories of illnesses and operations*
-  - *Upload medical reports/tests for their doctors to view*
-  - *Keep track of all appointments they have*
-  - *Pay for their appointments*
-
-- *Doctor:*
-  - *View upcoming appointments*
-  - *Create new appointments*
-  - *Add any walk-in patients to the platform* 
-  - *Create entries for each patient visit/appointment.* 
-  - *The information entered by the doctor would automatically be stored as a PDF report, which could be viewed/printed by either the doctor or the patient themselves.*
-  - *A doctor would also be able to view the patient's history of past illnesses (family/personal), which would make prescribing non-conflicting medicines easier, since the doctor would also be aware of other parallel treatments/medications that the patient was undergoing.*
-
-As I said, I got a bit too ambitious. Shortly after I started this project I was able to land a full time job in Web Development, which did not leave me with a lot of time to spend on this project. A few months later, I've finally decided to get off the couch in my free time and complete what I had started earlier. Due to time constraints, I haven't been able to add everything I wanted to, but I am reasonably happy with the final product. It works as a proof of concept for what I had earlier imagined.
+<!--
+TODO before sharing this link widely:
+1. Rotate this password to something non-trivial and put the new one here.
+2. Add 3 or 4 screenshots to a /screenshots directory and embed them below.
+   The overview dashboard with the D3 charts should be the first one.
+-->
 
 <br>
 
-# *Electronic Medical Record / Hospital Management System*
+## What it does
 
-This project was built using Django + Django Rest Framework (DRF) as the backend, with Vue.js (Vue 2) as the frontend. All generated information is stored in the default SQLite database. If I am able to host this site on a platform, like my other CS50W projects I'll probably go ahead with PostgreSQL. 
+**Doctor**
 
-## Installation
+- View upcoming appointments on a monthly calendar, or through a dedicated appointments page with live search
+- Create appointments and add walk-in patients directly
+- Record observations for each visit, which are automatically written to a PDF report that either the doctor or the patient can view and print
+- View a patient's history of personal and family illnesses, so prescriptions can account for treatments already underway
+- An overview dashboard showing patient demographics and earnings over time
 
-**Initial Steps:**
-- Clone the repository using the command `git clone https://github.com/OSquiddy/cs50w-capstone.git` and move into the **cs50w-capstone** directory using the command `cd cs50w-capstone`. *This step is not needed for instructors who will be viewing the final project.*
-- *(Optional Step)* Create a virtual environment for the project using the command `python3 -m venv .myenv` or `python -m venv .myenv`, where **.myenv** is the name of the virtual environment. You can put any name you want.
-  - To activate the virtual env on Windows, type: `.myenv\Scripts\activate`
-  - To activate the virtual env on Mac/Unix: `source .myenv/bin/activate`
+**Patient**
 
-**Note: You will need to run 2 terminals in parallel. One for the frontend, and the other for the backend**
+- Sign up, then browse a directory of doctor profiles with qualifications and working hours
+- Book an appointment with a doctor of their choice
+- Maintain a history of illnesses and operations
+- Upload medical reports and test results for their doctor to see
+- Track all of their appointments
 
-Once this repository has been cloned, you can do the following:
+The interface is fully responsive, with separate desktop and mobile layouts rather than a single design that reflows.
 
-**Backend Installation:**
-- Navigate to the backend directory by running the command `cd capstone/backend`
-- Install backend dependencies by running `pip install -r requirements.txt`. The main dependencies are Django *(main backend)*, Pillow *(Allows work with images)*, ReportLab *(Used to generate the PDF reports)* and Djoser *(authentication endpoints)*
-- Make and apply migrations by running `python manage.py makemigrations` and `python manage.py migrate`. *If you get messages saying No migrations were applied, or No changes detected, that is not an issue. It means the SQLite file is present.*
-- Run the server using `python manage.py runserver 5500`
+<br>
 
-**Note: It is important to run the backend server on port 5500**
+## Stack
 
-**Frontend Installation:**
-You need to have NPM and Node installed on your machine for the following commands
+| Layer | Technology |
+|---|---|
+| Backend | Django, Django REST Framework |
+| Frontend | Vue.js (Vue 2), Vuex, Vue Router |
+| Charts | D3.js |
+| PDF generation | ReportLab |
+| Authentication | Djoser |
+| Image handling | Pillow |
+| Database | SQLite in local development. <!-- CONFIRM what Render is actually running and state it here --> |
+| Hosting | Render. Originally deployed on a VM I managed myself with Nginx. |
 
-- Navigate to the frontend directory by running the command `cd capstone/frontend`
-- Install frontend dependencies by running `npm i`
-- Start the dev server by running `npm run serve`
+<br>
 
-**Signing In:**
-You can sign in to the system by using the doctor's credentials:
-- Username: severusSnape
-- Password: 1234
+## Architecture
 
-# Distinctiveness and Complexity
+Django serves API endpoints only. Vue owns the entire frontend and talks to the backend over REST. The two run as separate applications.
 
-Complexity for this project can be argued in a few different ways. 
+```
+Browser
+   |
+   |  Vue SPA (Vue Router handles all client-side routing)
+   |
+   |  REST over HTTP
+   v
+Django REST Framework
+   |
+   +-- emrsystem app
+   |     models.py       patients, doctors, appointments, visit records
+   |     serializers.py  JSON representation for every model
+   |     views.py        API logic
+   |     utils.py        PDF report generation, appointment filtering
+   |
+   +-- Djoser            authentication endpoints
+   |
+   v
+Database
+```
 
-The first complexity I'd say came from learning how to integrate Django with a frontend framework like Vue. There were a lot of different approaches available, and I was very keen on being able to implement one that would allow me to keep the Django templating engine, alongside whatever frontend framework I was using. I grew somewhat attached to the simplicity of Django's frontend management, and felt that keeping Django as just a backend would be limiting its potential.
+I did not start here. See the engineering notes below for how I arrived at it.
 
-I read quite a few different articles and blogs to find out if there was a way to get the behaviour I wanted, and there *was* one person who did it... but unfortunately, their method did not work for me. Maybe someone else will be able to figure out something. I will definitely be revisiting that method later.
+<br>
 
-What I finally settled with was the Django Rest Framework (DRF), where Django is used only for the API endpoints. The frontend is completely managed by Vue.
+## Running it locally
 
-Coming to the application itself, it has all the basic requirements of a complex web app. User authentication/authorization, CRUD functionilities etc. A few app specific areas of complexity include learning D3.js for the realtime generation of the charts on the overwiew page, as well as ReportLab, to generate PDF reports of patient appointments. You will notice the D3 charts change as more and more patients are added, appointments are created and visits/appointments are completed.
+You will need two terminals, one for the backend and one for the frontend.
 
-D3 was something I learned at work, and I wanted a way to improve my command over it, so I integrated it into this project. The parts where I've been able to add transitions to the charts were something I've never done anywhere else. Learned it while working on this.
+**Clone**
 
-Similarly, I've learned the basics of the ReportLab library just for this project, and will be exploring it a lot more. It's a very useful and powerful tool to have in your belt.
+```bash
+git clone https://github.com/OSquiddy/cs50w-capstone.git
+cd cs50w-capstone
+```
 
-# Detailed Summary of the Files and Directories
+**Backend**
 
-## Backend
+```bash
+cd capstone/backend
 
-- **capstone** - main application directory
-  - **backend** - contains all the Django related code for the backend
-    - **capstone** - the django project directory (Contains all configuration files for the backend)
-      - **settings.py**
-      - **urls.py**
-      - **wsgi.py**
-      - **asgi.py**
-    - **emrsystem** - the app created for this project
-      - **migrations** - contains the migration data for the app
-      - **admin.py** - contains the admin panel related code
-      - **apps.py**
-      - **models.py** - contains all the models for the app
-      - **serializers.py** - contains all the serializers for the models *(JSON)*. This is needed for communication with the frontend using the Rest Framework
-      - **urls.py** - contains the urls for the app
-      - **utils.py** - contains the utility functions for the app. (Report generation and appointment list filtering functions)
-      - **views.py** - contains all the logic for the APIs of the app
+# optional but recommended
+python3 -m venv .myenv
+source .myenv/bin/activate        # Windows: .myenv\Scripts\activate
 
-## Frontend
+pip install -r requirements.txt
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver 5500
+```
 
-- **capstone** - main application directory
-  - **frontend** - contains the Vue code for the frontend
-  - **build** - contains the files built for serving in a production environment
-  - **node_modules** - contains all the dependencies and sub-dependencies installed through npm
-  - **public** - contains all public assets *This mainly contains the reports generated through the ReportLab library*
-  - **src** - contains the source code for the Vue app
-    - **assets** - contains the static data that needs to be served on the app using the **development server**
-    - **components** - contains all the reusable Vue components created for the app
-      - **CustomCalendar.vue** - Code for the daily upcoming appointments viewer. The doctor can view all upcoming appointments for a certain day by clicking on it's date. This components only shows the doctor the appointments for the current month. For the rest of the appointments the doctor can visit the dedicated Appointments page.
-      - **DonutChart.vue** - contains the code for the donut chart found on the Overview page. The chart is generated using the *D3.js* library. It shows the genderwise distribution of patients in the database.
-      - **EarningsBarChart.vue** - contains the code for the barchart found on the Overview page. The chart is generated using the *D3.js* library. It shows the month-wise earnings of the establishment.
-      - **EarningsLineChart.vue** - contains the code for the line chart found on the Overview page. The chart is generated using the *D3.js* library. It shows the total earnings of the establishment, from the first appointment. Hovering over the data will show the earnings from and data of each appointment recorded.
-      - **Layout.vue** - contains the layout for the Desktop site. All other components/views are nested within this component
-      - **LayoutMobile.vue** - contains the layout for the Mobile site. All other components/views are nested within this component
-      - **LocalTabs.vue** - contains the code for the local navigation bar found on the patient information pages
-      - **LoginPage.vue** - contains the code for the login page
-      - **NoDataContainer.vue** - contains the code for the container that shows up when there is no data to be displayed
-      - **PatientHeader.vue** - contains the code for the Patient information header shown on any of the patient related pages in the Desktop view. 
-      - **PatientSmall.vue** - contains the code for the miniature patient header shown on any of the patient related pages in the Mobile view.
-      - **SearchableDropdown.vue** - contains the code for the searchable dropdown found on the New Appointment page
-      - **SearchContainer.vue** - contains the code for the live filtering, when a keyword is entered into any searchbar
-    - **router**
-      - **index.js** - contains the routes served by Vue on the frontend
-    - **store**
-      - **index.js** - contains the data and methods that are stored in the Vuex store. These variables/methods and their states are globally available throughout the app  
-      - **search.js** - contains the vuex data related to the live search functionality. This module is appended to the index.js file at compile time
-    - **util** - contains some utility functions 
-      - **tooltip.js** - contains the code used to render the custom tooltip for the D3 charts
-      - **util.js** - contain a utility function for the vue app. *(Debounce, Snackbar, defaultPic)*
-    - **views**
-      - **AppointmentEntry** - contains the code/view for form in which the doctor enters all appointment related data/observations
-        - **AppointmentEntry.vue**
-      - **Appointments** - contains the code for viewing all appointments in the app. (Dedicated appointments page)
-        - **Appointments.vue**
-        - **AppointmentsMobile.vue**
-      - **MainPage** - contains the code for the Main/Overview page. This page contains a sort of dashboard for the doctor
-        - **MainContainer.vue**
-        - **MainContainerMobile.vue**
-      - **NewAppointment** - contains the code for the page that allows you to create a new appointment
-        - **NewAppointment.vue**
-        - **NewAppointmentMobile.vue**
-      - **NewPatient** - contains the code for the page that allows you to add a patient to the database
-        - **NewPatient.vue**
-        - **NewPatientMobile.vue**
-      - **PatientDirectory** - contains the code for the page that allows you to view the patient database
-        - **PatientDirectory.vue**
-        - **PatientDirectoryMobile.vue**
-      - **PatientInfo** - contains the code that allows you to view detailed information about a patient (History, Reports, Overview etc)
-        - **PatientHistory.vue**
-        - **PatientMain.vue**
-        - **PatientMainMobile.vue**
-        - **PatientOverview.vue**
-      - **Reports** - contains the code that allows you to view/download the PDF reports of the patient
-        - **Report.vue**
-        - **ReportMobile.vue**
-      - **App.scss** - contains the styling that is common throughout the site
-      - **App.vue** - is the parent component for any Vue application
-      - **main.js** - JS file which mounts the Vue application onto the website
-    - **package.json** - Contains dependancy information
-  - **.gitignore** - Contains a list of files/folders that are not tracked by Git 
+The backend has to run on port 5500. The frontend expects it there.
 
-# Areas for improvement
+If `migrate` reports that no migrations were applied or no changes were detected, that is fine. It means the SQLite file is already present.
 
-- The search functionality on the Mobile Appointments page can be made more powerful. Currently it recognizes IDs, partial dates (Numbers can either be the days of the month, or the number of the month itself), partial names and full dates (ISO format - *YYYY-MM-DD*). It would be helpful if we could search for dates like *'2020-08'*, which would filter all results from August, or even dates in string formats, like *'21st July'*.
-- Add in a dark mode theme
-- Finish the Patients module
-- Serve static files through a CDN instead of hosting them on the main server
-- Forms currently do not have a error messages show up per input. If the form submission fails as a whole, then a small message shows up, but there are no input specific messages. Need to add that later.
-- Add some code for better patient confidentiality. Currently any doctor who signs in has full access to the entire patient database. We could write some conditions to make sure that doctors are only able to access the information of patients that they are treating, unless they're given some sort of permission.
-- Need to show the Past History in Mobile mode.
-- Need to update the Report PDF to take in the Past History information
-- Another feature I need to add is a time-slot check for new appointments. If a period of a doctor's time is already blocked by an appointment, users should not be able to book an appointment with that particular doctor for that time slot. A new appointment could be created after this one gets over, or with another doctor.
+**Frontend**
+
+```bash
+cd capstone/frontend
+npm i
+npm run serve
+```
+
+<br>
+
+## Engineering notes
+
+### Getting Django and Vue to work together
+
+The first real problem was integration. There were a lot of approaches available, and I was keen on one that would let me keep Django's templating engine alongside whatever frontend framework I used. I had grown somewhat attached to the simplicity of Django's frontend management, and it felt like reducing Django to a pure backend was limiting what it could do.
+
+I read quite a few articles and blog posts looking for a way to get the behaviour I wanted. There *was* one person who had done it, but their method did not work in my setup, and I spent longer than I should have trying to make it work anyway.
+
+Eventually I accepted that the approach was wrong for this project and rebuilt around Django REST Framework, with Django handling only the API endpoints and Vue owning the frontend completely. The decoupled version was simpler, easier to reason about, and made the mobile and desktop layouts far more manageable.
+
+The lesson I took from it was about the cost of staying attached to an approach. I was protecting a preference that was not actually load bearing.
+
+### The D3 charts
+
+I learned D3 at work and wanted a way to push my command of it further, so I built the overview dashboard around it rather than reaching for a chart library.
+
+There are three charts, all in `src/components`:
+
+- `DonutChart.vue` shows the gender distribution across the patient database
+- `EarningsBarChart.vue` shows month by month earnings
+- `EarningsLineChart.vue` shows cumulative earnings from the first appointment onward, with hover detail on each data point
+
+They regenerate as patients are added, appointments are created, and visits are completed. The transitions were new to me, I had not built animated D3 anywhere else before this, and getting them working properly took a fair bit of experimentation. `src/util/tooltip.js` holds the custom tooltip logic shared across all three.
+
+### PDF report generation
+
+The doctor's visit observations get written to a PDF automatically, using ReportLab. I learned the library specifically for this project. The generation logic sits in `emrsystem/utils.py`.
+
+<br>
+
+## Project structure
+
+```
+capstone/
+├── backend/
+│   ├── capstone/            Django project configuration
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   ├── wsgi.py
+│   │   └── asgi.py
+│   └── emrsystem/           the application
+│       ├── models.py        patients, doctors, appointments, visits
+│       ├── serializers.py   JSON serialization for the REST API
+│       ├── views.py         API logic
+│       ├── utils.py         PDF generation, appointment filtering
+│       ├── urls.py
+│       ├── admin.py
+│       └── migrations/
+│
+└── frontend/
+    ├── public/              static assets and generated reports
+    └── src/
+        ├── components/      reusable components, including the three D3 charts
+        │   ├── DonutChart.vue
+        │   ├── EarningsBarChart.vue
+        │   ├── EarningsLineChart.vue
+        │   ├── CustomCalendar.vue     monthly appointment viewer
+        │   ├── SearchableDropdown.vue
+        │   ├── SearchContainer.vue    live filtering for every search bar
+        │   ├── Layout.vue             desktop shell
+        │   └── LayoutMobile.vue       mobile shell
+        ├── views/           one directory per page, desktop and mobile variants
+        │   ├── MainPage/              overview dashboard
+        │   ├── Appointments/
+        │   ├── NewAppointment/
+        │   ├── AppointmentEntry/      visit observation form
+        │   ├── NewPatient/
+        │   ├── PatientDirectory/
+        │   ├── PatientInfo/           history, reports, overview
+        │   └── Reports/               PDF viewer
+        ├── store/           Vuex state, with live search in its own module
+        ├── router/
+        └── util/            tooltip logic for the D3 charts, debounce, snackbar
+```
+
+Most pages exist as both a desktop and a mobile component rather than one responsive component, which was a deliberate choice given how differently the two layouts needed to behave.
+
+<br>
+
+## Known limitations
+
+These are known and unaddressed, not oversights. Listing them here because the alternative is someone finding them and assuming I did not know.
+
+- **Authorization is not scoped per doctor.** Any signed in doctor can currently access the full patient database. The correct behaviour is for a doctor to see only the patients they are treating, unless explicitly granted access. This is the first thing I would fix, and it is the most important item on this list.
+- **Form validation is form level, not field level.** A failed submission shows one message rather than highlighting the specific input that caused it.
+- **No appointment time slot checking.** Nothing currently prevents two appointments being booked in the same slot with the same doctor.
+- **Past medical history is missing from the mobile view**, and is not yet included in the generated PDF reports.
+- **The Patients module is incomplete.**
+- **Static files are served from the application server** rather than a CDN.
+- **Mobile appointment search is limited.** It handles IDs, partial names, partial dates, and full ISO dates. It does not yet handle month level queries like `2020-08` or natural formats like `21st July`.
+
+<br>
+
+## What I would do differently
+
+- **Scope the authorization from the start.** Retrofitting per doctor access control onto views that were written assuming full access is more work than building it in would have been, and on a medical records system it should never have been deferred.
+- **Decide on the Django and Vue integration earlier.** I spent real time trying to preserve Django templating before accepting a decoupled architecture, and the decoupled version turned out to be the better design regardless.
+- **Use PostgreSQL from the beginning.** Starting on SQLite meant a migration later that would not have been necessary.
+- **Write tests.** There are none, and the PDF generation and appointment filtering logic in `utils.py` are exactly the kind of code that should have them.
+
+<br>
+
+## Background
+
+This started as my capstone for CS50W, Harvard's Web Programming with Python and JavaScript. The original brief was an Electronic Medical Record system, and I widened it into a fuller clinic management platform, which put it well beyond what the course required.
+
+I began it shortly before starting my first full time web development job, which meant it sat unfinished for several months before I came back and completed it. I have continued to extend and maintain it since.
