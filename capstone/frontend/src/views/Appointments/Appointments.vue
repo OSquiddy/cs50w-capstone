@@ -6,7 +6,7 @@
         <p class="text-lg font-medium text-gray-600 mb-6">
           Roll your own calendars using scoped slots
         </p> -->
-        <Calendar class="custom-calendar max-w-full" :masks="masks" :attributes="appointmentsList" disable-page-swipe is-expanded>
+        <Calendar class="custom-calendar max-w-full" :masks="masks" :attributes="appointmentsList" disable-page-swipe is-expanded @update:from-page="onPageChange">
           <template v-slot:day-content="{ day, attributes }">
             <div class="d-flex flex-column h-100">
               <span class="day-label">{{ day.day }}</span>
@@ -49,7 +49,8 @@ export default {
       masks: {
         weekdays: 'WWW'
       },
-      appointmentsList: []
+      appointmentsList: [],
+      monthCache: {}
     }
   },
   computed: {
@@ -68,9 +69,28 @@ export default {
     this.getAppointmentsList()
   },
   methods: {
+    monthKey (year, month) {
+      return `${year}-${String(month).padStart(2, '0')}`
+    },
+    onPageChange (page) {
+      if (this.searchKeyword) return
+      this.fetchMonth(page.year, page.month)
+    },
+    async fetchMonth (year, month) {
+      const key = this.monthKey(year, month)
+      if (this.monthCache[key]) {
+        this.appointmentsList = this.monthCache[key]
+        return
+      }
+      const list = await axios.get(process.env.VUE_APP_API_URL + '/appointmentsList', {
+        params: { month: key }
+      })
+      this.monthCache[key] = list.data.appointmentsList
+      this.appointmentsList = this.monthCache[key]
+    },
     async getAppointmentsList () {
-      const list = await axios.get(process.env.VUE_APP_API_URL + '/appointmentsList')
-      this.appointmentsList = list.data.appointmentsList
+      const now = new Date()
+      await this.fetchMonth(now.getFullYear(), now.getMonth() + 1)
     },
     async getFilteredList () {
       const list = await axios.get(process.env.VUE_APP_API_URL + '/appointmentsList/' + this.searchKeyword)

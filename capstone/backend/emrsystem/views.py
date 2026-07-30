@@ -214,30 +214,32 @@ def getReport(request, id, visitNumber):
 @api_view(['GET'])
 def appointmentsList(request):
     allVisits = Visit.objects.select_related('patient').order_by('date', 'time_from')
+
+    month = request.GET.get('month')
+    if month:
+        try:
+            year, mon = map(int, month.split('-'))
+            allVisits = allVisits.filter(date__year=year, date__month=mon)
+        except (ValueError, TypeError):
+            pass
+
     if not allVisits.exists():
         return Response({ "appointmentsList": [] })
 
-    firstAppointment = allVisits.first().date
-    lastAppointment = allVisits.last().date
     today = date.today()
     tomorrow = date.today() + timedelta(days=1)
-    numDates = lastAppointment - firstAppointment
     appointmentsList = []
-    colors = ['#1976D2', '#558B2F', '#AD1457', '#7C4DFF', '#C62828', '#004D40' ]
+    colors = ['#1976D2', '#558B2F', '#AD1457', '#7C4DFF', '#C62828', '#004D40']
 
-    # Group visits by date up front, so the day-by-day loop below is O(1) per
-    # day instead of issuing a fresh query for every day in the range (which
-    # gets very slow once appointments span months/years).
     visitsByDate = {}
     for visit in allVisits:
+        if visit.patient is None:
+            continue
         visitsByDate.setdefault(visit.date, []).append(visit)
 
-    for i in range(numDates.days + 1):
-        day = firstAppointment + timedelta(days=i)
+    for key, day in enumerate(sorted(visitsByDate)):
         patientsList = []
-        for visit in visitsByDate.get(day, []):
-            if visit.patient is None:
-                continue
+        for visit in visitsByDate[day]:
             appointment = {}
             appointment['id'] = visit.patient.id
             appointment['name'] = f"{visit.patient.fullname()}"
@@ -246,8 +248,6 @@ def appointmentsList(request):
             appointment['visitNumber'] = visit.visit_number
             appointment['visitCompleted'] = visit.visit_completed
             patientsList.append(appointment)
-        obj = {}
-        obj['key'] = i
         customData = {}
         customData['patientsList'] = patientsList
         if day == today:
@@ -256,9 +256,11 @@ def appointmentsList(request):
             customData['meta'] = 'Tomorrow'
         else:
             customData['meta'] = day.strftime('%A')
-        obj['customData'] = customData
-        obj['dates'] = day
-        appointmentsList.append(obj)
+        appointmentsList.append({
+            'key': key,
+            'customData': customData,
+            'dates': day,
+        })
     return Response({ "appointmentsList": appointmentsList })
 
 @api_view(['GET', 'POST'])

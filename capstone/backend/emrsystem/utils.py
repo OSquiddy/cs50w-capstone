@@ -64,17 +64,17 @@ def getAppointmentsList(appointments):
     return appointmentsList
 
 def getAppointmentsByPartialDigits(query):
-    appointments = Visit.objects.filter(Q(patient_id=query) | Q(date__day=query) | Q(date__month=query) | Q(date__year=query)).order_by('date')
+    appointments = Visit.objects.select_related('patient').filter(Q(patient_id=query) | Q(date__day=query) | Q(date__month=query) | Q(date__year=query)).order_by('date')
     appointmentsList = getAppointmentsList(appointments)
     return appointmentsList
 
 def getAppointmentsByName(query):
-    appointments = Visit.objects.filter(Q(patient__first_name__icontains=query) | Q(patient__last_name__icontains=query)).order_by('date', 'time_from')
+    appointments = Visit.objects.select_related('patient').filter(Q(patient__first_name__icontains=query) | Q(patient__last_name__icontains=query)).order_by('date', 'time_from')
     appointmentsList = getAppointmentsList(appointments)
     return appointmentsList
 
 def getAppointmentsByDate(query):
-    appointments = Visit.objects.filter(date=query).order_by('time_from')
+    appointments = Visit.objects.select_related('patient').filter(date=query).order_by('time_from')
     appointmentsList = getAppointmentsList(appointments)
     return appointmentsList
 
