@@ -9,7 +9,7 @@
 
 databases:
   - name: capstone-db
-    plan: free # optional: starter, basic-1gb, ...
+    plan: basic-256mb # must match live instance; Render blocks downgrades (e.g. free)
 
 services:
   # Django API (Python). Repo root is the slug so capstone/frontend paths resolve for static/media.
