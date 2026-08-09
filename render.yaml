@@ -20,8 +20,6 @@ projects:
                 sync: false
               - key: PORT
                 sync: false
-              - key: STATIC_ROOT_LOCATION
-                sync: false
               - key: SECRET_KEY
                 sync: false
               - key: PDF_ROOT_LOCATION
@@ -41,7 +39,6 @@ projects:
             buildFilter:
               paths:
                 - capstone/backend/**
-                - capstone/frontend/public/**
 
           - type: web
             name: avicenna

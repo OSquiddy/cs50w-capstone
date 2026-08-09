@@ -42,6 +42,7 @@ capstone/backend/emrsystem/__pycache__
 capstone/backend/emrsystem/migrations/__pycache__
 capstone/backend/python-3.8-venv
 capstone/backend/data/media/*
+capstone/backend/staticfiles/
 
 #capstone/backend/capstone/settings.py
 

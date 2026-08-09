@@ -87,6 +87,7 @@ CORS_ORIGIN_WHITELIST = tuple(CORS_ALLOWED_ORIGINS)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -189,8 +190,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'data' / 'media'
 SEED_MEDIA_ROOT = BASE_DIR / 'seed_data' / 'media'
-_capstone_root = Path(BASE_DIR).parent
-STATIC_ROOT = _capstone_root / os.getenv('STATIC_ROOT_LOCATION', 'frontend/public/assets/css')
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # STATICFILES_DIR = [
 
