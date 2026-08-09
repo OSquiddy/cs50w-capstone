@@ -38,4 +38,16 @@ capstone/backend/capstone/__pycache__
 capstone/backend/emrsystem/__pycache__
 capstone/backend/emrsystem/migrations/__pycache__
 capstone/backend/python-3.8-venv
+capstone/backend/data/media/*
+
 #capstone/backend/capstone/settings.py
+
+# Terraform files
+infra/.terraform/
+infra/*.tfstate
+infra/*.tfstate.*
+infra/crash.log
+infra/*.tfvars
+!infra/*.tfvars.example
+infra/override.tf
+infra/override.tf.json

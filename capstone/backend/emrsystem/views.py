@@ -23,6 +23,9 @@ from .models import *
 from .serializers import *
 from .utils import *
 
+def _serializer_context(request):
+    return {'request': request}
+
 # Create your views here.
 @api_view(['GET'])
 def hello_world(request):
@@ -30,9 +33,9 @@ def hello_world(request):
 
 @api_view(['GET', 'POST'])
 def users(request):
-    user = UserSerializer(request.user)
+    user = UserSerializer(request.user, context=_serializer_context(request))
     userList = Doctor.objects.all()
-    serializer = DoctorSerializer(userList, many=True)
+    serializer = DoctorSerializer(userList, many=True, context=_serializer_context(request))
     return Response({ "userList": serializer.data, "current-user": user.data })
 
 @api_view(['GET', 'POST'])
@@ -41,7 +44,7 @@ def patients(request, orderBy):
         patientList = Patient.objects.all()
     elif orderBy == 'name':
         patientList = Patient.objects.all().order_by('first_name')
-    serializer = PatientSerializer(patientList, many=True)
+    serializer = PatientSerializer(patientList, many=True, context=_serializer_context(request))
     return Response({"patientList": serializer.data})
 
 @api_view(['GET'])
@@ -62,26 +65,26 @@ def getAppointments(request):
 @api_view(['GET'])
 def doctors(request):
     doctorList = Doctor.objects.all().order_by('first_name')
-    serializer = DoctorSerializer(doctorList, many=True)
+    serializer = DoctorSerializer(doctorList, many=True, context=_serializer_context(request))
     return Response({"doctorList": serializer.data})
 
 @api_view(['GET', 'POST'])
 def filteredPatients(request, orderBy, query):
     query = str(query)
     patientList = Patient.objects.filter(Q(first_name__icontains=query) | Q(id__contains=query) | Q(last_name__contains=query)).order_by('first_name')
-    serializer = PatientSerializer(patientList, many=True)
+    serializer = PatientSerializer(patientList, many=True, context=_serializer_context(request))
     return Response({"patientList": serializer.data})
 
 @api_view(['GET'])
 def patientInfo(request, id):
     patientInfo = Patient.objects.get(id=id)
-    serializer = PatientSerializer(patientInfo)
+    serializer = PatientSerializer(patientInfo, context=_serializer_context(request))
     return Response({ "patientInfo": serializer.data })
 
 @api_view(['GET'])
 def doctorInfo(request, id):
     doctorInfo = Doctor.objects.get(id=id)
-    serializer = DoctorSerializer(doctorInfo)
+    serializer = DoctorSerializer(doctorInfo, context=_serializer_context(request))
     return Response({ "doctorInfo": serializer.data })
 
 @api_view(['GET'])
@@ -162,7 +165,7 @@ def getEarningsByMonth(request):
 @api_view(['GET'])
 def lastPatient(request):
     patient = Patient.objects.all().order_by('-date_joined').first()
-    serializer = PatientSerializer(patient)
+    serializer = PatientSerializer(patient, context=_serializer_context(request))
     return Response({ "lastPatient": serializer.data })
 
 @api_view(['GET'])
@@ -338,7 +341,7 @@ def getNumReports(request, patientID):
     totalCompletedVisits = Visit.objects.filter(patient=patientID, visit_completed=True).order_by('-visit_number')
     serializer = VisitSerializer(totalCompletedVisits, many=True)
     patient = Patient.objects.get(id=patientID)
-    patient = PatientSerializer(patient)
+    patient = PatientSerializer(patient, context=_serializer_context(request))
     return Response({ "completedVisits": serializer.data, "patient": patient.data })
 
 @api_view(['POST'])
@@ -356,7 +359,7 @@ def uploadImage(request):
     if request.method == 'POST':
         user.profilePic = request.FILES.get('image')
         user.save()
-    return Response({ "user": UserSerializer(user).data })
+    return Response({ "user": UserSerializer(user, context=_serializer_context(request)).data })
 
 @api_view(['POST'])
 def createPatient(request):
@@ -407,7 +410,7 @@ def updateUser(request):
     user = []
     user = Doctor.objects.get(id=request.user.id)
     serializer = None
-    serializer = DoctorSerializer(user)
+    serializer = DoctorSerializer(user, context=_serializer_context(request))
     if request.method == 'POST':
         data = json.loads(request.body)
         email = data['email']
@@ -431,7 +434,7 @@ def updateUser(request):
             user.Phone_Number = mob
             user.username = username
             user.save()
-            serializer = DoctorSerializer(user)
+            serializer = DoctorSerializer(user, context=_serializer_context(request))
         except Exception as e:
             print(e)
             return Response({ "errors": e })
@@ -440,6 +443,6 @@ def updateUser(request):
 @api_view(['POST'])
 def deleteUser(request, id):
     patient = Patient.objects.get(id=id)
-    serializer = PatientSerializer(patient)
+    serializer = PatientSerializer(patient, context=_serializer_context(request))
     patient.delete()
     return Response({"patient": serializer.data})

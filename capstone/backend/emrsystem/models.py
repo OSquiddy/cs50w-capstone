@@ -4,8 +4,6 @@ from io import BytesIO
 from PIL import Image
 from django.core.files import File
 from django.db.models.fields.related import OneToOneField
-from django.core.files.storage import FileSystemStorage
-
 # Functions that a model can use
 def calc_visit(patient):
     prev_visits = Visit.objects.filter(patient=patient).order_by('-visit_number').values_list('visit_number', flat=True)
@@ -13,11 +11,6 @@ def calc_visit(patient):
         return prev_visits[0] + 1
     else:
         return 1
-
-class OverwriteStorage(FileSystemStorage):
-    def get_available_name(self, name, max_length=None):
-        self.delete(name)
-        return name
 
 def new_filename(instance, filename):
         basename, extension = filename.split('.')
@@ -37,7 +30,7 @@ class MyBaseUser(AbstractUser):
     date_of_birth = models.DateField(null=True)
     isDoctor = models.BooleanField(null=True)
     isPatient = models.BooleanField(null=True)
-    profilePic = models.ImageField(upload_to=new_filename, storage=OverwriteStorage(), null=True, blank=True)
+    profilePic = models.ImageField(upload_to=new_filename, null=True, blank=True)
     sex_choices = [
         ('',''),
         ('M', 'Male'),

@@ -188,9 +188,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-# Env names follow existing .env; paths map onto Django variables as in the original project.
+MEDIA_ROOT = BASE_DIR / 'data' / 'media'
+SEED_MEDIA_ROOT = BASE_DIR / 'seed_data' / 'media'
 _capstone_root = Path(BASE_DIR).parent
-MEDIA_ROOT = _capstone_root / os.getenv('MEDIA_ROOT_LOCATION', 'frontend/public/assets/media')
 STATIC_ROOT = _capstone_root / os.getenv('STATIC_ROOT_LOCATION', 'frontend/public/assets/css')
 
 # STATICFILES_DIR = [
@@ -202,3 +202,19 @@ FILE_UPLOAD_HANDLERS = [
 ]
 
 PDF_ROOT = Path(BASE_DIR) / 'data' / 'pdf'
+
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+
+if AWS_STORAGE_BUCKET_NAME:
+    INSTALLED_APPS.append('storages')
+
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    AWS_S3_REGION_NAME = os.environ.get('AWS_REGION', 'us-east-1')
+    AWS_DEFAULT_ACL = None
+    AWS_S3_FILE_OVERWRITE = True
+    AWS_QUERYSTRING_AUTH = True
+    AWS_S3_SIGNATURE_VERSION = 's3v4'
+    AWS_LOCATION = 'media'
+else:
+    DEFAULT_FILE_STORAGE = 'emrsystem.storage.OverwriteMediaStorage'
+    MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
