@@ -1,6 +1,9 @@
 capstone/frontend/.DS_Store
 capstone/frontend/node_modules
 capstone/frontend/dist
+capstone/frontend/build
+capstone/frontend/public/assets/pdf/
+capstone/frontend/public/assets/media/
 capstone/frontend/.env
 
 # .myenv folder
