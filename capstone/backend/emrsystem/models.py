@@ -4,6 +4,9 @@ from io import BytesIO
 from PIL import Image
 from django.core.files import File
 from django.db.models.fields.related import OneToOneField
+
+from emrsystem.storage import OverwriteMediaStorage as OverwriteStorage  # migrations 0021, 0025
+
 # Functions that a model can use
 def calc_visit(patient):
     prev_visits = Visit.objects.filter(patient=patient).order_by('-visit_number').values_list('visit_number', flat=True)
