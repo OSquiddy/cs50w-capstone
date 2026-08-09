@@ -52,6 +52,10 @@ services:
     # Optional: use sync:false for VUE_APP_API_URL and set it in the dashboard instead.
     buildCommand: npm ci && VUE_APP_API_URL=https://drf-backend-t3bv.onrender.com/api/v1 npm run build
     staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
     buildFilter:
       paths:
         - capstone/frontend/**
