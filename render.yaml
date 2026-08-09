@@ -35,7 +35,8 @@ services:
         generateValue: true
       - key: DEBUG
         value: "False"
-      # Static assets only; user uploads live in backend/data/media (local) or S3 (when AWS_STORAGE_BUCKET_NAME is set).
+      # User uploads: ephemeral disk on Render (do not set AWS_* here). seed_media restores
+      # demo images on each start and clears profilePic rows whose files are gone.
       - key: STATIC_ROOT_LOCATION
         value: frontend/public/assets/css
       - key: CORS_ALLOWED_ORIGINS
