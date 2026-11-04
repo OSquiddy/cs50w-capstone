@@ -24,6 +24,9 @@ TODO before sharing this link widely:
 
 <br>
 
+<img width="11285" height="7914" alt="diagram" src="https://github.com/user-attachments/assets/8012677a-3c31-43f8-96b3-a53fbd14243a" />
+
+
 ## What it does
 
 **Doctor**
